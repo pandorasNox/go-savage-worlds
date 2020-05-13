@@ -1,20 +1,19 @@
 package main
 
 import (
-	"bufio"
-	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 
-	"github.com/go-yaml/yaml"
 	"github.com/pandorasNox/go-savage-worlds/pkg/savage"
+	yaml "gopkg.in/yaml.v2"
 )
 
 func main() {
 	character, err := getCharacterFromStdin()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("can't get character: %s", err)
 	}
 
 	fmt.Println(character)
@@ -25,26 +24,20 @@ func getCharacterFromStdin() (savage.Character, error) {
 	if (info.Mode() & os.ModeCharDevice) == os.ModeCharDevice {
 		errorMsg := "The command is intended to work with pipes.\n"
 		errorMsg += "Usage:\n"
-		errorMsg += "cat terraform.tfstate | tftoinv"
+		errorMsg += "  cat file | savage"
 		return savage.Character{}, fmt.Errorf(errorMsg)
 	}
 
-	var inputBuffer bytes.Buffer
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		inputBuffer.WriteString(scanner.Text())
+	yamlFile, err := ioutil.ReadAll(os.Stdin) //ioutil.ReadFile(filename)
+	if err != nil {
+		log.Fatal(err)
 	}
-
-	if err := scanner.Err(); err != nil {
-		log.Println(err)
-		return savage.Character{}, fmt.Errorf("fail to read stdin: %s", err)
-	}
-
-	// fmt.Printf("inputBuffer:\n%v\n", inputBuffer.String())
 
 	character := &savage.Character{}
-	if err := yaml.Unmarshal(inputBuffer.Bytes(), character); err != nil {
-		return savage.Character{}, fmt.Errorf("failed to Unmarshal stdin as an terraform.state json: %s", err)
+
+	err = yaml.Unmarshal(yamlFile, character)
+	if err != nil {
+		panic(err)
 	}
 
 	return *character, nil
