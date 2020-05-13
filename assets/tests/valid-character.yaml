@@ -1,9 +1,9 @@
 version: 0.0.1
 rule-set: SWADE
 setting-rules:
-  - starting-wealth: 500
-  - born-a-hero: false
-  - multiple-languages: false
+  starting-wealth: 500
+  born-a-hero: false
+  multiple-languages: false
 character:
   name: Johanna Smith
   race: Human
