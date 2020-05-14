@@ -35,7 +35,7 @@ func PrettyPrint(data interface{}) {
 func characterFromStdin() (savage.Character, error) {
 	info, err := os.Stdin.Stat()
 	if err != nil {
-		log.Fatalf("can't read info from Stdin: %s", err)
+		return savage.Character{}, fmt.Errorf("can't read info from Stdin: %s", err)
 	}
 	if (info.Mode() & os.ModeCharDevice) == os.ModeCharDevice {
 		errorMsg := "The command is intended to work with pipes.\n"
@@ -46,7 +46,7 @@ func characterFromStdin() (savage.Character, error) {
 
 	character, err := LoadCharacter(os.Stdin)
 	if err != nil {
-		log.Fatalf("can't read character yaml from Stdin: %s", err)
+		return savage.Character{}, fmt.Errorf("can't read character yaml from Stdin: %s", err)
 	}
 
 	return character, nil
