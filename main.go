@@ -20,7 +20,10 @@ func main() {
 }
 
 func getCharacterFromStdin() (savage.Character, error) {
-	info, _ := os.Stdin.Stat()
+	info, err := os.Stdin.Stat()
+	if err != nil {
+		log.Fatalf("can't read info from Stdin: %s", err)
+	}
 	if (info.Mode() & os.ModeCharDevice) == os.ModeCharDevice {
 		errorMsg := "The command is intended to work with pipes.\n"
 		errorMsg += "Usage:\n"
@@ -30,14 +33,14 @@ func getCharacterFromStdin() (savage.Character, error) {
 
 	yamlFile, err := ioutil.ReadAll(os.Stdin) //ioutil.ReadFile(filename)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("can't read \"all\" from Stdin: %s", err)
 	}
 
 	character := &savage.Character{}
 
 	err = yaml.Unmarshal(yamlFile, character)
 	if err != nil {
-		panic(err)
+		log.Fatalf("can't unmarshal expected yaml input: %s", err)
 	}
 
 	return *character, nil
