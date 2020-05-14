@@ -1,8 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"os"
 
@@ -11,15 +12,27 @@ import (
 )
 
 func main() {
-	character, err := getCharacterFromStdin()
+	character, err := characterFromStdin()
 	if err != nil {
 		log.Fatalf("can't get character: %s", err)
 	}
 
-	fmt.Println(character)
+	// fmt.Printf("%+v", character)
+	PrettyPrint(character)
 }
 
-func getCharacterFromStdin() (savage.Character, error) {
+func PrettyPrint(data interface{}) {
+	var p []byte
+	//    var err := error
+	p, err := json.MarshalIndent(data, "", "\t")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Printf("%s \n", p)
+}
+
+func characterFromStdin() (savage.Character, error) {
 	info, err := os.Stdin.Stat()
 	if err != nil {
 		log.Fatalf("can't read info from Stdin: %s", err)
@@ -31,17 +44,25 @@ func getCharacterFromStdin() (savage.Character, error) {
 		return savage.Character{}, fmt.Errorf(errorMsg)
 	}
 
-	yamlFile, err := ioutil.ReadAll(os.Stdin) //ioutil.ReadFile(filename)
+	character, err := LoadCharacter(os.Stdin)
 	if err != nil {
-		log.Fatalf("can't read \"all\" from Stdin: %s", err)
+		log.Fatalf("can't read character yaml from Stdin: %s", err)
 	}
 
-	character := &savage.Character{}
+	return character, nil
+}
 
-	err = yaml.Unmarshal(yamlFile, character)
+// LoadCharacter load the char from the reader.
+func LoadCharacter(r io.Reader) (savage.Character, error) {
+	d := yaml.NewDecoder(r)
+	d.SetStrict(true)
+
+	cfg := savage.Character{}
+
+	err := d.Decode(&cfg)
 	if err != nil {
-		log.Fatalf("can't unmarshal expected yaml input: %s", err)
+		return savage.Character{}, err
 	}
 
-	return *character, nil
+	return cfg, nil
 }
