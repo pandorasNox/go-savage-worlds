@@ -1,3 +1,18 @@
 ---
-version: "0.0.1"
-rule-set: "SWADE"
+version: 0.0.1
+rule-set: SWADE
+setting-rules:
+  starting-wealth: 500
+  born-a-hero: false
+  multiple-languages: false
+character:
+  info:
+    name: Johanna Smith
+    race: Human
+    gender: Female
+    concept: An example character.
+    background: The character was born long long time ago, in a galaxy far away.
+    height: 178cm
+    weight: 65kg
+    wealth: 250
+  traits: {}

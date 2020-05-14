@@ -32,36 +32,36 @@ func PrettyPrint(data interface{}) {
 	fmt.Printf("%s \n", p)
 }
 
-func characterFromStdin() (savage.Character, error) {
+func characterFromStdin() (savage.Sheet, error) {
 	info, err := os.Stdin.Stat()
 	if err != nil {
-		return savage.Character{}, fmt.Errorf("can't read info from Stdin: %s", err)
+		return savage.Sheet{}, fmt.Errorf("can't read info from Stdin: %s", err)
 	}
 	if (info.Mode() & os.ModeCharDevice) == os.ModeCharDevice {
 		errorMsg := "The command is intended to work with pipes.\n"
 		errorMsg += "Usage:\n"
 		errorMsg += "  cat file | savage"
-		return savage.Character{}, fmt.Errorf(errorMsg)
+		return savage.Sheet{}, fmt.Errorf(errorMsg)
 	}
 
 	character, err := LoadCharacter(os.Stdin)
 	if err != nil {
-		return savage.Character{}, fmt.Errorf("can't read character yaml from Stdin: %s", err)
+		return savage.Sheet{}, fmt.Errorf("can't read character yaml from Stdin: %s", err)
 	}
 
 	return character, nil
 }
 
 // LoadCharacter load the char from the reader.
-func LoadCharacter(r io.Reader) (savage.Character, error) {
+func LoadCharacter(r io.Reader) (savage.Sheet, error) {
 	d := yaml.NewDecoder(r)
 	d.SetStrict(true)
 
-	cfg := savage.Character{}
+	cfg := savage.Sheet{}
 
 	err := d.Decode(&cfg)
 	if err != nil {
-		return savage.Character{}, err
+		return savage.Sheet{}, err
 	}
 
 	return cfg, nil
