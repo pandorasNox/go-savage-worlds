@@ -1,9 +1,9 @@
 ---
-version: 0.0.1
+version: d4.0.1
 rule-set: SWADE
 setting-rules:
   starting-wealth: 500
-  born-a-hero: tomatensuppe
+  born-a-hero: true
   multiple-languages: false
 character:
   info:
@@ -20,46 +20,46 @@ character:
       agility:
         dice: d4
         skills:
-          athletics: 0
-          boating: 0
-          driving: 0
+          athletics: d4
+          boating: d4
+          driving: d4
           fighting: d4+2
-          piloting: 0
-          riding: 0
-          shooting: 0
-          stealth: 0
-          thievery: 0
+          piloting: d4
+          riding: d4
+          shooting: d4
+          stealth: d4
+          thievery: d4
       smarts:
         dice: d4
         skills:
-          academics: 0
-          battle: 0
-          common-knowledge: 0
-          electronics: 0
-          gambling: 0
-          hacking: 0
-          healing: 0
+          academics: d4
+          battle: d4
+          common-knowledge: d4
+          electronics: d4
+          gambling: d4
+          hacking: d4
+          healing: d4
           language:
             - name: common
               dice: d4
-          notice: 0
-          occult: 0
-          psionics: 0
-          repair: 0
-          research: 0
-          science: 0
-          spellcasting: 0
-          survival: 0
-          taunt: 0
-          weird-science: 0
+          notice: d4
+          occult: d4
+          psionics: d4
+          repair: d4
+          research: d4
+          science: d4
+          spellcasting: d4
+          survival: d4
+          taunt: d4
+          weird-science: d4
       spirit:
         dice: d4
         skills:
-          faith: 0
-          focus: 0
-          intimidation: 0
-          performance: 0
-          persuasion: 0
+          faith: d4
+          focus: d4
+          intimidation: d4
+          performance: d4
+          persuasion: d4
       strenght: 
         dice: d4
       vigor:
@@ -76,7 +76,7 @@ character:
     - alertness
   derived-statistics:
     standard-pace: 6in
-    parry: d4
+    parry: 4
     toughness:
       base: 11
       armor: 2

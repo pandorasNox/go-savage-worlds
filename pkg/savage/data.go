@@ -1,5 +1,10 @@
 package savage
 
+import (
+	"fmt"
+	"regexp"
+)
+
 type Sheet struct { //player??
 	Version      string       `yaml:"version"`
 	RuleSet      string       `yaml:"rule-set"`
@@ -104,9 +109,61 @@ type Hindrances []struct {
 
 type DerivedStatistics struct {
 	StandardPace string `yaml:"standard-pace"`
-	Parry        string `yaml:"parry"`
+	Parry        int    `yaml:"parry"`
 	Toughness    struct {
 		Base  int `yaml:"base"`
 		Armor int `yaml:"armor"`
 	} `yaml:"toughness"`
+}
+
+const (
+	baseAttributePoints int = 5
+	baseSkillPoints     int = 12
+)
+
+//Validate validates a savage world sheet
+func (s Sheet) Validate() error {
+	availableAttributePoints := baseAttributePoints
+	// availableSkillPoints := baseSkillPoints
+
+	err := s.validateAttributePoints(availableAttributePoints)
+	if err != nil {
+		return fmt.Errorf("sheet validation attribute erros: %s", err)
+	}
+
+	return nil
+}
+
+func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
+	attrDices := []string{
+		s.Character.Traits.Attributes.Agility.Dice,
+		s.Character.Traits.Attributes.Smarts.Dice,
+		s.Character.Traits.Attributes.Spirit.Dice,
+		s.Character.Traits.Attributes.Strenght.Dice,
+		s.Character.Traits.Attributes.Vigor.Dice,
+	}
+
+	var re = regexp.MustCompile(`(?m)^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
+
+	for _, dice := range attrDices {
+		fmt.Println(dice)
+
+		//^d(4|6|8|10|12)(\+([1-9][0-9]?))?$
+	}
+
+	var str = `d12+4`
+
+	// for i, match := range re.FindAllString(str, -1) {
+	// 	fmt.Println(match, "found at index", i)
+	// }
+
+	res := re.FindAllStringSubmatch(str, -1)
+	for i := range res {
+		//like Java: match.group(1), match.gropu(2), etc
+		fmt.Printf("res[i]: %v\n", res[i])
+	}
+
+	// fmt.Println("validateAttributePoints", s.Character.Traits.Attributes.Agility)
+
+	return nil
 }

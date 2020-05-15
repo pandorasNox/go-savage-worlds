@@ -12,13 +12,15 @@ import (
 )
 
 func main() {
-	character, err := characterFromStdin()
+	sheet, err := characterFromStdin()
 	if err != nil {
 		log.Fatalf("can't get character: %s", err)
 	}
 
 	// fmt.Printf("%+v", character)
-	PrettyPrint(character)
+	// PrettyPrint(sheet)
+
+	fmt.Println(sheet.Validate())
 }
 
 func PrettyPrint(data interface{}) {
