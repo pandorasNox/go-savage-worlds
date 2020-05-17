@@ -128,13 +128,23 @@ func (s Sheet) Validate() error {
 
 	err := s.validateAttributePoints(availableAttributePoints)
 	if err != nil {
-		return fmt.Errorf("sheet validation attribute erros: %s", err)
+		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
 
 	return nil
 }
 
+var attributeDiceValues = map[string]int{
+	"4":  0,
+	"6":  1,
+	"8":  2,
+	"10": 3,
+	"12": 4,
+}
+
 func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
+	aggregatedAttributePoints := 0
+
 	attrDices := []string{
 		s.Character.Traits.Attributes.Agility.Dice,
 		s.Character.Traits.Attributes.Smarts.Dice,
@@ -143,27 +153,29 @@ func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
 		s.Character.Traits.Attributes.Vigor.Dice,
 	}
 
-	var re = regexp.MustCompile(`(?m)^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
+	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
 
 	for _, dice := range attrDices {
-		fmt.Println(dice)
+		found := re.FindAllStringSubmatch(dice, -1)
 
-		//^d(4|6|8|10|12)(\+([1-9][0-9]?))?$
+		if found == nil || (len(found[0]) != 2 && len(found[0]) != 4) {
+			return fmt.Errorf(
+				"validation error: invalid dice value \"%s\" for path \"%s\"",
+				dice,
+				"n.a.", //todo: provide path
+			)
+		}
+
+		aggregatedAttributePoints += attributeDiceValues[found[0][1]]
 	}
 
-	var str = `d12+4`
-
-	// for i, match := range re.FindAllString(str, -1) {
-	// 	fmt.Println(match, "found at index", i)
-	// }
-
-	res := re.FindAllStringSubmatch(str, -1)
-	for i := range res {
-		//like Java: match.group(1), match.gropu(2), etc
-		fmt.Printf("res[i]: %v\n", res[i])
+	if aggregatedAttributePoints > availableAttributePoints {
+		return fmt.Errorf(
+			"validation error: Used %d of %d available attribute points",
+			aggregatedAttributePoints,
+			availableAttributePoints,
+		)
 	}
-
-	// fmt.Println("validateAttributePoints", s.Character.Traits.Attributes.Agility)
 
 	return nil
 }

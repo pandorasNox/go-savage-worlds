@@ -18,7 +18,7 @@ character:
   traits:
     attributes:
       agility:
-        dice: d4
+        dice: d8
         skills:
           athletics: d4
           boating: d4
@@ -30,7 +30,7 @@ character:
           stealth: d4
           thievery: d4
       smarts:
-        dice: d4
+        dice: d6
         skills:
           academics: d4
           battle: d4
@@ -60,10 +60,10 @@ character:
           intimidation: d4
           performance: d4
           persuasion: d4
-      strenght: 
-        dice: d4
+      strenght:
+        dice: d6
       vigor:
-        dice: d4
+        dice: d6
   hindrances:
     - name: poverty
       degree: minor
