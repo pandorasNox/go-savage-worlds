@@ -20,7 +20,12 @@ func main() {
 	// fmt.Printf("%+v", character)
 	// PrettyPrint(sheet)
 
-	fmt.Println(sheet.Validate())
+	err = sheet.Validate()
+	if err != nil {
+		log.Fatalf("sheet is not valid: %s", err)
+	}
+
+	fmt.Println("sheet is valid")
 }
 
 func PrettyPrint(data interface{}) {
