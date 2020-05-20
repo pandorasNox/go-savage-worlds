@@ -2,6 +2,7 @@ package savage
 
 import (
 	"fmt"
+	"reflect"
 	"regexp"
 )
 
@@ -14,7 +15,7 @@ type Sheet struct { //playerSheet???
 		Traits struct {
 			Attributes struct {
 				Agility struct {
-					Dice   string        `yaml:"dice"`
+					Dice   string        `yaml:"dice" savage:"foo"`
 					Skills AgilitySkills `yaml:"skills"`
 				} `yaml:"agility"`
 				Smarts struct {
@@ -161,6 +162,8 @@ func (s Sheet) Validate() error {
 		return fmt.Errorf("sheet validation skill errors: %s", err)
 	}
 
+	// allAttributes(s)
+
 	return nil
 }
 
@@ -213,6 +216,39 @@ func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
 	}
 
 	return nil
+}
+
+type Attribute struct {
+	Dice string
+	Name string
+	Path string
+}
+
+func allAttributes(s interface{}) {
+	fields := fieldsByType(s, "string")
+	fmt.Println(fields)
+}
+
+func fieldsByType(obj interface{}, fieldType string) []string {
+	var fields []string
+
+	v := reflect.ValueOf(obj)
+	t := v.Type()
+
+	for i := 0; i < v.NumField(); i++ {
+		f := v.Field(i)
+
+		// fmt.Printf("%d: %s %s %s = %v\n", i, t.Field(i).Name, f.Type(), f.Type().Kind(), f.Interface())
+		if f.Type().Kind() == reflect.Struct {
+			fields = append(fields, fieldsByType(f.Interface(), fieldType)...)
+		}
+
+		if f.Type().String() == fieldType {
+			fields = append(fields, t.Field(i).Name)
+		}
+	}
+
+	return fields
 }
 
 var diceValueToPointsUsedMap = map[string]int{
