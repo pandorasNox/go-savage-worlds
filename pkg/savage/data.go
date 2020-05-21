@@ -2,11 +2,13 @@ package savage
 
 import (
 	"fmt"
-	"reflect"
 	"regexp"
+
+	golookup "github.com/mcuadros/go-lookup"
+	"github.com/pandorasNox/go-savage-worlds/pkg/inspect"
 )
 
-type Sheet struct { //playerSheet???
+type Sheet struct {
 	Version      string       `yaml:"version"`
 	RuleSet      string       `yaml:"rule-set"`
 	SettingRules SettingRules `yaml:"setting-rules"`
@@ -49,7 +51,7 @@ type SettingRules struct {
 }
 
 type CharacterInfo struct {
-	Name       string `yaml:"name"`
+	Name       string `yaml:"name" isCore:"true"`
 	Race       string `yaml:"race"`
 	Gender     string `yaml:"gender"`
 	Concept    string `yaml:"concept"`
@@ -69,48 +71,6 @@ type AgilitySkills struct {
 	Shooting  string `yaml:"shooting"`
 	Stealth   string `yaml:"stealth"`
 	Thievery  string `yaml:"thievery"`
-}
-
-type Skill struct {
-	name            string
-	linkedAttribute string
-	isCore          bool
-	description     string
-}
-
-var skills = []Skill{
-	{name: "Academics", linkedAttribute: "Smarts", isCore: false, description: "Academics reflects knowledge of the liberal arts, social sciences, literature, history, archaeology, and similar fields. If an explorer wants to remember when the Mayan calendar ended or cite a line from Macbeth, this is the skill to have."},
-	{name: "Athletics", linkedAttribute: "Agility", isCore: true, description: ""},
-	{name: "Battle", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Boating", linkedAttribute: "Agility", isCore: false, description: ""},
-	{name: "Common Knowledge", linkedAttribute: "Smarts", isCore: true, description: ""},
-	{name: "Driving", linkedAttribute: "Agility", isCore: false, description: ""},
-	{name: "Electronics", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Faith", linkedAttribute: "Spirit", isCore: false, description: ""},
-	{name: "Fighting", linkedAttribute: "Agility", isCore: false, description: ""},
-	{name: "Focus", linkedAttribute: "Spirit", isCore: false, description: ""},
-	{name: "Gambling", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Hacking", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Healing", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Intimidation", linkedAttribute: "Spirit", isCore: false, description: ""},
-	{name: "Language (X)", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Notice", linkedAttribute: "Smarts", isCore: true, description: ""},
-	{name: "Occult", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Performance", linkedAttribute: "Spirit", isCore: false, description: ""},
-	{name: "Persuasion", linkedAttribute: "Spirit", isCore: true, description: ""},
-	{name: "Piloting", linkedAttribute: "Agility", isCore: false, description: ""},
-	{name: "Psionics", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Repair", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Research", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Riding", linkedAttribute: "Agility", isCore: false, description: ""},
-	{name: "Science", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Shooting", linkedAttribute: "Agility", isCore: false, description: ""},
-	{name: "Spellcasting", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Stealth", linkedAttribute: "Agility", isCore: true, description: ""},
-	{name: "Survival", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Taunt", linkedAttribute: "Smarts", isCore: false, description: ""},
-	{name: "Thievery", linkedAttribute: "Agility", isCore: false, description: ""},
-	{name: "Weird Science", linkedAttribute: "Smarts", isCore: false, description: ""},
 }
 
 type SmartsSkills struct {
@@ -245,42 +205,18 @@ func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
 		)
 	}
 
-	// allAttributes(s.Character.Traits)
-
-	return nil
-}
-
-type Attribute struct {
-	Dice string
-	Name string
-	Path string
-}
-
-func allAttributes(s interface{}) {
-	fields := fieldsByType(s, "string")
-	fmt.Println(fields)
-}
-
-func fieldsByType(obj interface{}, fieldType string) []string {
-	var fields []string
-
-	v := reflect.ValueOf(obj)
-	t := v.Type()
-
-	for i := 0; i < v.NumField(); i++ {
-		f := v.Field(i)
-
-		// fmt.Printf("%d: %s %s %s = %v\n", i, t.Field(i).Name, f.Type(), f.Type().Kind(), f.Interface())
-		if f.Type().Kind() == reflect.Struct {
-			fields = append(fields, fieldsByType(f.Interface(), fieldType)...)
+	for _, v := range inspect.ChildsFieldNames(s.Character.Traits.Attributes) {
+		// fmt.Println(v)
+		// fmt.Println(golookup.LookupString(s.Character.Traits.Attributes, v))
+		diceRefVal, err := golookup.LookupString(s.Character.Traits.Attributes, v+".Dice")
+		if err != nil {
+			return err
 		}
-
-		if f.Type().String() == fieldType {
-			fields = append(fields, t.Field(i).Name)
-		}
+		dice := diceRefVal.Interface()
+		fmt.Printf("name: %s, dice: %s, path: %s", v, dice, "some/path/to/somehwere")
 	}
 
-	return fields
+	return nil
 }
 
 var diceValueToPointsUsedMap = map[string]int{
