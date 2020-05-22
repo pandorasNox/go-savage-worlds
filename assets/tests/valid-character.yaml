@@ -17,57 +17,41 @@ character:
     wealth: 250
   traits:
     attributes:
-      agility:
+      - name: Agility
         dice: d8
         skills:
           #(4)68 = 2
-          athletics: d8
+          - name: athletics
+            dice: d8
           # 46810 = 4
-          boating: d10
+          - name: boating
+            dice: d10
           # 4 = 1
-          driving: d4
+          - name: driving
+            dice: d4
           # 4 = 1
-          fighting: d4
+          - name: fighting
+            dice: d4
           # 46810 = 4
-          piloting: d10
-          riding: d4
-          shooting: d4
-          stealth: d4
-          thievery: d4
-      smarts:
+          - name: piloting
+            dice: d10
+          - name: stealth
+            dice: d4
+      - name: Smarts
         dice: d6
         skills:
-          academics: d4
-          battle: d4
-          common-knowledge: d4
-          electronics: d4
-          gambling: d4
-          hacking: d4
-          healing: d4
-          language:
-            - name: common
-              dice: d4
-          notice: d4
-          occult: d4
-          psionics: d4
-          repair: d4
-          research: d4
-          science: d4
-          spellcasting: d4
-          survival: d4
-          taunt: d4
-          weird-science: d4
-      spirit:
+          - name: common-knowledge
+            dice: d4
+          - name: notice
+            dice: d4
+      - name: Spirit
         dice: d4
         skills:
-          faith: d4
-          focus: d4
-          intimidation: d4
-          performance: d4
-          persuasion: d4
-      strenght:
+          - name: persuasion
+            dice: d4
+      - name: Strength
         dice: d6
-      vigor:
+      - name: Vigor
         dice: d6
   hindrances:
     - name: poverty

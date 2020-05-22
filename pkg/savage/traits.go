@@ -1,5 +1,29 @@
 package savage
 
+type Attribute struct {
+	name        string
+	description string
+}
+
+var attributes = []Attribute{
+	{name: "Agility", description: ""},
+	{name: "Smarts", description: ""},
+	{name: "Spirit", description: ""},
+	{name: "Strength", description: ""},
+	{name: "Vigor", description: ""},
+}
+
+// attributeByName returns index int and ok bool
+func findAttribute(name string) (int, bool) {
+	for i, attribute := range attributes {
+		if attribute.name == name {
+			return i, true
+		}
+	}
+
+	return -1, false
+}
+
 type Skill struct {
 	name            string
 	linkedAttribute string
