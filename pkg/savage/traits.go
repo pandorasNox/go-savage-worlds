@@ -65,3 +65,13 @@ var skills = []Skill{
 	{name: "Thievery", linkedAttribute: "Agility", isCore: false, description: ""},
 	{name: "Weird Science", linkedAttribute: "Smarts", isCore: false, description: ""},
 }
+
+func coreSkills() (coreSkills []Skill) {
+	for _, skill := range skills {
+		if skill.isCore {
+			coreSkills = append(coreSkills, skill)
+		}
+	}
+
+	return coreSkills
+}
