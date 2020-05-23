@@ -14,7 +14,7 @@ type Sheet struct {
 		Traits struct {
 			Attributes []SheetAttribute `yaml:"attributes"`
 		} `yaml:"traits"`
-		Hindrances        Hindrances        `yaml:"hindrances"`
+		Hindrances        []SheetHindrance  `yaml:"hindrances"`
 		Edges             []string          `yaml:"edges"`
 		DerivedStatistics DerivedStatistics `yaml:"derived-statistics"`
 		Gear              []string          `yaml:"gear"`
@@ -50,7 +50,7 @@ type SheetSkill struct {
 	Dice string `yaml:"dice"`
 }
 
-type Hindrances []struct {
+type SheetHindrance struct {
 	Name   string `yaml:"name"`
 	Degree string `yaml:"degree"`
 }
@@ -68,17 +68,6 @@ const (
 	baseAttributePoints int = 5
 	baseSkillPoints     int = 12
 )
-
-//
-// var HindrancesList = []struct{
-// 	name string
-// 	degree string
-// 	//??? -3 vigor
-// 	//-3 thougness
-// 	//-1 strength
-// 	//-1 notice
-// //adaptValue ???
-// }{}
 
 //Validate validates a savage world sheet
 func (s Sheet) Validate() error {
