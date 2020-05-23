@@ -21,7 +21,7 @@ character:
         dice: d8
         skills:
           #(4)68 = 2
-          - name: athletics
+          - name: Athletics
             dice: d8
           # 46810 = 4
           - name: boating
@@ -35,19 +35,19 @@ character:
           # 46810 = 4
           - name: piloting
             dice: d10
-          - name: stealth
+          - name: Stealth
             dice: d4
       - name: Smarts
         dice: d6
         skills:
-          - name: common-knowledge
+          - name: Common Knowledge
             dice: d4
-          - name: notice
+          - name: Notice
             dice: d4
       - name: Spirit
         dice: d4
         skills:
-          - name: persuasion
+          - name: Persuasion
             dice: d4
       - name: Strength
         dice: d6

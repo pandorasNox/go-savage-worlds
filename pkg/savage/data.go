@@ -72,7 +72,7 @@ const (
 //Validate validates a savage world sheet
 func (s Sheet) Validate() error {
 	availableAttributePoints := baseAttributePoints
-	// availableSkillPoints := baseSkillPoints
+	availableSkillPoints := baseSkillPoints
 
 	var err error
 
@@ -81,12 +81,10 @@ func (s Sheet) Validate() error {
 		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
 
-	// err = s.validateSkillPoints(availableSkillPoints)
-	// if err != nil {
-	// 	return fmt.Errorf("sheet validation skill errors: %s", err)
-	// }
-
-	// allAttributes(s)
+	err = s.validateSkills(availableSkillPoints)
+	if err != nil {
+		return fmt.Errorf("sheet validation skill errors: %s", err)
+	}
 
 	return nil
 }
@@ -160,6 +158,43 @@ func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
 			aggregatedAttributePoints,
 			availableAttributePoints,
 		)
+	}
+
+	return nil
+}
+
+func (s Sheet) validateSkills(availableSkillPoints int) error {
+	var err error
+
+	err = s.validateCoreSkillsExist()
+	if err != nil {
+		return err
+	}
+
+	//check skills belong to right parents
+
+	//check skills are allowed
+
+	// err = s.validateSkillPoints(availableSkillPoints)
+	// if err != nil {
+	// 	return err
+	// }
+
+	return nil
+}
+
+func (s Sheet) validateCoreSkillsExist() error {
+RequiredCoreSkills:
+	for _, coreSkill := range coreSkills() {
+		for _, sheetAttr := range s.Character.Traits.Attributes {
+			for _, sheetSkill := range sheetAttr.Skills {
+				if coreSkill.name == sheetSkill.Name {
+					continue RequiredCoreSkills
+				}
+			}
+		}
+
+		return fmt.Errorf("\"%s\" is a required core skill", coreSkill.name)
 	}
 
 	return nil
