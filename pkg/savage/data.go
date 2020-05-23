@@ -76,7 +76,7 @@ func (s Sheet) Validate() error {
 
 	var err error
 
-	err = s.validateAttributePoints(availableAttributePoints)
+	err = s.validateAttributes(availableAttributePoints)
 	if err != nil {
 		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
@@ -91,8 +91,7 @@ func (s Sheet) Validate() error {
 	return nil
 }
 
-// AttributeDiceToAttributePointsUsedMap
-var attributeDiceValues = map[string]int{
+var diceValueToPointsUsedMap = map[string]int{
 	"4":  0,
 	"6":  1,
 	"8":  2,
@@ -100,11 +99,23 @@ var attributeDiceValues = map[string]int{
 	"12": 4,
 }
 
-func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
-	aggregatedAttributePoints := 0
+func (s Sheet) validateAttributes(availableAttributePoints int) error {
+	var err error
 
-	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
+	err = s.validateAttributesExist()
+	if err != nil {
+		return err
+	}
 
+	err = s.validateAttributePoints(availableAttributePoints)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s Sheet) validateAttributesExist() error {
 RequiredAttributes:
 	for _, attribute := range attributes {
 		for _, sheetAttribute := range s.Character.Traits.Attributes {
@@ -115,6 +126,14 @@ RequiredAttributes:
 
 		return fmt.Errorf("\"%s\" is a required attribute", attribute.name)
 	}
+
+	return nil
+}
+
+func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
+	aggregatedAttributePoints := 0
+
+	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
 
 	for _, attribute := range s.Character.Traits.Attributes {
 		_, ok := findAttribute(attribute.Name)
@@ -132,7 +151,7 @@ RequiredAttributes:
 			)
 		}
 
-		aggregatedAttributePoints += attributeDiceValues[found[0][1]]
+		aggregatedAttributePoints += diceValueToPointsUsedMap[found[0][1]]
 	}
 
 	if aggregatedAttributePoints > availableAttributePoints {
@@ -144,21 +163,6 @@ RequiredAttributes:
 	}
 
 	return nil
-}
-
-var diceValueToPointsUsedMap = map[string]int{
-	"4":  0,
-	"6":  1,
-	"8":  2,
-	"10": 3,
-	"12": 4,
-}
-
-type SkillField struct {
-	dice string
-	// modifier int //todo: should always be 0 0r 1
-	isCore   bool
-	yamlPath string
 }
 
 // func (s Sheet) validateSkillPoints(availableSkillPoints int) error {
