@@ -176,10 +176,10 @@ func (s Sheet) validateSkills(availableSkillPoints int) error {
 		return err
 	}
 
-	// err = s.validateSkillPoints(availableSkillPoints)
-	// if err != nil {
-	// 	return err
-	// }
+	err = s.validateSkillPoints(availableSkillPoints)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -225,65 +225,43 @@ func (s Sheet) validatePermittedSkills() error {
 	return nil
 }
 
-// func (s Sheet) validateSkillPoints(availableSkillPoints int) error {
-// 	skillDices := []SkillField{
-// 		{
-// 			dice:     s.Character.Traits.Attributes.Agility.Skills.Athletics,
-// 			isCore:   true,
-// 			yamlPath: "character.traits.attributes.agility.skills.athletics",
-// 		},
-// 		{
-// 			dice:     s.Character.Traits.Attributes.Agility.Skills.Boating,
-// 			isCore:   false,
-// 			yamlPath: "character.traits.attributes.agility.skills.boating",
-// 		},
-// 		{
-// 			dice:     s.Character.Traits.Attributes.Agility.Skills.Driving,
-// 			isCore:   false,
-// 			yamlPath: "character.traits.attributes.agility.skills.driving",
-// 		},
-// 		{
-// 			dice:     s.Character.Traits.Attributes.Agility.Skills.Fighting,
-// 			isCore:   false,
-// 			yamlPath: "character.traits.attributes.agility.skills.fighting",
-// 		},
-// 		{
-// 			dice:     s.Character.Traits.Attributes.Agility.Skills.Piloting,
-// 			isCore:   false,
-// 			yamlPath: "character.traits.attributes.agility.skills.piloting",
-// 		},
-// 	}
+func (s Sheet) validateSkillPoints(availableSkillPoints int) error {
 
-// 	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
+	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
 
-// 	aggregatedSkillPoints := 0
+	aggregatedSkillPoints := 0
 
-// 	for _, sd := range skillDices {
-// 		found := re.FindAllStringSubmatch(sd.dice, -1)
+	for _, sheetAttr := range s.Character.Traits.Attributes {
+		for _, sheetSkill := range sheetAttr.Skills {
+			index, _ := findSkill(sheetSkill.Name)
+			skill := skills[index]
 
-// 		if found == nil || (len(found[0]) != 2 && len(found[0]) != 4) {
-// 			return fmt.Errorf(
-// 				"validation error: invalid dice value \"%s\" for path \"%s\"",
-// 				sd.dice,
-// 				sd.yamlPath, //todo: provide path
-// 			)
-// 		}
+			found := re.FindAllStringSubmatch(sheetSkill.Dice, -1)
 
-// 		coreModifier := 1
-// 		if sd.isCore {
-// 			coreModifier = 0
-// 		}
+			if found == nil || (len(found[0]) != 2 && len(found[0]) != 4) {
+				return fmt.Errorf(
+					"validation error: invalid dice value \"%s\" for path \"%s\"",
+					sheetSkill.Dice,
+					"", //todo: provide path
+				)
+			}
 
-// 		aggregatedSkillPoints += diceValueToPointsUsedMap[found[0][1]] + coreModifier
-// 	}
+			pointCostModifier := 1
+			if skill.isCore {
+				pointCostModifier = 0
+			}
 
-// 	if aggregatedSkillPoints > availableSkillPoints {
-// 		return fmt.Errorf(
-// 			"validation error: Used %d of %d available skill points",
-// 			aggregatedSkillPoints,
-// 			availableSkillPoints,
-// 		)
-// 	}
+			aggregatedSkillPoints += diceValueToPointsUsedMap[found[0][1]] + pointCostModifier
+		}
+	}
 
-// 	return nil
-// }
+	if aggregatedSkillPoints > availableSkillPoints {
+		return fmt.Errorf(
+			"validation error: Used %d of %d available skill points",
+			aggregatedSkillPoints,
+			availableSkillPoints,
+		)
+	}
+
+	return nil
+}
