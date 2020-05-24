@@ -171,13 +171,10 @@ func (s Sheet) validateSkills(availableSkillPoints int) error {
 		return err
 	}
 
-	//check skills are allowed
 	err = s.validatePermittedSkills()
 	if err != nil {
 		return err
 	}
-
-	//check skills belong to right parents
 
 	// err = s.validateSkillPoints(availableSkillPoints)
 	// if err != nil {
@@ -207,8 +204,19 @@ RequiredCoreSkills:
 func (s Sheet) validatePermittedSkills() error {
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
-			if _, ok := findSkill(sheetSkill.Name); !ok {
+			index, ok := findSkill(sheetSkill.Name)
+
+			if !ok {
 				return fmt.Errorf("\"%s\" is no valid skill", sheetSkill.Name)
+			}
+
+			if skills[index].linkedAttribute != sheetAttr.Name {
+				return fmt.Errorf(
+					"\"%s\" should belong to attribute \"%s\" and not \"%s\"",
+					sheetSkill.Name,
+					skills[index].linkedAttribute,
+					sheetAttr.Name,
+				)
 			}
 
 		}
