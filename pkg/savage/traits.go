@@ -13,7 +13,7 @@ var attributes = []Attribute{
 	{name: "Vigor", description: ""},
 }
 
-// attributeByName returns index int and ok bool
+// findAttribute returns index int and ok bool
 func findAttribute(name string) (int, bool) {
 	for i, attribute := range attributes {
 		if attribute.name == name {
@@ -74,4 +74,15 @@ func coreSkills() (coreSkills []Skill) {
 	}
 
 	return coreSkills
+}
+
+// findSkill returns index int and ok bool
+func findSkill(name string) (int, bool) {
+	for i, skill := range skills {
+		if skill.name == name {
+			return i, true
+		}
+	}
+
+	return -1, false
 }

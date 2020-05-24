@@ -24,16 +24,16 @@ character:
           - name: Athletics
             dice: d8
           # 46810 = 4
-          - name: boating
+          - name: Boating
             dice: d10
           # 4 = 1
-          - name: driving
+          - name: Driving
             dice: d4
           # 4 = 1
-          - name: fighting
+          - name: Fighting
             dice: d4
           # 46810 = 4
-          - name: piloting
+          - name: Piloting
             dice: d10
           - name: Stealth
             dice: d4
