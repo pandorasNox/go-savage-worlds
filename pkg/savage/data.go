@@ -73,8 +73,17 @@ const (
 func (s Sheet) Validate() error {
 	availableAttributePoints := baseAttributePoints
 	availableSkillPoints := baseSkillPoints
+	earnedHindrancePoints := 0
 
 	var err error
+
+	err = s.validatePermittedHindrances()
+	if err != nil {
+		return fmt.Errorf("sheet validation hindrance errors: %s", err)
+	}
+
+	earnedHindrancePoints = s.countHindrancePoints()
+	_ = earnedHindrancePoints
 
 	err = s.validateAttributes(availableAttributePoints)
 	if err != nil {
@@ -87,6 +96,50 @@ func (s Sheet) Validate() error {
 	}
 
 	return nil
+}
+
+func (s Sheet) validatePermittedHindrances() error {
+	for _, sheetHindrance := range s.Character.Hindrances {
+		index, ok := findHindrance(sheetHindrance.Name)
+
+		if !ok {
+			return fmt.Errorf("\"%s\" is no valid hindrance", sheetHindrance.Name)
+		}
+
+		found := false
+		for _, degree := range hindrances[index].availableDegrees {
+			if degree == sheetHindrance.Degree {
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			return fmt.Errorf(
+				"\"%s\" is no valid degree of \"%s\"",
+				sheetHindrance.Degree,
+				hindrances[index].name,
+			)
+		}
+	}
+
+	return nil
+}
+
+func (s Sheet) countHindrancePoints() int {
+	hindrancePoints := 0
+
+	for _, hindrance := range s.Character.Hindrances {
+		if hindrance.Degree == "minor" {
+			hindrancePoints += 1
+		}
+
+		if hindrance.Degree == "major" {
+			hindrancePoints += 2
+		}
+	}
+
+	return hindrancePoints
 }
 
 var diceValueToPointsUsedMap = map[string]int{

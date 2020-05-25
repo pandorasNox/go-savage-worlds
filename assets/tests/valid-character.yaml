@@ -54,11 +54,11 @@ character:
       - name: Vigor
         dice: d6
   hindrances:
-    - name: poverty
+    - name: Poverty
       degree: minor
-    - name: habit
+    - name: Habit
       degree: major
-    - name: mean
+    - name: Mean
       degree: minor
   #hindrance-points: 4
   edges:
