@@ -6,3 +6,11 @@ go implementation of savage world rules
 - pass savage-world yaml sheet via cli pipe into it
 - returns valid for a valid sheet / character
 - returns invald and all the related "errors/mistakes" if the sheet is invalid
+
+## todo's
+- races + racial effects
+- hindrance effects
+- edges + edges effects
+- DerivedStatistics
+- gear + gear effects
+- ??? gold validation + inventory + gear IF init validation ???
