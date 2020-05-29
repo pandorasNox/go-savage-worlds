@@ -14,3 +14,4 @@ go implementation of savage world rules
 - DerivedStatistics
 - gear + gear effects
 - ??? gold validation + inventory + gear IF init validation ???
+- subskills optional field in skills

@@ -6,16 +6,6 @@ type Hindrance struct {
 	availableDegrees []Degree
 }
 
-type Modifier struct {
-	value    int
-	selector Selector
-}
-
-type Selector struct {
-	kind   string
-	target string
-}
-
 type Degree struct {
 	value     string
 	modifiers []Modifier
@@ -39,12 +29,16 @@ var hindrances = []Hindrance{
 		description: "Clueless (Major): –1 to Common Knowledge and Notice rolls.",
 		availableDegrees: []Degree{{value: DEGREE_MAJOR,
 			modifiers: []Modifier{
-				{value: -2, selector: Selector{kind: "skill", target: "Common Knowledge"}},
+				{value: -1, selector: Selector{kind: "skill", target: "Common Knowledge"}},
+				{value: -1, selector: Selector{kind: "skill", target: "Notice"}},
 			}}},
 	},
 	//Clumsy (Major): –2 to Athletics and Stealth rolls.
 	//Obese (Minor): Size +1, Pace –1 and running die of d4. Treat Str as one die type lower for Min Str.
-	//Small (Minor): Size and Toughness are reduced by 1. Size cannot be reduced below –1.
+	/*
+	 * Small (Minor): Size and Toughness are reduced by 1. Size cannot be reduced below –1.
+	 * race aquarian +1 toughness
+	 */
 	//Young (Minor/Major): Minor has 4 attribute points and 10 skill points, extra Benny per session. Major has 3 attribute points, 10 skill points, and two extra Bennies per session.
 }
 
@@ -52,6 +46,16 @@ var hindrances = []Hindrance{
 func findHindrance(name string) (int, bool) {
 	for i, hindrance := range hindrances {
 		if hindrance.name == name {
+			return i, true
+		}
+	}
+
+	return -1, false
+}
+
+func findDegree(hindrance Hindrance, value string) (int, bool) {
+	for i, degree := range hindrance.availableDegrees {
+		if degree.value == value {
 			return i, true
 		}
 	}

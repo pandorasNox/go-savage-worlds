@@ -56,7 +56,7 @@ character:
   hindrances:
     - name: Poverty
       degree: minor
-    - name: Habit
+    - name: Clueless
       degree: major
     - name: Mean
       degree: minor

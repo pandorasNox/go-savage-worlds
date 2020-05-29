@@ -82,6 +82,9 @@ func (s Sheet) Validate() error {
 		return fmt.Errorf("sheet validation hindrance errors: %s", err)
 	}
 
+	modifier := s.collectModifier()
+	_ = modifier
+
 	earnedHindrancePoints = s.countHindrancePoints()
 	_ = earnedHindrancePoints
 
@@ -96,6 +99,37 @@ func (s Sheet) Validate() error {
 	}
 
 	return nil
+}
+
+func (s Sheet) collectModifier() []Modifier {
+	var modifier []Modifier
+
+	// race modifier
+
+	modifier = append(modifier, s.collectHindranceModifier()...)
+
+	// endge modifier
+
+	return modifier
+}
+
+func (s Sheet) collectHindranceModifier() []Modifier {
+	modifier := []Modifier{}
+
+	for _, sheetHindrance := range s.Character.Hindrances {
+		index, _ := findHindrance(sheetHindrance.Name)
+		matchedHindrance := hindrances[index]
+
+		index, ok := findDegree(matchedHindrance, sheetHindrance.Degree)
+		if !ok {
+			continue
+		}
+		matchedDegree := matchedHindrance.availableDegrees[index]
+
+		modifier = append(modifier, matchedDegree.modifiers...)
+	}
+
+	return modifier
 }
 
 func (s Sheet) validatePermittedHindrances() error {
