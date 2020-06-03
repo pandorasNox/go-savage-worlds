@@ -176,14 +176,6 @@ func (s Sheet) countHindrancePoints() int {
 	return hindrancePoints
 }
 
-var diceValueToPointsUsedMap = map[string]int{
-	"4":  0,
-	"6":  1,
-	"8":  2,
-	"10": 3,
-	"12": 4,
-}
-
 func (s Sheet) validateAttributes(availableAttributePoints int) error {
 	var err error
 
@@ -218,25 +210,21 @@ RequiredAttributes:
 func (s Sheet) validateAttributePoints(availableAttributePoints int) error {
 	aggregatedAttributePoints := 0
 
-	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
-
 	for _, attribute := range s.Character.Traits.Attributes {
 		_, ok := findAttribute(attribute.Name)
 		if ok == false {
 			return fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
 		}
 
-		found := re.FindAllStringSubmatch(attribute.Dice, -1)
-
-		if found == nil || (len(found[0]) != 2 && len(found[0]) != 4) {
+		dice, err := ParseDice(attribute.Dice)
+		if err != nil {
 			return fmt.Errorf(
-				"validation error: invalid dice value \"%s\" for path \"%s\"",
-				attribute.Dice,
-				"n.a.", //todo: provide path
+				"parsing dice for attribute \"%s\" failed: %s",
+				attribute.Name, err,
 			)
 		}
 
-		aggregatedAttributePoints += diceValueToPointsUsedMap[found[0][1]]
+		aggregatedAttributePoints += dice.value
 	}
 
 	if aggregatedAttributePoints > availableAttributePoints {

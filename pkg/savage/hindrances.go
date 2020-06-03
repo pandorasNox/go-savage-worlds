@@ -29,8 +29,8 @@ var hindrances = []Hindrance{
 		description: "Clueless (Major): –1 to Common Knowledge and Notice rolls.",
 		availableDegrees: []Degree{{value: DEGREE_MAJOR,
 			modifiers: []Modifier{
-				{value: -1, selector: Selector{kind: "skill", target: "Common Knowledge"}},
-				{value: -1, selector: Selector{kind: "skill", target: "Notice"}},
+				{kind: MODIFIER_KIND_ACCUMULATION, value: -1, selector: Selector{kind: SELECTOR_KIND_SKILL, target: "Common Knowledge"}},
+				{kind: MODIFIER_KIND_ACCUMULATION, value: -1, selector: Selector{kind: SELECTOR_KIND_SKILL, target: "Notice"}},
 			}}},
 	},
 	//Clumsy (Major): –2 to Athletics and Stealth rolls.

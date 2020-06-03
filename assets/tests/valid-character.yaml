@@ -19,6 +19,7 @@ character:
     attributes:
       - name: Agility
         dice: d8
+        #pointsSpend: 2
         skills:
           #(4)68 = 2
           - name: Athletics
