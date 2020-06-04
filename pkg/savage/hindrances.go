@@ -3,34 +3,38 @@ package savage
 type Hindrance struct {
 	name             string
 	description      string
-	availableDegrees []Degree
+	availableDegrees []HindranceDegree
 }
 
-type Degree struct {
-	value     string
+type HindranceDegree struct {
+	degree    Degree
 	modifiers []Modifier
 }
 
+type Degree int
+
 const (
-	DEGREE_MAJOR = "major"
-	DEGREE_MINOR = "minor"
+	Major Degree = iota
+	Minor
 )
 
-// var allowedDegrees = []string{"DEGREE_MAJOR", "DEGREE_MINOR"}
+func (d Degree) String() string {
+	return []string{"major", "minor"}[d]
+}
 
 var hindrances = []Hindrance{
-	{name: "Poverty", description: "", availableDegrees: []Degree{{value: DEGREE_MINOR}}},
-	{name: "Habit", description: "", availableDegrees: []Degree{{value: DEGREE_MAJOR}, {value: DEGREE_MINOR}}},
-	{name: "Mean", description: "", availableDegrees: []Degree{{value: DEGREE_MINOR}}},
+	{name: "Poverty", description: "", availableDegrees: []HindranceDegree{{degree: Minor}}},
+	{name: "Habit", description: "", availableDegrees: []HindranceDegree{{degree: Major}, {degree: Minor}}},
+	{name: "Mean", description: "", availableDegrees: []HindranceDegree{{degree: Minor}}},
 	//Can’t Swim (Minor): –2 to swimming (contained in skill Athletiks)
-	{name: "Can't Swim", description: "", availableDegrees: []Degree{{value: DEGREE_MINOR}}},
+	{name: "Can't Swim", description: "", availableDegrees: []HindranceDegree{{degree: Minor}}},
 	{
 		name:        "Clueless",
 		description: "Clueless (Major): –1 to Common Knowledge and Notice rolls.",
-		availableDegrees: []Degree{{value: DEGREE_MAJOR,
+		availableDegrees: []HindranceDegree{{degree: Major,
 			modifiers: []Modifier{
-				{kind: MODIFIER_KIND_ACCUMULATION, value: -1, selector: Selector{kind: SELECTOR_KIND_SKILL, target: "Common Knowledge"}},
-				{kind: MODIFIER_KIND_ACCUMULATION, value: -1, selector: Selector{kind: SELECTOR_KIND_SKILL, target: "Notice"}},
+				{kind: ModifierKindAccumulator, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Common Knowledge"}},
+				{kind: ModifierKindAccumulator, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Notice"}},
 			}}},
 	},
 	//Clumsy (Major): –2 to Athletics and Stealth rolls.
@@ -53,9 +57,9 @@ func findHindrance(name string) (int, bool) {
 	return -1, false
 }
 
-func findDegree(hindrance Hindrance, value string) (int, bool) {
-	for i, degree := range hindrance.availableDegrees {
-		if degree.value == value {
+func findDegree(hindrance Hindrance, degreeName string) (int, bool) {
+	for i, hd := range hindrance.availableDegrees {
+		if hd.degree.String() == degreeName {
 			return i, true
 		}
 	}

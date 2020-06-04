@@ -142,7 +142,7 @@ func (s Sheet) validatePermittedHindrances() error {
 
 		found := false
 		for _, degree := range hindrances[index].availableDegrees {
-			if degree.value == sheetHindrance.Degree {
+			if degree.degree.String() == sheetHindrance.Degree {
 				found = true
 				break
 			}

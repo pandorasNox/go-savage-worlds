@@ -1,22 +1,34 @@
 package savage
 
 type Modifier struct {
-	kind     string
+	kind     ModifierKind
 	value    int
 	selector Selector
 }
 
+type ModifierKind int
+
 const (
-	MODIFIER_KIND_DICE         = "dice"
-	MODIFIER_KIND_ACCUMULATION = "accumulation"
+	ModifierKindDice ModifierKind = iota
+	ModifierKindAccumulator
 )
 
+func (mk ModifierKind) String() string {
+	return [...]string{"dice", "accumulator"}[mk]
+}
+
 type Selector struct {
-	kind   string
+	kind   SelectorKind
 	target string
 }
 
+type SelectorKind int
+
 const (
-	SELECTOR_KIND_SKILL     = "skill"
-	SELECTOR_KIND_ATTRIBUTE = "attribute"
+	SelectorKindAttribute SelectorKind = iota
+	SelectorKindSkill
 )
+
+func (sk SelectorKind) String() string {
+	return [...]string{"attribute", "skill"}[sk]
+}
