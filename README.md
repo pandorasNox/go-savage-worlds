@@ -8,6 +8,9 @@ go implementation of savage world rules
 - returns invald and all the related "errors/mistakes" if the sheet is invalid
 
 ## todo's
+- split sheet + sheet validator 
+- add testing
+- add enum exhaustiv switch checker
 - races + racial effects
 - hindrance effects
 - edges + edges effects
