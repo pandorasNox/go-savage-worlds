@@ -20,7 +20,7 @@ func main() {
 	// fmt.Printf("%+v", character)
 	// PrettyPrint(sheet)
 
-	err = sheet.Validate()
+	err = savage.Validate(sheet)
 	if err != nil {
 		log.Fatalf("sheet is not valid: %s", err)
 	}
