@@ -7,8 +7,8 @@ import (
 )
 
 type Dice struct {
-	value        int
-	accumulation int
+	value      int
+	adjustment int
 }
 
 var diceValueToPointsUsedMap = map[string]int{
@@ -33,21 +33,21 @@ func ParseDice(dice string) (Dice, error) {
 	}
 
 	foundDice := found[0][1]
-	foundAccumulator := ""
+	foundAdjustment := ""
 
 	if len(found[0]) == 4 {
-		foundAccumulator = found[0][2]
+		foundAdjustment = found[0][2]
 	}
 
-	accumulation := 0
+	adjustment := 0
 	var err error
-	if foundAccumulator != "" {
-		accumulation, err = strconv.Atoi(foundAccumulator)
+	if foundAdjustment != "" {
+		adjustment, err = strconv.Atoi(foundAdjustment)
 
 		if err != nil {
 			return Dice{}, err
 		}
 	}
 
-	return Dice{value: diceValueToPointsUsedMap[foundDice], accumulation: accumulation}, nil
+	return Dice{value: diceValueToPointsUsedMap[foundDice], adjustment: adjustment}, nil
 }
