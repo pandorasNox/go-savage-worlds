@@ -19,22 +19,35 @@ var diceValueToPointsUsedMap = map[string]int{
 	"12": 4,
 }
 
+// ParseDice parse dice strig to struct using points map
 func ParseDice(dice string) (Dice, error) {
 	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
 
 	found := re.FindAllStringSubmatch(dice, -1)
 
-	if found == nil || (len(found[0]) != 2 && len(found[0]) != 4) {
+	if found == nil || len(found) != 1 || (len(found[0]) != 2 && len(found[0]) != 4) {
 		return Dice{}, fmt.Errorf(
 			"validation error: invalid dice value \"%s\"",
 			dice,
 		)
 	}
 
-	accumulation, err := strconv.Atoi(found[0][1])
-	if err != nil {
-		return Dice{}, err
+	foundDice := found[0][1]
+	foundAccumulator := ""
+
+	if len(found[0]) == 4 {
+		foundAccumulator = found[0][2]
 	}
 
-	return Dice{value: diceValueToPointsUsedMap[found[0][1]], accumulation: accumulation}, nil
+	accumulation := 0
+	var err error
+	if foundAccumulator != "" {
+		accumulation, err = strconv.Atoi(foundAccumulator)
+
+		if err != nil {
+			return Dice{}, err
+		}
+	}
+
+	return Dice{value: diceValueToPointsUsedMap[foundDice], accumulation: accumulation}, nil
 }
