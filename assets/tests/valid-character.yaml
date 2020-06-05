@@ -1,5 +1,5 @@
 ---
-version: d4.0.1
+version: "0.0.3"
 rule-set: SWADE
 setting-rules:
   starting-wealth: 500
