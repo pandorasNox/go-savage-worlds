@@ -12,7 +12,7 @@ go implementation of savage world rules
 - add enum exhaustiv switch checker
 - races + racial effects
 - hindrance effects
-- edges + edges effects
+- edges + edges effects + edged requirements
 - DerivedStatistics
 - gear + gear effects
 - ??? gold validation + inventory + gear IF init validation ???
