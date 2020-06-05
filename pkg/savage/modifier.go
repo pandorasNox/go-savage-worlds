@@ -9,12 +9,12 @@ type Modifier struct {
 type ModifierKind int
 
 const (
-	ModifierKindDice ModifierKind = iota
-	ModifierKindAccumulator
+	ModifierKindDiceValue ModifierKind = iota
+	ModifierKindDiceAdjustment
 )
 
 func (mk ModifierKind) String() string {
-	return [...]string{"dice", "accumulator"}[mk]
+	return [...]string{"diceValue", "diceAdjustment"}[mk]
 }
 
 type Selector struct {
