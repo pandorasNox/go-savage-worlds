@@ -46,8 +46,9 @@ var hindrances = []Hindrance{
 	//Young (Minor/Major): Minor has 4 attribute points and 10 skill points, extra Benny per session. Major has 3 attribute points, 10 skill points, and two extra Bennies per session.
 }
 
+//find vs indexOf
 // findHindrance returns index int and ok bool
-func findHindrance(name string) (int, bool) {
+func findHindrance(name string) (index int, ok bool) {
 	for i, hindrance := range hindrances {
 		if hindrance.name == name {
 			return i, true
