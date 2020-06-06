@@ -22,16 +22,22 @@ func TestParseDice(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "parse dice and accumulator",
+			name:    "parse dice and adjustment",
 			args:    args{dice: "d12+8"},
 			want:    Dice{value: 4, adjustment: 8},
 			wantErr: false,
 		},
 		{
-			name:    "parse dice missing accumulator",
+			name:    "parse dice missing adjustment",
 			args:    args{dice: "d4+"},
 			want:    Dice{},
 			wantErr: true,
+		},
+		{
+			name:    "parse dice and negative adjustment",
+			args:    args{dice: "d10-2"},
+			want:    Dice{value: 3, adjustment: -2},
+			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
