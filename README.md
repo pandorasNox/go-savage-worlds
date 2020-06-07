@@ -18,3 +18,4 @@ go implementation of savage world rules
 - ??? gold validation + inventory + gear IF init validation ???
 - subskills optional field in skills
 - build a frontend app with go and the wasm compiler or go and gopherjs/vecty
+- use opaque types (example creating hindrances)
