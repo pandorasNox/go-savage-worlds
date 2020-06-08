@@ -1,5 +1,14 @@
 package savage
 
+type Traits struct {
+	attributes []Attribute
+	skills     []Skill
+}
+
+func InitTraits() Traits {
+	return Traits{attributes: attributes, skills: skills}
+}
+
 type Attribute struct {
 	name        string
 	description string
@@ -14,8 +23,8 @@ var attributes = []Attribute{
 }
 
 // findAttribute returns index int and ok bool
-func findAttribute(name string) (int, bool) {
-	for i, attribute := range attributes {
+func (t Traits) findAttribute(name string) (int, bool) {
+	for i, attribute := range t.attributes {
 		if attribute.name == name {
 			return i, true
 		}
@@ -66,8 +75,10 @@ var skills = []Skill{
 	{name: "Weird Science", linkedAttribute: "Smarts", isCore: false, description: ""},
 }
 
-func coreSkills() (coreSkills []Skill) {
-	for _, skill := range skills {
+func (t Traits) coreSkills() (coreSkills []Skill) {
+	coreSkills = []Skill{}
+
+	for _, skill := range t.skills {
 		if skill.isCore {
 			coreSkills = append(coreSkills, skill)
 		}
@@ -77,8 +88,8 @@ func coreSkills() (coreSkills []Skill) {
 }
 
 // findSkill returns index int and ok bool
-func findSkill(name string) (int, bool) {
-	for i, skill := range skills {
+func (t Traits) findSkill(name string) (int, bool) {
+	for i, skill := range t.skills {
 		if skill.name == name {
 			return i, true
 		}
