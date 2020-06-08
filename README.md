@@ -9,6 +9,7 @@ go implementation of savage world rules
 
 ## todo's
 - add testing
+- gather races, traits, hindrances, edged ...etc in ruleBook struct of sorts???
 - add enum exhaustiv switch checker
 - races + racial effects
 - hindrance effects
