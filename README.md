@@ -10,6 +10,7 @@ go implementation of savage world rules
 ## todo's
 - add testing
 - gather races, traits, hindrances, edged ...etc in ruleBook struct of sorts???
+- make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
 - add enum exhaustiv switch checker
 - races + racial effects
 - hindrance effects

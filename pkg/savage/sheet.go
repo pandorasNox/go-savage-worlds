@@ -1,5 +1,7 @@
 package savage
 
+import "github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
+
 type Sheet struct {
 	Version      string       `yaml:"version"`
 	RuleSet      string       `yaml:"rule-set"`
@@ -64,8 +66,8 @@ const (
 	baseSkillPoints     int = 12
 )
 
-func (s Sheet) collectModifier() []Modifier {
-	var modifier []Modifier
+func (s Sheet) collectModifier() []rulebook.Modifier {
+	var modifier []rulebook.Modifier
 
 	// race modifier
 
@@ -76,20 +78,20 @@ func (s Sheet) collectModifier() []Modifier {
 	return modifier
 }
 
-func (s Sheet) collectHindranceModifier() []Modifier {
-	modifier := []Modifier{}
+func (s Sheet) collectHindranceModifier() []rulebook.Modifier {
+	modifier := []rulebook.Modifier{}
 
 	for _, sheetHindrance := range s.Character.Hindrances {
-		index, _ := findHindrance(sheetHindrance.Name)
-		matchedHindrance := hindrances[index]
+		index, _ := rulebook.FindHindrance(sheetHindrance.Name)
+		matchedHindrance := rulebook.Hindrances[index]
 
-		index, ok := findDegree(matchedHindrance, sheetHindrance.Degree)
+		index, ok := rulebook.FindDegree(matchedHindrance, sheetHindrance.Degree)
 		if !ok {
 			continue
 		}
-		matchedDegree := matchedHindrance.availableDegrees[index]
+		matchedDegree := matchedHindrance.AvailableDegrees[index]
 
-		modifier = append(modifier, matchedDegree.modifiers...)
+		modifier = append(modifier, matchedDegree.Modifiers...)
 	}
 
 	return modifier

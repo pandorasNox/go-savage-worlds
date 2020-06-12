@@ -1,4 +1,4 @@
-package savage
+package rulebook
 
 type Modifier struct {
 	kind     ModifierKind

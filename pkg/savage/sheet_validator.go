@@ -3,10 +3,12 @@ package savage
 import (
 	"fmt"
 	"regexp"
+
+	"github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
 )
 
 //Validate validates a savage world sheet
-func Validate(s Sheet, traits Traits) error {
+func Validate(s Sheet, traits rulebook.Traits) error {
 	availableAttributePoints := baseAttributePoints
 	availableSkillPoints := baseSkillPoints
 	earnedHindrancePoints := 0
@@ -39,15 +41,15 @@ func Validate(s Sheet, traits Traits) error {
 
 func validatePermittedHindrances(s Sheet) error {
 	for _, sheetHindrance := range s.Character.Hindrances {
-		index, ok := findHindrance(sheetHindrance.Name)
+		index, ok := rulebook.FindHindrance(sheetHindrance.Name)
 
 		if !ok {
 			return fmt.Errorf("\"%s\" is no valid hindrance", sheetHindrance.Name)
 		}
 
 		found := false
-		for _, hd := range hindrances[index].availableDegrees {
-			if hd.degree.String() == sheetHindrance.Degree {
+		for _, hd := range rulebook.Hindrances[index].AvailableDegrees {
+			if hd.Degree.String() == sheetHindrance.Degree {
 				found = true
 				break
 			}
@@ -57,7 +59,7 @@ func validatePermittedHindrances(s Sheet) error {
 			return fmt.Errorf(
 				"\"%s\" is no valid degree of \"%s\"",
 				sheetHindrance.Degree,
-				hindrances[index].name,
+				rulebook.Hindrances[index].Name,
 			)
 		}
 	}
@@ -65,7 +67,7 @@ func validatePermittedHindrances(s Sheet) error {
 	return nil
 }
 
-func validateAttributes(s Sheet, t Traits, availableAttributePoints int) error {
+func validateAttributes(s Sheet, t rulebook.Traits, availableAttributePoints int) error {
 	var err error
 
 	err = validateAttributesExist(s, t)
@@ -81,26 +83,26 @@ func validateAttributes(s Sheet, t Traits, availableAttributePoints int) error {
 	return nil
 }
 
-func validateAttributesExist(s Sheet, t Traits) error {
+func validateAttributesExist(s Sheet, t rulebook.Traits) error {
 RequiredAttributes:
-	for _, attribute := range t.attributes {
+	for _, attribute := range t.Attributes {
 		for _, sheetAttribute := range s.Character.Traits.Attributes {
-			if attribute.name == sheetAttribute.Name {
+			if attribute.Name == sheetAttribute.Name {
 				continue RequiredAttributes
 			}
 		}
 
-		return fmt.Errorf("\"%s\" is a required attribute", attribute.name)
+		return fmt.Errorf("\"%s\" is a required attribute", attribute.Name)
 	}
 
 	return nil
 }
 
-func validateAttributePoints(s Sheet, t Traits, availableAttributePoints int) error {
+func validateAttributePoints(s Sheet, t rulebook.Traits, availableAttributePoints int) error {
 	aggregatedAttributePoints := 0
 
 	for _, attribute := range s.Character.Traits.Attributes {
-		_, ok := t.findAttribute(attribute.Name)
+		_, ok := t.FindAttribute(attribute.Name)
 		if ok == false {
 			return fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
 		}
@@ -127,7 +129,7 @@ func validateAttributePoints(s Sheet, t Traits, availableAttributePoints int) er
 	return nil
 }
 
-func validateSkills(s Sheet, t Traits, availableSkillPoints int) error {
+func validateSkills(s Sheet, t rulebook.Traits, availableSkillPoints int) error {
 	var err error
 
 	err = validateCoreSkillsExist(s, t)
@@ -148,37 +150,37 @@ func validateSkills(s Sheet, t Traits, availableSkillPoints int) error {
 	return nil
 }
 
-func validateCoreSkillsExist(s Sheet, t Traits) error {
+func validateCoreSkillsExist(s Sheet, t rulebook.Traits) error {
 RequiredCoreSkills:
-	for _, coreSkill := range t.coreSkills() {
+	for _, coreSkill := range t.CoreSkills() {
 		for _, sheetAttr := range s.Character.Traits.Attributes {
 			for _, sheetSkill := range sheetAttr.Skills {
-				if coreSkill.name == sheetSkill.Name {
+				if coreSkill.Name == sheetSkill.Name {
 					continue RequiredCoreSkills
 				}
 			}
 		}
 
-		return fmt.Errorf("\"%s\" is a required core skill", coreSkill.name)
+		return fmt.Errorf("\"%s\" is a required core skill", coreSkill.Name)
 	}
 
 	return nil
 }
 
-func validatePermittedSkills(s Sheet, t Traits) error {
+func validatePermittedSkills(s Sheet, t rulebook.Traits) error {
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
-			index, ok := t.findSkill(sheetSkill.Name)
+			index, ok := t.FindSkill(sheetSkill.Name)
 
 			if !ok {
 				return fmt.Errorf("\"%s\" is no valid skill", sheetSkill.Name)
 			}
 
-			if t.skills[index].linkedAttribute != sheetAttr.Name {
+			if t.Skills[index].LinkedAttribute != sheetAttr.Name {
 				return fmt.Errorf(
 					"\"%s\" should belong to attribute \"%s\" and not \"%s\"",
 					sheetSkill.Name,
-					t.skills[index].linkedAttribute,
+					t.Skills[index].LinkedAttribute,
 					sheetAttr.Name,
 				)
 			}
@@ -189,7 +191,7 @@ func validatePermittedSkills(s Sheet, t Traits) error {
 	return nil
 }
 
-func validateSkillPoints(s Sheet, t Traits, availableSkillPoints int) error {
+func validateSkillPoints(s Sheet, t rulebook.Traits, availableSkillPoints int) error {
 
 	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
 
@@ -197,8 +199,8 @@ func validateSkillPoints(s Sheet, t Traits, availableSkillPoints int) error {
 
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
-			index, _ := t.findSkill(sheetSkill.Name)
-			skill := t.skills[index]
+			index, _ := t.FindSkill(sheetSkill.Name)
+			skill := t.Skills[index]
 
 			found := re.FindAllStringSubmatch(sheetSkill.Dice, -1)
 
@@ -211,7 +213,7 @@ func validateSkillPoints(s Sheet, t Traits, availableSkillPoints int) error {
 			}
 
 			pointCostModifier := 1
-			if skill.isCore {
+			if skill.IsCore {
 				pointCostModifier = 0
 			}
 

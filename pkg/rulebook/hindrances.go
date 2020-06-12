@@ -1,14 +1,14 @@
-package savage
+package rulebook
 
 type Hindrance struct {
-	name             string
+	Name             string
 	description      string
-	availableDegrees []HindranceDegree
+	AvailableDegrees []HindranceDegree
 }
 
 type HindranceDegree struct {
-	degree    Degree
-	modifiers []Modifier
+	Degree    Degree
+	Modifiers []Modifier
 }
 
 type Degree int
@@ -22,17 +22,17 @@ func (d Degree) String() string {
 	return []string{"major", "minor"}[d]
 }
 
-var hindrances = []Hindrance{
-	{name: "Poverty", description: "", availableDegrees: []HindranceDegree{{degree: Minor}}},
-	{name: "Habit", description: "", availableDegrees: []HindranceDegree{{degree: Major}, {degree: Minor}}},
-	{name: "Mean", description: "", availableDegrees: []HindranceDegree{{degree: Minor}}},
+var Hindrances = []Hindrance{
+	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
+	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	//Can’t Swim (Minor): –2 to swimming (contained in skill Athletiks)
-	{name: "Can't Swim", description: "", availableDegrees: []HindranceDegree{{degree: Minor}}},
+	{Name: "Can't Swim", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{
-		name:        "Clueless",
+		Name:        "Clueless",
 		description: "Clueless (Major): –1 to Common Knowledge and Notice rolls.",
-		availableDegrees: []HindranceDegree{{degree: Major,
-			modifiers: []Modifier{
+		AvailableDegrees: []HindranceDegree{{Degree: Major,
+			Modifiers: []Modifier{
 				{kind: ModifierKindDiceAdjustment, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Common Knowledge"}},
 				{kind: ModifierKindDiceAdjustment, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Notice"}},
 			}}},
@@ -48,9 +48,9 @@ var hindrances = []Hindrance{
 
 //find vs indexOf
 // findHindrance returns index int and ok bool
-func findHindrance(name string) (index int, ok bool) {
-	for i, hindrance := range hindrances {
-		if hindrance.name == name {
+func FindHindrance(name string) (index int, ok bool) {
+	for i, hindrance := range Hindrances {
+		if hindrance.Name == name {
 			return i, true
 		}
 	}
@@ -58,9 +58,9 @@ func findHindrance(name string) (index int, ok bool) {
 	return -1, false
 }
 
-func findDegree(hindrance Hindrance, degreeName string) (int, bool) {
-	for i, hd := range hindrance.availableDegrees {
-		if hd.degree.String() == degreeName {
+func FindDegree(hindrance Hindrance, degreeName string) (int, bool) {
+	for i, hd := range hindrance.AvailableDegrees {
+		if hd.Degree.String() == degreeName {
 			return i, true
 		}
 	}

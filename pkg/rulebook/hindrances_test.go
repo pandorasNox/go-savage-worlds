@@ -1,13 +1,13 @@
-package savage
+package rulebook
 
 import (
 	"testing"
 )
 
 func Test_findHindrance(t *testing.T) {
-	hindrances = []Hindrance{
-		{name: "Mock0", description: "", availableDegrees: []HindranceDegree{{degree: Minor}}},
-		{name: "Mock1", description: "", availableDegrees: []HindranceDegree{{degree: Major}, {degree: Minor}}},
+	Hindrances = []Hindrance{
+		{Name: "Mock0", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+		{Name: "Mock1", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
 	}
 	type args struct {
 		name string
@@ -25,7 +25,7 @@ func Test_findHindrance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := findHindrance(tt.args.name)
+			got, got1 := FindHindrance(tt.args.name)
 			if got != tt.wantIndex {
 				t.Errorf("findHindrance() got = %v, want %v", got, tt.wantIndex)
 			}
@@ -38,19 +38,19 @@ func Test_findHindrance(t *testing.T) {
 
 func Test_findDegree(t *testing.T) {
 	mockHindranceMinor := Hindrance{
-		name:             "MockMinor",
+		Name:             "MockMinor",
 		description:      "",
-		availableDegrees: []HindranceDegree{{degree: Minor}},
+		AvailableDegrees: []HindranceDegree{{Degree: Minor}},
 	}
 	mockHindranceMajor := Hindrance{
-		name:             "MockMajor",
+		Name:             "MockMajor",
 		description:      "",
-		availableDegrees: []HindranceDegree{{degree: Major}},
+		AvailableDegrees: []HindranceDegree{{Degree: Major}},
 	}
 	mockHindranceMinorMajor := Hindrance{
-		name:             "MockMinorMajor",
+		Name:             "MockMinorMajor",
 		description:      "",
-		availableDegrees: []HindranceDegree{{degree: Minor}, {degree: Major}},
+		AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}},
 	}
 	type args struct {
 		hindrance  Hindrance
@@ -89,7 +89,7 @@ func Test_findDegree(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := findDegree(tt.args.hindrance, tt.args.degreeName)
+			got, got1 := FindDegree(tt.args.hindrance, tt.args.degreeName)
 			if got != tt.wantIndex {
 				t.Errorf("findDegree() got = %v, wantIndex %v", got, tt.wantIndex)
 			}

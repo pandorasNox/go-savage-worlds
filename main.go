@@ -7,12 +7,13 @@ import (
 	"log"
 	"os"
 
+	"github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
 	"github.com/pandorasNox/go-savage-worlds/pkg/savage"
 	yaml "gopkg.in/yaml.v2"
 )
 
 func main() {
-	traits := savage.InitTraits()
+	traits := rulebook.InitTraits()
 	sheet, err := characterFromStdin()
 	if err != nil {
 		log.Fatalf("can't get character: %s", err)
