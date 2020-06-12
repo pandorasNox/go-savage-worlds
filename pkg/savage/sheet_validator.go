@@ -8,7 +8,7 @@ import (
 )
 
 //Validate validates a savage world sheet
-func Validate(s Sheet, traits rulebook.Traits) error {
+func Validate(s Sheet, rb rulebook.Rulebook) error {
 	availableAttributePoints := baseAttributePoints
 	availableSkillPoints := baseSkillPoints
 	earnedHindrancePoints := 0
@@ -26,12 +26,12 @@ func Validate(s Sheet, traits rulebook.Traits) error {
 	earnedHindrancePoints = s.countHindrancePoints()
 	_ = earnedHindrancePoints
 
-	err = validateAttributes(s, traits, availableAttributePoints)
+	err = validateAttributes(s, rb.Traits(), availableAttributePoints)
 	if err != nil {
 		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
 
-	err = validateSkills(s, traits, availableSkillPoints)
+	err = validateSkills(s, rb.Traits(), availableSkillPoints)
 	if err != nil {
 		return fmt.Errorf("sheet validation skill errors: %s", err)
 	}

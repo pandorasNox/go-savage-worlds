@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-	traits := rulebook.InitTraits()
 	sheet, err := characterFromStdin()
 	if err != nil {
 		log.Fatalf("can't get character: %s", err)
@@ -22,7 +21,9 @@ func main() {
 	// fmt.Printf("%+v", character)
 	// PrettyPrint(sheet)
 
-	err = savage.Validate(sheet, traits)
+	rb := rulebook.New()
+
+	err = savage.Validate(sheet, rb)
 	if err != nil {
 		log.Fatalf("sheet is not valid: %s", err)
 	}

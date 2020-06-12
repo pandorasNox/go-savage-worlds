@@ -5,10 +5,6 @@ type Traits struct {
 	Skills     []Skill
 }
 
-func InitTraits() Traits {
-	return Traits{Attributes: attributes, Skills: skills}
-}
-
 type Attribute struct {
 	Name        string
 	description string
