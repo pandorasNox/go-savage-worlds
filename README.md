@@ -9,7 +9,7 @@ go implementation of savage world rules
 
 ## todo's
 - add testing
-- maybe move dice parser into rulebook ?! 
+- maybe move dice parser into rulebook ?! OR in it's own `dice` package, that sounds more like it
 - (maybe, bec how about testing???) make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
 - add enum exhaustiv switch checker
 - races + racial effects
