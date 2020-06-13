@@ -1,4 +1,4 @@
-package savage
+package dice
 
 import (
 	"fmt"
@@ -11,6 +11,16 @@ type Dice struct {
 	adjustment int
 }
 
+//Value returns int represented dice value
+func (d Dice) Value() (value int) {
+	return d.value
+}
+
+//Adjustment returns the dice adjustment (e.g. +3 OR -2 OR ...)
+func (d Dice) Adjustment() (adjustment int) {
+	return d.adjustment
+}
+
 var diceValueToPointsUsedMap = map[string]int{
 	"4":  0,
 	"6":  1,
@@ -19,8 +29,8 @@ var diceValueToPointsUsedMap = map[string]int{
 	"12": 4,
 }
 
-// ParseDice parse dice strig to struct using points map
-func ParseDice(dice string) (Dice, error) {
+// Parse parses a dice string to struct using points map
+func Parse(dice string) (Dice, error) {
 	var re = regexp.MustCompile(`^d(4|6|8|10|12)((\+|-)([1-9][0-9]?))?$`)
 
 	found := re.FindAllStringSubmatch(dice, -1)

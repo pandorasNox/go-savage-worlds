@@ -1,11 +1,11 @@
-package savage
+package dice
 
 import (
 	"reflect"
 	"testing"
 )
 
-func TestParseDice(t *testing.T) {
+func TestParse(t *testing.T) {
 	type args struct {
 		dice string
 	}
@@ -42,7 +42,7 @@ func TestParseDice(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ParseDice(tt.args.dice)
+			got, err := Parse(tt.args.dice)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ParseDice() error = %v, wantErr %v", err, tt.wantErr)
 				return

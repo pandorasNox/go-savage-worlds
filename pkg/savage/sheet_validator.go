@@ -2,8 +2,8 @@ package savage
 
 import (
 	"fmt"
-	"regexp"
 
+	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 	"github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
 )
 
@@ -107,7 +107,7 @@ func validateAttributePoints(s Sheet, rb rulebook.Rulebook, availableAttributePo
 			return fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
 		}
 
-		dice, err := ParseDice(attribute.Dice)
+		dice, err := dice.Parse(attribute.Dice)
 		if err != nil {
 			return fmt.Errorf(
 				"parsing dice for attribute \"%s\" failed: %s",
@@ -115,7 +115,7 @@ func validateAttributePoints(s Sheet, rb rulebook.Rulebook, availableAttributePo
 			)
 		}
 
-		aggregatedAttributePoints += dice.value
+		aggregatedAttributePoints += dice.Value()
 	}
 
 	if aggregatedAttributePoints > availableAttributePoints {
@@ -192,9 +192,6 @@ func validatePermittedSkills(s Sheet, rb rulebook.Rulebook) error {
 }
 
 func validateSkillPoints(s Sheet, rb rulebook.Rulebook, availableSkillPoints int) error {
-
-	var re = regexp.MustCompile(`^d(4|6|8|10|12)(\+([1-9][0-9]?))?$`)
-
 	aggregatedSkillPoints := 0
 
 	for _, sheetAttr := range s.Character.Traits.Attributes {
@@ -202,13 +199,11 @@ func validateSkillPoints(s Sheet, rb rulebook.Rulebook, availableSkillPoints int
 			index, _ := rb.FindSkill(sheetSkill.Name)
 			skill := rb.Traits().Skills[index]
 
-			found := re.FindAllStringSubmatch(sheetSkill.Dice, -1)
-
-			if found == nil || (len(found[0]) != 2 && len(found[0]) != 4) {
+			dice, err := dice.Parse(sheetSkill.Dice)
+			if err != nil {
 				return fmt.Errorf(
-					"validation error: invalid dice value \"%s\" for path \"%s\"",
-					sheetSkill.Dice,
-					"", //todo: provide path
+					"parsing dice for skill \"%s\" failed: %s",
+					sheetSkill.Name, err,
 				)
 			}
 
@@ -217,7 +212,7 @@ func validateSkillPoints(s Sheet, rb rulebook.Rulebook, availableSkillPoints int
 				pointCostModifier = 0
 			}
 
-			aggregatedSkillPoints += diceValueToPointsUsedMap[found[0][1]] + pointCostModifier
+			aggregatedSkillPoints += dice.Value() + pointCostModifier
 		}
 	}
 
