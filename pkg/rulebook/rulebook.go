@@ -5,11 +5,11 @@ type Rulebook struct {
 }
 
 // New returns a rulebook with basic SWADE rules and related data
-func New() Rulebook {
+func New(a []Attribute, s []Skill) Rulebook {
 	return Rulebook{
 		traits: Traits{
-			Attributes: attributes,
-			Skills:     skills,
+			Attributes: a,
+			Skills:     s,
 		},
 	}
 }

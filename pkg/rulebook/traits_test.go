@@ -6,6 +6,7 @@ import (
 )
 
 func TestTraits_coreSkills(t *testing.T) {
+	// mockHindrances := ...
 	type fields struct {
 		attributes []Attribute
 		skills     []Skill
@@ -77,11 +78,8 @@ func TestTraits_coreSkills(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tr := Traits{
-				Attributes: tt.fields.attributes,
-				Skills:     tt.fields.skills,
-			}
-			if gotCoreSkills := tr.CoreSkills(); !reflect.DeepEqual(gotCoreSkills, tt.wantCoreSkills) {
+			rb := New(tt.fields.attributes, tt.fields.skills)
+			if gotCoreSkills := rb.CoreSkills(); !reflect.DeepEqual(gotCoreSkills, tt.wantCoreSkills) {
 				t.Errorf("Traits.coreSkills() = %v, want %v", gotCoreSkills, tt.wantCoreSkills)
 			}
 		})

@@ -21,7 +21,7 @@ func main() {
 	// fmt.Printf("%+v", character)
 	// PrettyPrint(sheet)
 
-	rb := rulebook.New()
+	rb := rulebook.New(rulebook.Attributes, rulebook.Skills)
 
 	err = savage.Validate(sheet, rb)
 	if err != nil {
