@@ -1,7 +1,7 @@
 package rulebook
 
-// Attributes which are predefined for the SWADE ruleset
-var Attributes = []Attribute{
+// SWADE_Attributes which are predefined for the SWADE ruleset
+var SWADE_Attributes = []Attribute{
 	{Name: "Agility", description: ""},
 	{Name: "Smarts", description: ""},
 	{Name: "Spirit", description: ""},
@@ -9,8 +9,8 @@ var Attributes = []Attribute{
 	{Name: "Vigor", description: ""},
 }
 
-// Skills which are predefined for the SWADE ruleset
-var Skills = []Skill{
+// SWADE_Skills which are predefined for the SWADE ruleset
+var SWADE_Skills = []Skill{
 	{Name: "Academics", LinkedAttribute: "Smarts", IsCore: false, description: "Academics reflects knowledge of the liberal arts, social sciences, literature, history, archaeology, and similar fields. If an explorer wants to remember when the Mayan calendar ended or cite a line from Macbeth, this is the skill to have."},
 	{Name: "Athletics", LinkedAttribute: "Agility", IsCore: true, description: ""},
 	{Name: "Battle", LinkedAttribute: "Smarts", IsCore: false, description: ""},
