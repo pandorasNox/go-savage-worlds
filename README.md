@@ -10,8 +10,6 @@ go implementation of savage world rules
 ## todo's
 - add testing
 - write integration test for sheet validation (cat ....)
-- dice.Value rename to dice.Points
-- rename package `savage` to `sheet`
 - (maybe, bec how about testing???) make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
 - add enum exhaustiv switch checker
 - races + racial effects
