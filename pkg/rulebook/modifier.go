@@ -6,6 +6,8 @@ type Modifier struct {
 	selector Selector
 }
 
+type Modifiers []Modifier
+
 type ModifierKind int
 
 const (
