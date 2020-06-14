@@ -28,10 +28,13 @@ type Skill struct {
 	description     string
 }
 
-func (rb Rulebook) CoreSkills() (coreSkills []Skill) {
+type Skills []Skill
+
+//CoreSkills returns slice of skills which have isCore true
+func (ss Skills) CoreSkills() (coreSkills []Skill) {
 	coreSkills = []Skill{}
 
-	for _, skill := range rb.Traits().Skills {
+	for _, skill := range ss {
 		if skill.IsCore {
 			coreSkills = append(coreSkills, skill)
 		}
@@ -40,9 +43,9 @@ func (rb Rulebook) CoreSkills() (coreSkills []Skill) {
 	return coreSkills
 }
 
-// FindSkill returns index int and ok bool
-func (rb Rulebook) FindSkill(name string) (int, bool) {
-	for i, skill := range rb.Traits().Skills {
+// FindSkill returns index int and found bool
+func (ss Skills) FindSkill(name string) (index int, found bool) {
+	for i, skill := range ss {
 		if skill.Name == name {
 			return i, true
 		}

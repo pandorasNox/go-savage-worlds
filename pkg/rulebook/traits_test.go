@@ -5,39 +5,29 @@ import (
 	"testing"
 )
 
-func TestTraits_coreSkills(t *testing.T) {
-	// mockHindrances := ...
-	type fields struct {
-		attributes []Attribute
-		skills     []Skill
-	}
+func TestSkills_CoreSkills(t *testing.T) {
 	tests := []struct {
 		name           string
-		fields         fields
+		skills         Skills
 		wantCoreSkills []Skill
 	}{
 		// TODO: Add test cases.
+		// TODO: Add test cases.
 		{
 			name: "find none",
-			fields: fields{
-				attributes: []Attribute{},
-				skills: []Skill{
-					{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
-					{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
-					{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
-				},
+			skills: []Skill{
+				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
+				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
+				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
 			},
 			wantCoreSkills: []Skill{},
 		},
 		{
 			name: "find all",
-			fields: fields{
-				attributes: []Attribute{},
-				skills: []Skill{
-					{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: true, description: ""},
-					{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
-					{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
-				},
+			skills: []Skill{
+				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: true, description: ""},
+				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
+				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 			},
 			wantCoreSkills: []Skill{
 				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: true, description: ""},
@@ -47,28 +37,23 @@ func TestTraits_coreSkills(t *testing.T) {
 		},
 		{
 			name: "find one",
-			fields: fields{
-				attributes: []Attribute{},
-				skills: []Skill{
-					{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
-					{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
-					{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
-				},
+			skills: []Skill{
+				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
+				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
+				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
 			},
+
 			wantCoreSkills: []Skill{
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 			},
 		},
 		{
 			name: "find some",
-			fields: fields{
-				attributes: []Attribute{},
-				skills: []Skill{
-					{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
-					{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
-					{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
-					{Name: "Skill3", LinkedAttribute: "Attribute4", IsCore: true, description: ""},
-				},
+			skills: []Skill{
+				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
+				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
+				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
+				{Name: "Skill3", LinkedAttribute: "Attribute4", IsCore: true, description: ""},
 			},
 			wantCoreSkills: []Skill{
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
@@ -78,9 +63,8 @@ func TestTraits_coreSkills(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			rb := New(tt.fields.attributes, tt.fields.skills)
-			if gotCoreSkills := rb.CoreSkills(); !reflect.DeepEqual(gotCoreSkills, tt.wantCoreSkills) {
-				t.Errorf("Traits.coreSkills() = %v, want %v", gotCoreSkills, tt.wantCoreSkills)
+			if gotCoreSkills := tt.skills.CoreSkills(); !reflect.DeepEqual(gotCoreSkills, tt.wantCoreSkills) {
+				t.Errorf("Skills.CoreSkills() = %v, want %v", gotCoreSkills, tt.wantCoreSkills)
 			}
 		})
 	}
