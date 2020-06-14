@@ -3,6 +3,7 @@
 .PHONY: test
 test:
 	go test ./...
+	bash githooks/pre-commit
 	cat assets/tests/valid-character.yaml | go run .
 
 
