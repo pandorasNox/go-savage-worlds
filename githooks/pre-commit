@@ -2,12 +2,15 @@
 
 set -euo pipefail
 
+echo "pre-commit started"
+
 export GO111MODULE="on"
 export GOBIN=$(pwd)/bin
-# export PATH=$GOBIN:$PATH
 
-go get -u github.com/nishanths/exhaustive/...
-
-# exhaustive
+if [ ! -f "$(pwd)/bin/exhaustive" ]; then
+    go get -u github.com/nishanths/exhaustive/...
+fi
 
 $(pwd)/bin/exhaustive ./...
+
+echo "pre-commit finished"
