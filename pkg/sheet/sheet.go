@@ -1,4 +1,4 @@
-package savage
+package sheet
 
 import "github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
 

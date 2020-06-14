@@ -8,12 +8,12 @@ import (
 	"os"
 
 	"github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
-	"github.com/pandorasNox/go-savage-worlds/pkg/savage"
+	"github.com/pandorasNox/go-savage-worlds/pkg/sheet"
 	yaml "gopkg.in/yaml.v2"
 )
 
 func main() {
-	sheet, err := characterFromStdin()
+	charSheet, err := characterFromStdin()
 	if err != nil {
 		log.Fatalf("can't get character: %s", err)
 	}
@@ -23,7 +23,7 @@ func main() {
 
 	rb := rulebook.New(rulebook.SWADE_Attributes, rulebook.SWADE_Skills)
 
-	err = savage.Validate(sheet, rb)
+	err = sheet.Validate(charSheet, rb)
 	if err != nil {
 		log.Fatalf("sheet is not valid: %s", err)
 	}
@@ -42,36 +42,36 @@ func PrettyPrint(data interface{}) {
 	fmt.Printf("%s \n", p)
 }
 
-func characterFromStdin() (savage.Sheet, error) {
+func characterFromStdin() (sheet.Sheet, error) {
 	info, err := os.Stdin.Stat()
 	if err != nil {
-		return savage.Sheet{}, fmt.Errorf("can't read info from Stdin: %s", err)
+		return sheet.Sheet{}, fmt.Errorf("can't read info from Stdin: %s", err)
 	}
 	if (info.Mode() & os.ModeCharDevice) == os.ModeCharDevice {
 		errorMsg := "The command is intended to work with pipes.\n"
 		errorMsg += "Usage:\n"
 		errorMsg += "  cat file | savage"
-		return savage.Sheet{}, fmt.Errorf(errorMsg)
+		return sheet.Sheet{}, fmt.Errorf(errorMsg)
 	}
 
 	character, err := LoadCharacter(os.Stdin)
 	if err != nil {
-		return savage.Sheet{}, fmt.Errorf("can't read character yaml from Stdin: %s", err)
+		return sheet.Sheet{}, fmt.Errorf("can't read character yaml from Stdin: %s", err)
 	}
 
 	return character, nil
 }
 
 // LoadCharacter load the char from the reader.
-func LoadCharacter(r io.Reader) (savage.Sheet, error) {
+func LoadCharacter(r io.Reader) (sheet.Sheet, error) {
 	d := yaml.NewDecoder(r)
 	d.SetStrict(true)
 
-	cfg := savage.Sheet{}
+	cfg := sheet.Sheet{}
 
 	err := d.Decode(&cfg)
 	if err != nil {
-		return savage.Sheet{}, err
+		return sheet.Sheet{}, err
 	}
 
 	return cfg, nil
