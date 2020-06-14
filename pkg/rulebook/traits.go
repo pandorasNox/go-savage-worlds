@@ -10,9 +10,11 @@ type Attribute struct {
 	description string
 }
 
-// FindAttribute returns index int and ok bool
-func (rb Rulebook) FindAttribute(name string) (int, bool) {
-	for i, attribute := range rb.Traits().Attributes {
+type Attributes []Attribute
+
+// FindAttribute returns index and found bool
+func (attrs Attributes) FindAttribute(name string) (index int, found bool) {
+	for i, attribute := range attrs {
 		if attribute.Name == name {
 			return i, true
 		}

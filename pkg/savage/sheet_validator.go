@@ -26,7 +26,7 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 	earnedHindrancePoints = s.countHindrancePoints()
 	_ = earnedHindrancePoints
 
-	err = validateAttributes(s, rb, availableAttributePoints)
+	err = validateAttributes(s, rb.Traits().Attributes, availableAttributePoints)
 	if err != nil {
 		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
@@ -67,15 +67,15 @@ func validatePermittedHindrances(s Sheet) error {
 	return nil
 }
 
-func validateAttributes(s Sheet, rb rulebook.Rulebook, availableAttributePoints int) error {
+func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, availableAttributePoints int) error {
 	var err error
 
-	err = validateAttributesExist(s, rb)
+	err = validateAttributesExist(s, rbAttrs)
 	if err != nil {
 		return err
 	}
 
-	err = validateAttributePoints(s, rb, availableAttributePoints)
+	err = validateAttributePoints(s, rbAttrs, availableAttributePoints)
 	if err != nil {
 		return err
 	}
@@ -83,9 +83,9 @@ func validateAttributes(s Sheet, rb rulebook.Rulebook, availableAttributePoints 
 	return nil
 }
 
-func validateAttributesExist(s Sheet, rb rulebook.Rulebook) error {
+func validateAttributesExist(s Sheet, rbAttrs rulebook.Attributes) error {
 RequiredAttributes:
-	for _, attribute := range rb.Traits().Attributes {
+	for _, attribute := range rbAttrs {
 		for _, sheetAttribute := range s.Character.Traits.Attributes {
 			if attribute.Name == sheetAttribute.Name {
 				continue RequiredAttributes
@@ -98,11 +98,11 @@ RequiredAttributes:
 	return nil
 }
 
-func validateAttributePoints(s Sheet, rb rulebook.Rulebook, availableAttributePoints int) error {
+func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, availableAttributePoints int) error {
 	aggregatedAttributePoints := 0
 
 	for _, attribute := range s.Character.Traits.Attributes {
-		_, ok := rb.FindAttribute(attribute.Name)
+		_, ok := rbAttrs.FindAttribute(attribute.Name)
 		if ok == false {
 			return fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
 		}
