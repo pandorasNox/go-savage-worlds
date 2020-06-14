@@ -4,70 +4,6 @@ import (
 	"testing"
 )
 
-func Test_findDegree(t *testing.T) {
-	mockHindranceMinor := Hindrance{
-		Name:             "MockMinor",
-		description:      "",
-		AvailableDegrees: []HindranceDegree{{Degree: Minor}},
-	}
-	mockHindranceMajor := Hindrance{
-		Name:             "MockMajor",
-		description:      "",
-		AvailableDegrees: []HindranceDegree{{Degree: Major}},
-	}
-	mockHindranceMinorMajor := Hindrance{
-		Name:             "MockMinorMajor",
-		description:      "",
-		AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}},
-	}
-	type args struct {
-		hindrance  Hindrance
-		degreeName string
-	}
-	tests := []struct {
-		name      string
-		args      args
-		wantIndex int
-		wantOk    bool
-	}{
-		{
-			"find degree",
-			args{hindrance: mockHindranceMinor, degreeName: Minor.String()},
-			0,
-			true,
-		},
-		{
-			"do not find degree (empty hindrance)",
-			args{hindrance: Hindrance{}, degreeName: Minor.String()},
-			-1,
-			false,
-		},
-		{
-			"do not find degree (missing degree)",
-			args{hindrance: mockHindranceMajor, degreeName: Minor.String()},
-			-1,
-			false,
-		},
-		{
-			"find degree (having  multiple degrees)",
-			args{hindrance: mockHindranceMinorMajor, degreeName: Major.String()},
-			1,
-			true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := FindDegree(tt.args.hindrance, tt.args.degreeName)
-			if got != tt.wantIndex {
-				t.Errorf("findDegree() got = %v, wantIndex %v", got, tt.wantIndex)
-			}
-			if got1 != tt.wantOk {
-				t.Errorf("findDegree() got1 = %v, wantOk %v", got1, tt.wantOk)
-			}
-		})
-	}
-}
-
 func TestHindrances_FindHindrance(t *testing.T) {
 	type args struct {
 		name string
@@ -118,6 +54,98 @@ func TestHindrances_FindHindrance(t *testing.T) {
 			}
 			if gotFound != tt.wantFound {
 				t.Errorf("Hindrances.FindHindrance() gotFound = %v, want %v", gotFound, tt.wantFound)
+			}
+		})
+	}
+}
+
+func TestHindrance_FindDegree(t *testing.T) {
+	type fields struct {
+		Name             string
+		description      string
+		AvailableDegrees []HindranceDegree
+	}
+	type args struct {
+		degreeName string
+	}
+	tests := []struct {
+		name      string
+		fields    fields
+		args      args
+		wantIndex int
+		wantFound bool
+	}{
+		{
+			name: "find degree",
+			fields: fields{
+				Name:             "MockMinor",
+				description:      "",
+				AvailableDegrees: []HindranceDegree{{Degree: Minor}},
+			},
+			args:      args{degreeName: Minor.String()},
+			wantIndex: 0,
+			wantFound: true,
+		},
+		{
+			name: "find degree",
+			fields: fields{
+				Name:             "MockMinor",
+				description:      "",
+				AvailableDegrees: []HindranceDegree{{Degree: Minor}},
+			},
+			args:      args{degreeName: Minor.String()},
+			wantIndex: 0,
+			wantFound: true,
+		},
+		{
+			name: "do not find degree (empty hindrance)",
+			fields: fields{
+				Name:             "MockEmpty",
+				description:      "",
+				AvailableDegrees: []HindranceDegree{},
+			},
+			args:      args{degreeName: Minor.String()},
+			wantIndex: -1,
+			wantFound: false,
+		},
+		{
+
+			name: "do not find degree (missing degree)",
+			fields: fields{
+				Name:             "MockMajor",
+				description:      "",
+				AvailableDegrees: []HindranceDegree{{Degree: Major}},
+			},
+			args:      args{degreeName: Minor.String()},
+			wantIndex: -1,
+			wantFound: false,
+		},
+		{
+
+			name: "find degree (having  multiple degrees)",
+			fields: fields{
+				Name:             "MockMajorMinor",
+				description:      "",
+				AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}},
+			},
+			args:      args{degreeName: Minor.String()},
+			wantIndex: 1,
+			wantFound: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			h := Hindrance{
+				Name:             tt.fields.Name,
+				description:      tt.fields.description,
+				AvailableDegrees: tt.fields.AvailableDegrees,
+			}
+			gotIndex, gotFound := h.FindDegree(tt.args.degreeName)
+			if gotIndex != tt.wantIndex {
+				t.Errorf("Hindrance.FindDegree() gotIndex = %v, want %v", gotIndex, tt.wantIndex)
+			}
+			if gotFound != tt.wantFound {
+				t.Errorf("Hindrance.FindDegree() gotFound = %v, want %v", gotFound, tt.wantFound)
 			}
 		})
 	}

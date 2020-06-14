@@ -85,7 +85,7 @@ func (s Sheet) collectHindranceModifier(rbHinds rulebook.Hindrances) []rulebook.
 		index, _ := rbHinds.FindHindrance(sheetHindrance.Name)
 		matchedHindrance := rulebook.SwadeHindrances[index]
 
-		index, ok := rulebook.FindDegree(matchedHindrance, sheetHindrance.Degree)
+		index, ok := matchedHindrance.FindDegree(sheetHindrance.Degree)
 		if !ok {
 			continue
 		}
