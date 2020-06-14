@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -euo pipefail
+
+export GO111MODULE="on"
+export GOBIN=$(pwd)/bin
+# export PATH=$GOBIN:$PATH
+
+go get -u github.com/nishanths/exhaustive/...
+
+# exhaustive
+
+$(pwd)/bin/exhaustive ./...
