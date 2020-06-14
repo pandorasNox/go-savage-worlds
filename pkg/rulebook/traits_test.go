@@ -74,7 +74,7 @@ func TestSkills_CoreSkills(t *testing.T) {
 	tests := []struct {
 		name           string
 		skills         Skills
-		wantCoreSkills []Skill
+		wantCoreSkills Skills
 	}{
 		// TODO: Add test cases.
 		// TODO: Add test cases.
@@ -85,16 +85,16 @@ func TestSkills_CoreSkills(t *testing.T) {
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
 				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
 			},
-			wantCoreSkills: []Skill{},
+			wantCoreSkills: Skills{},
 		},
 		{
 			name: "find all",
-			skills: []Skill{
+			skills: Skills{
 				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: true, description: ""},
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 			},
-			wantCoreSkills: []Skill{
+			wantCoreSkills: Skills{
 				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: true, description: ""},
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
@@ -102,25 +102,25 @@ func TestSkills_CoreSkills(t *testing.T) {
 		},
 		{
 			name: "find one",
-			skills: []Skill{
+			skills: Skills{
 				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
 			},
 
-			wantCoreSkills: []Skill{
+			wantCoreSkills: Skills{
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 			},
 		},
 		{
 			name: "find some",
-			skills: []Skill{
+			skills: Skills{
 				{Name: "Skill0", LinkedAttribute: "Attribute1", IsCore: false, description: ""},
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 				{Name: "Skill2", LinkedAttribute: "Attribute2", IsCore: false, description: ""},
 				{Name: "Skill3", LinkedAttribute: "Attribute4", IsCore: true, description: ""},
 			},
-			wantCoreSkills: []Skill{
+			wantCoreSkills: Skills{
 				{Name: "Skill1", LinkedAttribute: "Attribute2", IsCore: true, description: ""},
 				{Name: "Skill3", LinkedAttribute: "Attribute4", IsCore: true, description: ""},
 			},

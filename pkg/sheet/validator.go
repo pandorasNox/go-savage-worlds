@@ -15,12 +15,12 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 
 	var err error
 
-	err = validatePermittedHindrances(s)
+	err = validatePermittedHindrances(s, rb.Hindrances())
 	if err != nil {
 		return fmt.Errorf("sheet validation hindrance errors: %s", err)
 	}
 
-	modifier := s.collectModifier()
+	modifier := s.collectModifier(rb)
 	_ = modifier
 
 	earnedHindrancePoints = s.countHindrancePoints()
@@ -39,9 +39,9 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 	return nil
 }
 
-func validatePermittedHindrances(s Sheet) error {
+func validatePermittedHindrances(s Sheet, rbHinds rulebook.Hindrances) error {
 	for _, sheetHindrance := range s.Character.Hindrances {
-		index, ok := rulebook.FindHindrance(sheetHindrance.Name)
+		index, ok := rbHinds.FindHindrance(sheetHindrance.Name)
 
 		if !ok {
 			return fmt.Errorf("\"%s\" is no valid hindrance", sheetHindrance.Name)

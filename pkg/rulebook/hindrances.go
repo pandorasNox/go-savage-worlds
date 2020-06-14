@@ -6,6 +6,8 @@ type Hindrance struct {
 	AvailableDegrees []HindranceDegree
 }
 
+type Hindrances []Hindrance
+
 type HindranceDegree struct {
 	Degree    Degree
 	Modifiers []Modifier
@@ -22,10 +24,9 @@ func (d Degree) String() string {
 	return []string{"major", "minor"}[d]
 }
 
-//find vs indexOf
-// findHindrance returns index int and ok bool
-func FindHindrance(name string) (index int, ok bool) {
-	for i, hindrance := range SwadeHindrances {
+// FindHindrance returns index int and found bool
+func (hs Hindrances) FindHindrance(name string) (index int, found bool) {
+	for i, hindrance := range hs {
 		if hindrance.Name == name {
 			return i, true
 		}

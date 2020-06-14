@@ -4,38 +4,6 @@ import (
 	"testing"
 )
 
-func Test_findHindrance(t *testing.T) {
-	SwadeHindrances = []Hindrance{
-		{Name: "Mock0", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
-		{Name: "Mock1", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
-	}
-	type args struct {
-		name string
-	}
-	tests := []struct {
-		name      string
-		args      args
-		wantIndex int
-		wantOk    bool
-	}{
-		// TODO: Add test cases.
-		{"find hindrance Mock0", args{"Mock0"}, 0, true},
-		{"find hindrance Mock1", args{"Mock1"}, 1, true},
-		{"don't find non-existing hindrance", args{"MockFOO"}, -1, false},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := FindHindrance(tt.args.name)
-			if got != tt.wantIndex {
-				t.Errorf("findHindrance() got = %v, want %v", got, tt.wantIndex)
-			}
-			if got1 != tt.wantOk {
-				t.Errorf("findHindrance() got1 = %v, want %v", got1, tt.wantOk)
-			}
-		})
-	}
-}
-
 func Test_findDegree(t *testing.T) {
 	mockHindranceMinor := Hindrance{
 		Name:             "MockMinor",
@@ -95,6 +63,61 @@ func Test_findDegree(t *testing.T) {
 			}
 			if got1 != tt.wantOk {
 				t.Errorf("findDegree() got1 = %v, wantOk %v", got1, tt.wantOk)
+			}
+		})
+	}
+}
+
+func TestHindrances_FindHindrance(t *testing.T) {
+	type args struct {
+		name string
+	}
+	tests := []struct {
+		name      string
+		hs        Hindrances
+		args      args
+		wantIndex int
+		wantFound bool
+	}{
+		{
+			name: "find hindrance Mock0",
+			hs: []Hindrance{
+				{Name: "Mock0", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+				{Name: "Mock1", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
+			},
+			args:      args{name: "Mock0"},
+			wantIndex: 0,
+			wantFound: true,
+		},
+		{
+			name: "find hindrance Mock1",
+			hs: []Hindrance{
+				{Name: "Mock0", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+				{Name: "Mock1", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
+			},
+			args:      args{name: "Mock1"},
+			wantIndex: 1,
+			wantFound: true,
+		},
+		{
+			name: "dont find non-existing hindrance",
+			hs: []Hindrance{
+				{Name: "Mock0", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+				{Name: "Mock1", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
+			},
+			args:      args{name: "Mock foo"},
+			wantIndex: -1,
+			wantFound: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotIndex, gotFound := tt.hs.FindHindrance(tt.args.name)
+			if gotIndex != tt.wantIndex {
+				t.Errorf("Hindrances.FindHindrance() gotIndex = %v, want %v", gotIndex, tt.wantIndex)
+			}
+			if gotFound != tt.wantFound {
+				t.Errorf("Hindrances.FindHindrance() gotFound = %v, want %v", gotFound, tt.wantFound)
 			}
 		})
 	}

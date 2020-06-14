@@ -66,23 +66,23 @@ const (
 	baseSkillPoints     int = 12
 )
 
-func (s Sheet) collectModifier() []rulebook.Modifier {
+func (s Sheet) collectModifier(rb rulebook.Rulebook) []rulebook.Modifier {
 	var modifier []rulebook.Modifier
 
 	// race modifier
 
-	modifier = append(modifier, s.collectHindranceModifier()...)
+	modifier = append(modifier, s.collectHindranceModifier(rb.Hindrances())...)
 
 	// endge modifier
 
 	return modifier
 }
 
-func (s Sheet) collectHindranceModifier() []rulebook.Modifier {
+func (s Sheet) collectHindranceModifier(rbHinds rulebook.Hindrances) []rulebook.Modifier {
 	modifier := []rulebook.Modifier{}
 
 	for _, sheetHindrance := range s.Character.Hindrances {
-		index, _ := rulebook.FindHindrance(sheetHindrance.Name)
+		index, _ := rbHinds.FindHindrance(sheetHindrance.Name)
 		matchedHindrance := rulebook.SwadeHindrances[index]
 
 		index, ok := rulebook.FindDegree(matchedHindrance, sheetHindrance.Degree)

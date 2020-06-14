@@ -1,8 +1,8 @@
 package rulebook
 
 type Traits struct {
-	Attributes []Attribute
-	Skills     []Skill
+	Attributes Attributes
+	Skills     Skills
 }
 
 type Attribute struct {
@@ -33,8 +33,8 @@ type Skill struct {
 type Skills []Skill
 
 //CoreSkills returns slice of skills which have isCore true
-func (ss Skills) CoreSkills() (coreSkills []Skill) {
-	coreSkills = []Skill{}
+func (ss Skills) CoreSkills() (coreSkills Skills) {
+	coreSkills = Skills{}
 
 	for _, skill := range ss {
 		if skill.IsCore {
