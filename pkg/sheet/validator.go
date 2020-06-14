@@ -48,7 +48,7 @@ func validatePermittedHindrances(s Sheet) error {
 		}
 
 		found := false
-		for _, hd := range rulebook.Hindrances[index].AvailableDegrees {
+		for _, hd := range rulebook.SwadeHindrances[index].AvailableDegrees {
 			if hd.Degree.String() == sheetHindrance.Degree {
 				found = true
 				break
@@ -59,7 +59,7 @@ func validatePermittedHindrances(s Sheet) error {
 			return fmt.Errorf(
 				"\"%s\" is no valid degree of \"%s\"",
 				sheetHindrance.Degree,
-				rulebook.Hindrances[index].Name,
+				rulebook.SwadeHindrances[index].Name,
 			)
 		}
 	}

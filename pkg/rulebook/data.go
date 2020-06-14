@@ -1,7 +1,7 @@
 package rulebook
 
-// SWADE_Attributes which are predefined for the SWADE ruleset
-var SWADE_Attributes = []Attribute{
+// SwadeAttributes which are predefined for the SWADE ruleset
+var SwadeAttributes = []Attribute{
 	{Name: "Agility", description: ""},
 	{Name: "Smarts", description: ""},
 	{Name: "Spirit", description: ""},
@@ -9,8 +9,8 @@ var SWADE_Attributes = []Attribute{
 	{Name: "Vigor", description: ""},
 }
 
-// SWADE_Skills which are predefined for the SWADE ruleset
-var SWADE_Skills = []Skill{
+// SwadeSkills which are predefined for the SWADE ruleset
+var SwadeSkills = []Skill{
 	{Name: "Academics", LinkedAttribute: "Smarts", IsCore: false, description: "Academics reflects knowledge of the liberal arts, social sciences, literature, history, archaeology, and similar fields. If an explorer wants to remember when the Mayan calendar ended or cite a line from Macbeth, this is the skill to have."},
 	{Name: "Athletics", LinkedAttribute: "Agility", IsCore: true, description: ""},
 	{Name: "Battle", LinkedAttribute: "Smarts", IsCore: false, description: ""},
@@ -43,4 +43,29 @@ var SWADE_Skills = []Skill{
 	{Name: "Taunt", LinkedAttribute: "Smarts", IsCore: false, description: ""},
 	{Name: "Thievery", LinkedAttribute: "Agility", IsCore: false, description: ""},
 	{Name: "Weird Science", LinkedAttribute: "Smarts", IsCore: false, description: ""},
+}
+
+// SwadeHindrances which are predefined for the SWADE ruleset
+var SwadeHindrances = []Hindrance{
+	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
+	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	//Can’t Swim (Minor): –2 to swimming (contained in skill Athletiks)
+	{Name: "Can't Swim", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{
+		Name:        "Clueless",
+		description: "Clueless (Major): –1 to Common Knowledge and Notice rolls.",
+		AvailableDegrees: []HindranceDegree{{Degree: Major,
+			Modifiers: []Modifier{
+				{kind: ModifierKindDiceAdjustment, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Common Knowledge"}},
+				{kind: ModifierKindDiceAdjustment, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Notice"}},
+			}}},
+	},
+	//Clumsy (Major): –2 to Athletics and Stealth rolls.
+	//Obese (Minor): Size +1, Pace –1 and running die of d4. Treat Str as one die type lower for Min Str.
+	/*
+	 * Small (Minor): Size and Toughness are reduced by 1. Size cannot be reduced below –1.
+	 * race aquarian +1 toughness
+	 */
+	//Young (Minor/Major): Minor has 4 attribute points and 10 skill points, extra Benny per session. Major has 3 attribute points, 10 skill points, and two extra Bennies per session.
 }

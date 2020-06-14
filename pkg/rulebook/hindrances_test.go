@@ -5,7 +5,7 @@ import (
 )
 
 func Test_findHindrance(t *testing.T) {
-	Hindrances = []Hindrance{
+	SwadeHindrances = []Hindrance{
 		{Name: "Mock0", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 		{Name: "Mock1", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
 	}

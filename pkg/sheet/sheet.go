@@ -83,7 +83,7 @@ func (s Sheet) collectHindranceModifier() []rulebook.Modifier {
 
 	for _, sheetHindrance := range s.Character.Hindrances {
 		index, _ := rulebook.FindHindrance(sheetHindrance.Name)
-		matchedHindrance := rulebook.Hindrances[index]
+		matchedHindrance := rulebook.SwadeHindrances[index]
 
 		index, ok := rulebook.FindDegree(matchedHindrance, sheetHindrance.Degree)
 		if !ok {

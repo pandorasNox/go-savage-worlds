@@ -21,7 +21,7 @@ func main() {
 	// fmt.Printf("%+v", character)
 	// PrettyPrint(sheet)
 
-	rb := rulebook.New(rulebook.SWADE_Attributes, rulebook.SWADE_Skills)
+	rb := rulebook.New(rulebook.SwadeAttributes, rulebook.SwadeSkills)
 
 	err = sheet.Validate(charSheet, rb)
 	if err != nil {
