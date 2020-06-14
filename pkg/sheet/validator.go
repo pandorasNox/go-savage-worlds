@@ -115,7 +115,7 @@ func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, availableAttr
 			)
 		}
 
-		aggregatedAttributePoints += dice.Value()
+		aggregatedAttributePoints += dice.Points()
 	}
 
 	if aggregatedAttributePoints > availableAttributePoints {
@@ -212,7 +212,7 @@ func validateSkillPoints(s Sheet, rbs rulebook.Skills, availableSkillPoints int)
 				pointCostModifier = 0
 			}
 
-			aggregatedSkillPoints += dice.Value() + pointCostModifier
+			aggregatedSkillPoints += dice.Points() + pointCostModifier
 		}
 	}
 

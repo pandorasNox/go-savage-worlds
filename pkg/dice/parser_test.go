@@ -18,13 +18,13 @@ func TestParse(t *testing.T) {
 		{
 			name:    "parse only dice",
 			args:    args{dice: "d4"},
-			want:    Dice{value: 0, adjustment: 0},
+			want:    Dice{value: "4", points: 0, adjustment: 0},
 			wantErr: false,
 		},
 		{
 			name:    "parse dice and adjustment",
 			args:    args{dice: "d12+8"},
-			want:    Dice{value: 4, adjustment: 8},
+			want:    Dice{value: "12", points: 4, adjustment: 8},
 			wantErr: false,
 		},
 		{
@@ -36,7 +36,7 @@ func TestParse(t *testing.T) {
 		{
 			name:    "parse dice and negative adjustment",
 			args:    args{dice: "d10-2"},
-			want:    Dice{value: 3, adjustment: -2},
+			want:    Dice{value: "10", points: 3, adjustment: -2},
 			wantErr: false,
 		},
 	}

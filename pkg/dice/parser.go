@@ -7,13 +7,19 @@ import (
 )
 
 type Dice struct {
-	value      int
+	value      string
+	points     int
 	adjustment int
 }
 
-//Value returns int represented dice value
-func (d Dice) Value() (value int) {
+//Value returns the string value of the dice
+func (d Dice) Value() (value string) {
 	return d.value
+}
+
+//Points returns the int representation of dice.Value()
+func (d Dice) Points() (points int) {
+	return d.points
 }
 
 //Adjustment returns the dice adjustment (e.g. +3 OR -2 OR ...)
@@ -59,5 +65,5 @@ func Parse(dice string) (Dice, error) {
 		}
 	}
 
-	return Dice{value: diceValueToPointsUsedMap[foundDice], adjustment: adjustment}, nil
+	return Dice{value: foundDice, points: diceValueToPointsUsedMap[foundDice], adjustment: adjustment}, nil
 }
