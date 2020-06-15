@@ -1,7 +1,33 @@
 package rulebook
 
+// SwadeRaces predefined for the SWADE core ruleset
+var SwadeRaces = Races{
+	{
+		name:        "Human",
+		description: "boring",
+		abilities: racialAbilities{
+			{
+				name:           "Adaptable",
+				classification: Positive,
+				modifiers:      Modifiers{},
+			},
+		},
+	},
+	{
+		name:        "Android",
+		description: "pacifistic...",
+		abilities: racialAbilities{
+			{
+				name:           "Hindrance",
+				classification: Negative,
+				modifiers:      Modifiers{},
+			},
+		},
+	},
+}
+
 // SwadeAttributes which are predefined for the SWADE ruleset
-var SwadeAttributes = []Attribute{
+var SwadeAttributes = Attributes{
 	{Name: "Agility", description: ""},
 	{Name: "Smarts", description: ""},
 	{Name: "Spirit", description: ""},
@@ -10,7 +36,7 @@ var SwadeAttributes = []Attribute{
 }
 
 // SwadeSkills which are predefined for the SWADE ruleset
-var SwadeSkills = []Skill{
+var SwadeSkills = Skills{
 	{Name: "Academics", LinkedAttribute: "Smarts", IsCore: false, description: "Academics reflects knowledge of the liberal arts, social sciences, literature, history, archaeology, and similar fields. If an explorer wants to remember when the Mayan calendar ended or cite a line from Macbeth, this is the skill to have."},
 	{Name: "Athletics", LinkedAttribute: "Agility", IsCore: true, description: ""},
 	{Name: "Battle", LinkedAttribute: "Smarts", IsCore: false, description: ""},
@@ -46,7 +72,7 @@ var SwadeSkills = []Skill{
 }
 
 // SwadeHindrances which are predefined for the SWADE ruleset
-var SwadeHindrances = []Hindrance{
+var SwadeHindrances = Hindrances{
 	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
 	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},

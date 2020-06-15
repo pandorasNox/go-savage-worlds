@@ -11,7 +11,13 @@ go implementation of savage world rules
 - add testing
 - write integration test for sheet validation (cat ....)
 - (maybe, bec how about testing???) make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
+- create validation struct with internal counter
+    - we have to mutate it over the running process
+    - redux???
+    - afterwards change modifier to function which can change the internal counter
+        - fixing ModifierKindEdgeSlot ModifierKindAddHindrance issues
 - races + racial effects
+- after we added ModifierKindEdgeSlot we also need a new kind of EdgeValidator which ensures e.g. at least one edge (depending on all collected validators) is from level novize (human racial ability) ?????
 - hindrance effects
 - edges + edges effects + edged requirements
 - DerivedStatistics
