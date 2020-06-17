@@ -61,11 +61,6 @@ type DerivedStatistics struct {
 	} `yaml:"toughness"`
 }
 
-const (
-	baseAttributePoints int = 5
-	baseSkillPoints     int = 12
-)
-
 func (s Sheet) collectModifier(rb rulebook.Rulebook) []rulebook.Modifier {
 	var modifier []rulebook.Modifier
 

@@ -9,9 +9,19 @@ import (
 
 //Validate validates a savage world sheet
 func Validate(s Sheet, rb rulebook.Rulebook) error {
-	availableAttributePoints := baseAttributePoints
-	availableSkillPoints := baseSkillPoints
-	earnedHindrancePoints := 0
+	initCharAggegation := CharacterAggregation{
+		AttributePointsAvailable: rulebook.BaseAttributePoints,
+		SkillPointsAvailable:     rulebook.BaseSkillPoints,
+		HindrancePointsLimit:     4,
+		HindrancePointsEarned:    0,
+		HindrancePointsUsed:      0,
+	}
+
+	charState := CharacterAggregationState{}
+	//todo: init func instead?!
+	charState.Update(func(_ CharacterAggregation) CharacterAggregation {
+		return initCharAggegation
+	})
 
 	var err error
 
@@ -23,15 +33,21 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 	modifier := s.collectModifier(rb)
 	_ = modifier
 
-	earnedHindrancePoints = s.countHindrancePoints()
-	_ = earnedHindrancePoints
+	charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
+		currentState.HindrancePointsEarned = s.countHindrancePoints()
+		return currentState
+	})
 
-	err = validateAttributes(s, rb.Traits().Attributes, availableAttributePoints)
+	//todo: process attribute modifieres
+
+	err = validateAttributes(s, rb.Traits().Attributes, charState)
 	if err != nil {
 		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
 
-	err = validateSkills(s, rb.Traits().Skills, availableSkillPoints)
+	//todo: process skill modifieres
+
+	err = validateSkills(s, rb.Traits().Skills, charState)
 	if err != nil {
 		return fmt.Errorf("sheet validation skill errors: %s", err)
 	}
@@ -67,7 +83,7 @@ func validatePermittedHindrances(s Sheet, rbHinds rulebook.Hindrances) error {
 	return nil
 }
 
-func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, availableAttributePoints int) error {
+func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, charState CharacterAggregationState) error {
 	var err error
 
 	err = validateAttributesExist(s, rbAttrs)
@@ -75,7 +91,7 @@ func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, availableAttribute
 		return err
 	}
 
-	err = validateAttributePoints(s, rbAttrs, availableAttributePoints)
+	err = validateAttributePoints(s, rbAttrs, charState)
 	if err != nil {
 		return err
 	}
@@ -98,9 +114,7 @@ RequiredAttributes:
 	return nil
 }
 
-func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, availableAttributePoints int) error {
-	aggregatedAttributePoints := 0
-
+func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState CharacterAggregationState) error {
 	for _, attribute := range s.Character.Traits.Attributes {
 		_, ok := rbAttrs.FindAttribute(attribute.Name)
 		if ok == false {
@@ -115,21 +129,24 @@ func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, availableAttr
 			)
 		}
 
-		aggregatedAttributePoints += dice.Points()
+		charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
+			currentState.AttributePointsUsed += dice.Points()
+			return currentState
+		})
 	}
 
-	if aggregatedAttributePoints > availableAttributePoints {
+	if charState.AttributePointsUsed() > charState.AttributePointsAvailable() {
 		return fmt.Errorf(
 			"validation error: Used %d of %d available attribute points",
-			aggregatedAttributePoints,
-			availableAttributePoints,
+			charState.AttributePointsUsed(),
+			charState.AttributePointsAvailable(),
 		)
 	}
 
 	return nil
 }
 
-func validateSkills(s Sheet, rbs rulebook.Skills, availableSkillPoints int) error {
+func validateSkills(s Sheet, rbs rulebook.Skills, charState CharacterAggregationState) error {
 	var err error
 
 	err = validateCoreSkillsExist(s, rbs)
@@ -142,7 +159,7 @@ func validateSkills(s Sheet, rbs rulebook.Skills, availableSkillPoints int) erro
 		return err
 	}
 
-	err = validateSkillPoints(s, rbs, availableSkillPoints)
+	err = validateSkillPoints(s, rbs, charState)
 	if err != nil {
 		return err
 	}
@@ -191,9 +208,7 @@ func validatePermittedSkills(s Sheet, rbs rulebook.Skills) error {
 	return nil
 }
 
-func validateSkillPoints(s Sheet, rbs rulebook.Skills, availableSkillPoints int) error {
-	aggregatedSkillPoints := 0
-
+func validateSkillPoints(s Sheet, rbs rulebook.Skills, charState CharacterAggregationState) error {
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
 			index, _ := rbs.FindSkill(sheetSkill.Name)
@@ -212,15 +227,18 @@ func validateSkillPoints(s Sheet, rbs rulebook.Skills, availableSkillPoints int)
 				pointCostModifier = 0
 			}
 
-			aggregatedSkillPoints += dice.Points() + pointCostModifier
+			charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
+				currentState.SkillPointsUsed += dice.Points() + pointCostModifier
+				return currentState
+			})
 		}
 	}
 
-	if aggregatedSkillPoints > availableSkillPoints {
+	if charState.SkillPointsUsed() > charState.SkillPointsAvailable() {
 		return fmt.Errorf(
 			"validation error: Used %d of %d available skill points",
-			aggregatedSkillPoints,
-			availableSkillPoints,
+			charState.SkillPointsUsed(),
+			charState.SkillPointsAvailable(),
 		)
 	}
 

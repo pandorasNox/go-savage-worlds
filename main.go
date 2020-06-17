@@ -29,13 +29,6 @@ func main() {
 	}
 
 	fmt.Println("sheet is valid")
-
-	// mycas := sheet.CharacterAggregationState{}
-	// mycas.Update(func(sc sheet.CharacterAggregation) sheet.CharacterAggregation {
-	// 	sc.AttributePointsAvailable = 200
-	// 	return sc
-	// })
-	// fmt.Println(mycas)
 }
 
 func PrettyPrint(data interface{}) {

@@ -12,6 +12,11 @@ type Attribute struct {
 
 type Attributes []Attribute
 
+const (
+	BaseAttributePoints int = 5
+	BaseSkillPoints     int = 12
+)
+
 // FindAttribute returns index and found bool
 func (attrs Attributes) FindAttribute(name string) (index int, found bool) {
 	for i, attribute := range attrs {
