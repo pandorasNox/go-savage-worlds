@@ -1,6 +1,4 @@
-package sheet
-
-import "github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
+package rulebook
 
 //CharacterAggregation reflect the values of rules and sheet
 type CharacterAggregation struct {
@@ -13,9 +11,9 @@ type CharacterAggregation struct {
 	HindrancePointsLimit  int
 	HindrancePointsEarned int
 	HindrancePointsUsed   int
-	HindrancesRequired    rulebook.Hindrances
+	HindrancesRequired    Hindrances
 	//ignored for hindrancePoints aggregation
-	HindrancesIgnored rulebook.Hindrances
+	HindrancesIgnored Hindrances
 }
 
 //CharacterAggregationState reflects current state of character aggregation
@@ -23,13 +21,23 @@ type CharacterAggregationState struct {
 	characterAggregation CharacterAggregation
 }
 
-//Update the character aggregation state via the provided method
+//Update the character aggregation state via the provided functions
 func (cas *CharacterAggregationState) Update(cam CharacterAggregationModifier) {
 	cas.characterAggregation = cam(cas.characterAggregation)
 }
 
-//CharacterAggregationModifier the method used to update the character aggregation
+//Updates the character aggregation state via the provided functions
+func (cas *CharacterAggregationState) Updates(cams CharacterAggregationModifiers) {
+	for _, m := range cams {
+		cas.Update(m)
+	}
+}
+
+//CharacterAggregationModifier the function used to update the character aggregation
 type CharacterAggregationModifier func(CharacterAggregation) CharacterAggregation
+
+//CharacterAggregationModifiers is a list of CharacterAggregationModifier
+type CharacterAggregationModifiers []CharacterAggregationModifier
 
 //AttributePointsAvailable returns available attribute points
 func (cas CharacterAggregationState) AttributePointsAvailable() (pointsAvailable int) {

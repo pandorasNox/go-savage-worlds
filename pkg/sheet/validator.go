@@ -9,7 +9,7 @@ import (
 
 //Validate validates a savage world sheet
 func Validate(s Sheet, rb rulebook.Rulebook) error {
-	initCharAggegation := CharacterAggregation{
+	initCharAggegation := rulebook.CharacterAggregation{
 		AttributePointsAvailable: rulebook.BaseAttributePoints,
 		SkillPointsAvailable:     rulebook.BaseSkillPoints,
 		HindrancePointsLimit:     4,
@@ -17,9 +17,9 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 		HindrancePointsUsed:      0,
 	}
 
-	charState := CharacterAggregationState{}
+	charState := rulebook.CharacterAggregationState{}
 	//todo: init func instead?!
-	charState.Update(func(_ CharacterAggregation) CharacterAggregation {
+	charState.Update(func(_ rulebook.CharacterAggregation) rulebook.CharacterAggregation {
 		return initCharAggegation
 	})
 
@@ -33,7 +33,7 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 	modifier := s.collectModifier(rb)
 	_ = modifier
 
-	charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
+	charState.Update(func(currentState rulebook.CharacterAggregation) rulebook.CharacterAggregation {
 		currentState.HindrancePointsEarned = s.countHindrancePoints()
 		return currentState
 	})
@@ -83,7 +83,7 @@ func validatePermittedHindrances(s Sheet, rbHinds rulebook.Hindrances) error {
 	return nil
 }
 
-func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, charState CharacterAggregationState) error {
+func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, charState rulebook.CharacterAggregationState) error {
 	var err error
 
 	err = validateAttributesExist(s, rbAttrs)
@@ -114,7 +114,7 @@ RequiredAttributes:
 	return nil
 }
 
-func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState CharacterAggregationState) error {
+func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState rulebook.CharacterAggregationState) error {
 	for _, attribute := range s.Character.Traits.Attributes {
 		_, ok := rbAttrs.FindAttribute(attribute.Name)
 		if ok == false {
@@ -129,7 +129,7 @@ func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState Cha
 			)
 		}
 
-		charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
+		charState.Update(func(currentState rulebook.CharacterAggregation) rulebook.CharacterAggregation {
 			currentState.AttributePointsUsed += dice.Points()
 			return currentState
 		})
@@ -146,7 +146,7 @@ func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState Cha
 	return nil
 }
 
-func validateSkills(s Sheet, rbs rulebook.Skills, charState CharacterAggregationState) error {
+func validateSkills(s Sheet, rbs rulebook.Skills, charState rulebook.CharacterAggregationState) error {
 	var err error
 
 	err = validateCoreSkillsExist(s, rbs)
@@ -208,7 +208,7 @@ func validatePermittedSkills(s Sheet, rbs rulebook.Skills) error {
 	return nil
 }
 
-func validateSkillPoints(s Sheet, rbs rulebook.Skills, charState CharacterAggregationState) error {
+func validateSkillPoints(s Sheet, rbs rulebook.Skills, charState rulebook.CharacterAggregationState) error {
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
 			index, _ := rbs.FindSkill(sheetSkill.Name)
@@ -227,7 +227,7 @@ func validateSkillPoints(s Sheet, rbs rulebook.Skills, charState CharacterAggreg
 				pointCostModifier = 0
 			}
 
-			charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
+			charState.Update(func(currentState rulebook.CharacterAggregation) rulebook.CharacterAggregation {
 				currentState.SkillPointsUsed += dice.Points() + pointCostModifier
 				return currentState
 			})

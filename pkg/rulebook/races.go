@@ -22,14 +22,14 @@ type racialAbility struct {
 	name           string
 	description    string
 	classification classification
-	modifiers      Modifiers
+	modifiers      CharacterAggregationModifiers
 }
 
 type racialAbilities []racialAbility
 
 //Modifiers return the races modifiers
-func (r Race) Modifiers() (modifiers Modifiers) {
-	m := Modifiers{}
+func (r Race) Modifiers() (modifiers CharacterAggregationModifiers) {
+	m := CharacterAggregationModifiers{}
 
 	for _, ab := range r.abilities {
 		m = append(m, ab.modifiers...)

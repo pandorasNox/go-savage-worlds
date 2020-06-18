@@ -1,11 +1,21 @@
 package rulebook
 
 import (
-	"reflect"
+	"fmt"
 	"testing"
 )
 
 func TestRace_Modifiers(t *testing.T) {
+	m1 := func(ca CharacterAggregation) CharacterAggregation {
+		return ca
+	}
+	m2 := func(ca CharacterAggregation) CharacterAggregation {
+		return ca
+	}
+	m3 := func(ca CharacterAggregation) CharacterAggregation {
+		return ca
+	}
+
 	type fields struct {
 		name        string
 		description string
@@ -14,7 +24,7 @@ func TestRace_Modifiers(t *testing.T) {
 	tests := []struct {
 		name          string
 		fields        fields
-		wantModifiers Modifiers
+		wantModifiers CharacterAggregationModifiers
 	}{
 		{
 			name: "nothing found when empty modifiers",
@@ -23,7 +33,7 @@ func TestRace_Modifiers(t *testing.T) {
 				description: "",
 				abilities:   racialAbilities{},
 			},
-			wantModifiers: Modifiers{},
+			wantModifiers: CharacterAggregationModifiers{},
 		},
 		{
 			name: "found single",
@@ -32,23 +42,11 @@ func TestRace_Modifiers(t *testing.T) {
 				description: "",
 				abilities: racialAbilities{
 					racialAbility{
-						modifiers: Modifiers{
-							Modifier{
-								kind:     ModifierKindDiceAdjustment,
-								value:    3,
-								selector: Selector{},
-							},
-						},
+						modifiers: CharacterAggregationModifiers{m1},
 					},
 				},
 			},
-			wantModifiers: Modifiers{
-				Modifier{
-					kind:     ModifierKindDiceAdjustment,
-					value:    3,
-					selector: Selector{},
-				},
-			},
+			wantModifiers: CharacterAggregationModifiers{m1},
 		},
 		{
 			name: "found multiple",
@@ -57,47 +55,14 @@ func TestRace_Modifiers(t *testing.T) {
 				description: "",
 				abilities: racialAbilities{
 					racialAbility{
-						modifiers: Modifiers{
-							Modifier{
-								kind:     ModifierKindDiceAdjustment,
-								value:    3,
-								selector: Selector{},
-							},
-						},
+						modifiers: CharacterAggregationModifiers{m1},
 					},
 					racialAbility{
-						modifiers: Modifiers{
-							Modifier{
-								kind:     ModifierKindDiceAdjustment,
-								value:    1,
-								selector: Selector{},
-							},
-							Modifier{
-								kind:     ModifierKindDiceValue,
-								value:    1,
-								selector: Selector{},
-							},
-						},
+						modifiers: CharacterAggregationModifiers{m2, m3},
 					},
 				},
 			},
-			wantModifiers: Modifiers{
-				Modifier{
-					kind:     ModifierKindDiceAdjustment,
-					value:    3,
-					selector: Selector{},
-				},
-				Modifier{
-					kind:     ModifierKindDiceAdjustment,
-					value:    1,
-					selector: Selector{},
-				},
-				Modifier{
-					kind:     ModifierKindDiceValue,
-					value:    1,
-					selector: Selector{},
-				},
-			},
+			wantModifiers: CharacterAggregationModifiers{m1, m2, m3},
 		},
 	}
 	for _, tt := range tests {
@@ -107,8 +72,9 @@ func TestRace_Modifiers(t *testing.T) {
 				description: tt.fields.description,
 				abilities:   tt.fields.abilities,
 			}
-			if gotModifiers := r.Modifiers(); !reflect.DeepEqual(gotModifiers, tt.wantModifiers) {
-				t.Errorf("Race.Modifiers() = %v, want %v", gotModifiers, tt.wantModifiers)
+
+			if gotModifiers := fmt.Sprintf("%v", r.Modifiers()); gotModifiers != fmt.Sprintf("%v", tt.wantModifiers) {
+				t.Errorf("Race.Modifiers() = %v, want %v", gotModifiers, fmt.Sprintf("%v", tt.wantModifiers))
 			}
 		})
 	}

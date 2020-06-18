@@ -9,7 +9,7 @@ var SwadeRaces = Races{
 			{
 				name:           "Adaptable",
 				classification: Positive,
-				modifiers:      Modifiers{},
+				modifiers:      CharacterAggregationModifiers{},
 			},
 		},
 	},
@@ -20,7 +20,7 @@ var SwadeRaces = Races{
 			{
 				name:           "Hindrance",
 				classification: Negative,
-				modifiers:      Modifiers{},
+				modifiers:      CharacterAggregationModifiers{},
 			},
 		},
 	},
