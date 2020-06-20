@@ -20,7 +20,9 @@ var SwadeRaces = Races{
 			{
 				name:           "Hindrance",
 				classification: Negative,
-				modifiers:      CharacterAggregationModifiers{},
+				modifiers: CharacterAggregationModifiers{
+					modifierAddIgnoredPacifistHindrance,
+				},
 			},
 		},
 	},
@@ -94,4 +96,10 @@ var SwadeHindrances = Hindrances{
 	 * race aquarian +1 toughness
 	 */
 	//Young (Minor/Major): Minor has 4 attribute points and 10 skill points, extra Benny per session. Major has 3 attribute points, 10 skill points, and two extra Bennies per session.
+
+	{
+		Name:             "Pacifist",
+		description:      "Fights only in self-defense as a Minor Hindrance, won’t fight at all as Major.",
+		AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}},
+	},
 }

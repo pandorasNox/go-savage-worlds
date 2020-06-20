@@ -11,10 +11,13 @@ type CharacterAggregation struct {
 	HindrancePointsLimit  int
 	HindrancePointsEarned int
 	HindrancePointsUsed   int
-	HindrancesRequired    Hindrances
+	HindrancesRequired    AggregatedHindrances
 	//ignored for hindrancePoints aggregation
-	HindrancesIgnored Hindrances
+	HindrancesIgnored AggregatedHindrances
 }
+
+type HindranceName string
+type AggregatedHindrances map[HindranceName]Degree
 
 //CharacterAggregationState reflects current state of character aggregation
 type CharacterAggregationState struct {
