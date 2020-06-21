@@ -26,14 +26,15 @@ type SettingRules struct {
 }
 
 type CharacterInfo struct {
-	Name       string `yaml:"name" isCore:"true"`
-	Race       string `yaml:"race"`
-	Gender     string `yaml:"gender"`
-	Concept    string `yaml:"concept"`
-	Background string `yaml:"background"`
-	Height     string `yaml:"height"`
-	Weight     string `yaml:"weight"`
-	Wealth     int    `yaml:"wealth"`
+	Name           string `yaml:"name" isCore:"true"`
+	Race           string `yaml:"race"`
+	Gender         string `yaml:"gender"`
+	Concept        string `yaml:"concept"`
+	Background     string `yaml:"background"`
+	Height         string `yaml:"height"`
+	Weight         string `yaml:"weight"`
+	Wealth         int    `yaml:"wealth"`
+	ShakenRecovery string `yaml:"shaken-recovery"`
 }
 
 type SheetAttribute struct {

@@ -8,13 +8,14 @@ setting-rules:
 character:
   info:
     name: Johanna Smith
-    race: Human
+    race: Android
     gender: Female
     concept: An example character.
     background: The character was born long long time ago, in a galaxy far away.
     height: 178cm
     weight: 65kg
     wealth: 250
+    shaken-recovery: d4+2
   traits:
     attributes:
       - name: Agility

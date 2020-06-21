@@ -14,6 +14,8 @@ type CharacterAggregation struct {
 	HindrancesRequired    AggregatedHindrances
 	//ignored for hindrancePoints aggregation
 	HindrancesIgnored AggregatedHindrances
+
+	ShakenRecoveryAdjusment int
 }
 
 type HindranceName string

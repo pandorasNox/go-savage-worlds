@@ -22,6 +22,21 @@ var SwadeRaces = Races{
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
 					modifierAddIgnoredPacifistHindrance,
+					modifierAddTwoAdjustmentsShakenRecovery,
+				},
+			},
+		},
+	},
+	{
+		name:        "Aquarius",
+		description: "",
+		abilities: racialAbilities{
+			{
+				name:           "Hindrance",
+				classification: Negative,
+				modifiers: CharacterAggregationModifiers{
+					modifierAddIgnoredPacifistHindrance,
+					modifierAddTwoAdjustmentsShakenRecovery,
 				},
 			},
 		},

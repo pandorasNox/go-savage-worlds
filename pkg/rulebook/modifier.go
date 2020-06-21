@@ -58,3 +58,9 @@ func modifierAddIgnoredPacifistHindrance(ca CharacterAggregation) CharacterAggre
 
 	return ca
 }
+
+func modifierAddTwoAdjustmentsShakenRecovery(ca CharacterAggregation) CharacterAggregation {
+	ca.ShakenRecoveryAdjusment += 2
+
+	return ca
+}

@@ -23,6 +23,16 @@ go implementation of savage world rules
 - DerivedStatistics
 - gear + gear effects
 - ??? gold validation + inventory + gear IF init validation ???
-- subskills optional field in skills
 - build a frontend app with go and the wasm compiler or go and gopherjs/vecty
 - use opaque types (example creating hindrances)
+
+## out of scope v1.0
+- racial abilities
+  - android
+    - hindrance: OUTSIDER (Major): Androids subtract 2 from Persuasion rolls when interacting with anyone besides other androids, and have no legal rights in most areas (they’re generally considered property).
+- subskills (roadmap v1.1)
+  - in racial ability pace modifiers
+  - edge adjustments
+  - hindrance adjustment
+- pace
+  - character enrichment with pace info about diffrent skills (roadmap v2)
