@@ -13,11 +13,10 @@ go implementation of savage world rules
 - (maybe, bec how about testing???) make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
 - create validation struct with internal counter
     - we have to mutate it over the running process
-    - redux???
     - afterwards change modifier to function which can change the internal counter
         - fixing ModifierKindEdgeSlot ModifierKindAddHindrance issues
 - races + racial effects
-- after we added ModifierKindEdgeSlot we also need a new kind of EdgeValidator which ensures e.g. at least one edge (depending on all collected validators) is from level novize (human racial ability) ?????
+- add dice raise validation to d12 + 1. (e.g. racial ability keen senses, start notice on d6)
 - hindrance effects
 - edges + edges effects + edged requirements
 - DerivedStatistics
@@ -31,7 +30,10 @@ go implementation of savage world rules
   - android
     - hindrance: OUTSIDER (Major): Androids subtract 2 from Persuasion rolls when interacting with anyone besides other androids, and have no legal rights in most areas (they’re generally considered property).
 - subskills (roadmap v1.1)
-  - in racial ability pace modifiers
+  - in racial ability
+    - pace modifiers
+      - e.g. agurian, avion ...
+    - CAN’T SWIM (-2 to swim)
   - edge adjustments
   - hindrance adjustment
 - pace

@@ -21,8 +21,9 @@ var SwadeRaces = Races{
 				name:           "Hindrance",
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
-					modifierAddIgnoredPacifistHindrance,
-					modifierAddTwoAdjustmentsShakenRecovery,
+					addIgnoredPacifistHindranceMod,
+					plusShakenRecoveryAdjustmentMod,
+					plusShakenRecoveryAdjustmentMod,
 				},
 			},
 		},
@@ -32,11 +33,33 @@ var SwadeRaces = Races{
 		description: "",
 		abilities: racialAbilities{
 			{
-				name:           "Hindrance",
+				name:           "Toughness",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					plusToughnessAdjustmentMod,
+					plusToughnessAdjustmentMod,
+				},
+			},
+		},
+	},
+	{
+		name:        "Avion",
+		description: "has wings",
+		abilities: racialAbilities{
+			{
+				name:           "Frail",
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
-					modifierAddIgnoredPacifistHindrance,
-					modifierAddTwoAdjustmentsShakenRecovery,
+					minusToughnessAdjustmentMod,
+				},
+			},
+			//KEEN SENSES: Avions are more perceptive than most.
+			//They begin with a d6 in Notice (instead of d4) and may raise the skill to d12 + 1.
+			{
+				name:           "Keen Senses",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					noticeSkillStartD6Mod,
 				},
 			},
 		},

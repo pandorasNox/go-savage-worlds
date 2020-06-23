@@ -37,7 +37,7 @@ func (sk SelectorKind) String() string {
 	return [...]string{"attribute", "skill"}[sk]
 }
 
-func modifierAddIgnoredPacifistHindrance(ca CharacterAggregation) CharacterAggregation {
+func addIgnoredPacifistHindranceMod(ca CharacterAggregation) CharacterAggregation {
 	hindranceName := HindranceName("Pacifist")
 	wantDegree := Major
 
@@ -59,8 +59,40 @@ func modifierAddIgnoredPacifistHindrance(ca CharacterAggregation) CharacterAggre
 	return ca
 }
 
-func modifierAddTwoAdjustmentsShakenRecovery(ca CharacterAggregation) CharacterAggregation {
-	ca.ShakenRecoveryAdjusment += 2
+func plusShakenRecoveryAdjustmentMod(ca CharacterAggregation) CharacterAggregation {
+	ca.ShakenRecoveryAdjusment++
 
+	return ca
+}
+
+func plusToughnessAdjustmentMod(ca CharacterAggregation) CharacterAggregation {
+	ca.ToughnessAdjustment++
+
+	return ca
+}
+
+func minusToughnessAdjustmentMod(ca CharacterAggregation) CharacterAggregation {
+	ca.ToughnessAdjustment--
+
+	return ca
+}
+
+func minusSkillPointsUsedMod(ca CharacterAggregation) CharacterAggregation {
+	ca.SkillPointsUsed--
+
+	return ca
+}
+
+func noticeSkillStartD6Mod(ca CharacterAggregation) CharacterAggregation {
+	ca = minusSkillPointsUsedMod(ca)
+
+	skillName := SkillName("Notice")
+	if pointsUsed, ok := ca.MinimumSkillPointsUsed[skillName]; ok {
+		if pointsUsed >= 1 {
+			return ca
+		}
+	}
+
+	ca.MinimumSkillPointsUsed[skillName] = 1
 	return ca
 }

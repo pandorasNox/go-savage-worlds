@@ -5,8 +5,9 @@ type CharacterAggregation struct {
 	AttributePointsAvailable int
 	AttributePointsUsed      int
 
-	SkillPointsAvailable int
-	SkillPointsUsed      int
+	SkillPointsAvailable   int
+	SkillPointsUsed        int
+	MinimumSkillPointsUsed MinimumSkillPointsUsed
 
 	HindrancePointsLimit  int
 	HindrancePointsEarned int
@@ -15,11 +16,16 @@ type CharacterAggregation struct {
 	//ignored for hindrancePoints aggregation
 	HindrancesIgnored AggregatedHindrances
 
+	ToughnessAdjustment int
+
 	ShakenRecoveryAdjusment int
 }
 
 type HindranceName string
 type AggregatedHindrances map[HindranceName]Degree
+
+type SkillName string
+type MinimumSkillPointsUsed map[SkillName]int
 
 //CharacterAggregationState reflects current state of character aggregation
 type CharacterAggregationState struct {
