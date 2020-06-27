@@ -2,12 +2,13 @@ package rulebook
 
 //CharacterAggregation reflect the values of rules and sheet
 type CharacterAggregation struct {
-	AttributePointsAvailable int
-	AttributePointsUsed      int
+	AttributePointsAvailable          int
+	AttributePointsUsed               int
+	MinimumAttributePointsRequiredFor MinimumAttributePointsRequiredFor
 
-	SkillPointsAvailable   int
-	SkillPointsUsed        int
-	MinimumSkillPointsUsed MinimumSkillPointsUsed
+	SkillPointsAvailable          int
+	SkillPointsUsed               int
+	MinimumSkillPointsRequiredFor MinimumSkillPointsRequiredFor
 
 	HindrancePointsLimit  int
 	HindrancePointsEarned int
@@ -25,7 +26,10 @@ type HindranceName string
 type AggregatedHindrances map[HindranceName]Degree
 
 type SkillName string
-type MinimumSkillPointsUsed map[SkillName]int
+type MinimumSkillPointsRequiredFor map[SkillName]int
+
+type AttributeName string
+type MinimumAttributePointsRequiredFor map[AttributeName]int
 
 //CharacterAggregationState reflects current state of character aggregation
 type CharacterAggregationState struct {

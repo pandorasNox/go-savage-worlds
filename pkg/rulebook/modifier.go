@@ -1,6 +1,10 @@
 package rulebook
 
-import "log"
+import (
+	"log"
+
+	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
+)
 
 type Modifier struct {
 	kind     ModifierKind
@@ -38,7 +42,7 @@ func (sk SelectorKind) String() string {
 }
 
 func addIgnoredPacifistHindranceMod(ca CharacterAggregation) CharacterAggregation {
-	hindranceName := HindranceName("Pacifist")
+	var hindranceName HindranceName = "Pacifist"
 	wantDegree := Major
 
 	hIndex, hFound := SwadeHindrances.FindHindrance(string(hindranceName))
@@ -83,16 +87,46 @@ func minusSkillPointsUsedMod(ca CharacterAggregation) CharacterAggregation {
 	return ca
 }
 
-func noticeSkillStartD6Mod(ca CharacterAggregation) CharacterAggregation {
+func skillStartsAtModBuilder(skillName SkillName, maybeDice string, ca CharacterAggregation) CharacterAggregation {
 	ca = minusSkillPointsUsedMod(ca)
 
-	skillName := SkillName("Notice")
-	if pointsUsed, ok := ca.MinimumSkillPointsUsed[skillName]; ok {
-		if pointsUsed >= 1 {
+	dice, err := dice.Parse(maybeDice)
+	if err != nil {
+		log.Fatalf("skillStartsAtModBuilder failed due dice parsing: %s", err)
+	}
+
+	if pointsRequired, ok := ca.MinimumSkillPointsRequiredFor[skillName]; ok {
+		if pointsRequired >= dice.Points() {
 			return ca
 		}
 	}
 
-	ca.MinimumSkillPointsUsed[skillName] = 1
+	ca.MinimumSkillPointsRequiredFor[skillName] = dice.Points()
+
+	return ca
+}
+
+func minusAttributePointsUsedMod(ca CharacterAggregation) CharacterAggregation {
+	ca.AttributePointsUsed--
+
+	return ca
+}
+
+func attributeStartsAtModBuilder(attributeName AttributeName, maybeDice string, ca CharacterAggregation) CharacterAggregation {
+	ca = minusAttributePointsUsedMod(ca)
+
+	dice, err := dice.Parse(maybeDice)
+	if err != nil {
+		log.Fatalf("attributeStartsAtModBuilder failed due dice parsing: %s", err)
+	}
+
+	if pointsRequired, ok := ca.MinimumAttributePointsRequiredFor[attributeName]; ok {
+		if pointsRequired >= dice.Points() {
+			return ca
+		}
+	}
+
+	ca.MinimumAttributePointsRequiredFor[attributeName] = dice.Points()
+
 	return ca
 }

@@ -59,7 +59,24 @@ var SwadeRaces = Races{
 				name:           "Keen Senses",
 				classification: Positive,
 				modifiers: CharacterAggregationModifiers{
-					noticeSkillStartD6Mod,
+					func (ca CharacterAggregation) CharacterAggregation {
+						return skillStartsAtModBuilder("Notice", "D6", ca)
+					},
+				},
+			},
+		},
+	},
+	{
+		name:        "Dwarfs",
+		description: "small and strong",
+		abilities: racialAbilities{
+			{
+				name:           "Tough",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func (ca CharacterAggregation) CharacterAggregation {
+						return attributeStartsAtModBuilder("Vigor", "D6", ca)
+					},
 				},
 			},
 		},
