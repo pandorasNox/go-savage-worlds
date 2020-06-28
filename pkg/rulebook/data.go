@@ -1,5 +1,7 @@
 package rulebook
 
+import "github.com/pandorasNox/go-savage-worlds/pkg/dice"
+
 // SwadeRaces predefined for the SWADE core ruleset
 var SwadeRaces = Races{
 	{
@@ -59,8 +61,8 @@ var SwadeRaces = Races{
 				name:           "Keen Senses",
 				classification: Positive,
 				modifiers: CharacterAggregationModifiers{
-					func (ca CharacterAggregation) CharacterAggregation {
-						return skillStartsAtModBuilder("Notice", "D6", ca)
+					func(ca CharacterAggregation) CharacterAggregation {
+						return skillStartsAtModBuilder("Notice", dice.D6, ca)
 					},
 				},
 			},
@@ -74,8 +76,8 @@ var SwadeRaces = Races{
 				name:           "Tough",
 				classification: Positive,
 				modifiers: CharacterAggregationModifiers{
-					func (ca CharacterAggregation) CharacterAggregation {
-						return attributeStartsAtModBuilder("Vigor", "D6", ca)
+					func(ca CharacterAggregation) CharacterAggregation {
+						return attributeStartsAtModBuilder("Vigor", dice.D6, ca)
 					},
 				},
 			},

@@ -87,13 +87,8 @@ func minusSkillPointsUsedMod(ca CharacterAggregation) CharacterAggregation {
 	return ca
 }
 
-func skillStartsAtModBuilder(skillName SkillName, maybeDice string, ca CharacterAggregation) CharacterAggregation {
+func skillStartsAtModBuilder(skillName SkillName, dice dice.Dice, ca CharacterAggregation) CharacterAggregation {
 	ca = minusSkillPointsUsedMod(ca)
-
-	dice, err := dice.Parse(maybeDice)
-	if err != nil {
-		log.Fatalf("skillStartsAtModBuilder failed due dice parsing: %s", err)
-	}
 
 	if pointsRequired, ok := ca.MinimumSkillPointsRequiredFor[skillName]; ok {
 		if pointsRequired >= dice.Points() {
@@ -112,13 +107,8 @@ func minusAttributePointsUsedMod(ca CharacterAggregation) CharacterAggregation {
 	return ca
 }
 
-func attributeStartsAtModBuilder(attributeName AttributeName, maybeDice string, ca CharacterAggregation) CharacterAggregation {
+func attributeStartsAtModBuilder(attributeName AttributeName, dice dice.Dice, ca CharacterAggregation) CharacterAggregation {
 	ca = minusAttributePointsUsedMod(ca)
-
-	dice, err := dice.Parse(maybeDice)
-	if err != nil {
-		log.Fatalf("attributeStartsAtModBuilder failed due dice parsing: %s", err)
-	}
 
 	if pointsRequired, ok := ca.MinimumAttributePointsRequiredFor[attributeName]; ok {
 		if pointsRequired >= dice.Points() {

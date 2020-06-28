@@ -35,11 +35,19 @@ var diceValueToPointsUsedMap = map[string]int{
 	"12": 4,
 }
 
+var (
+	D4  Dice = MustParse("d4")
+	D6  Dice = MustParse("d6")
+	D8  Dice = MustParse("d8")
+	D10 Dice = MustParse("d10")
+	D12 Dice = MustParse("d12")
+)
+
+var diceRegex *regexp.Regexp = regexp.MustCompile(`^d(4|6|8|10|12)((\+|-)([1-9][0-9]?))?$`)
+
 // Parse parses a dice string to struct using points map
 func Parse(dice string) (Dice, error) {
-	var re = regexp.MustCompile(`^d(4|6|8|10|12)((\+|-)([1-9][0-9]?))?$`)
-
-	found := re.FindAllStringSubmatch(dice, -1)
+	found := diceRegex.FindAllStringSubmatch(dice, -1)
 
 	if found == nil || len(found) != 1 || (len(found[0]) != 2 && len(found[0]) != 5) {
 		return Dice{}, fmt.Errorf(
@@ -66,4 +74,16 @@ func Parse(dice string) (Dice, error) {
 	}
 
 	return Dice{value: foundDice, points: diceValueToPointsUsedMap[foundDice], adjustment: adjustment}, nil
+}
+
+// MustParse is like Parse but panics if the expression cannot be parsed.
+// It simplifies safe initialization of global variables holding compiled regular
+// expressions.
+func MustParse(dice string) Dice {
+	parsedDice, err := Parse(dice)
+	if err != nil {
+		panic(`dice parse: Parse(` + dice + `): ` + err.Error())
+	}
+
+	return parsedDice
 }
