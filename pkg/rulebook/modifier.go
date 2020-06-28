@@ -41,24 +41,21 @@ func (sk SelectorKind) String() string {
 	return [...]string{"attribute", "skill"}[sk]
 }
 
-func addIgnoredPacifistHindranceMod(ca CharacterAggregation) CharacterAggregation {
-	var hindranceName HindranceName = "Pacifist"
-	wantDegree := Major
-
+func addHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, ca CharacterAggregation) CharacterAggregation {
 	hIndex, hFound := SwadeHindrances.FindHindrance(string(hindranceName))
 	if hFound == false {
 		log.Fatalf("couldn't find %s hindrance in application data for modifierAddIgnoredPacifistHindrance function", hindranceName)
 	}
 
-	pacifistHindrance := SwadeHindrances[hIndex]
+	foundHindrance := SwadeHindrances[hIndex]
 
-	_, dFound := pacifistHindrance.FindDegree(wantDegree.String())
+	_, dFound := foundHindrance.FindDegree(wantedDegree.String())
 	if dFound == false {
-		log.Fatalf("couldn't find degree %s for %s hindrance in application data for modifierAddIgnoredPacifistHindrance function", wantDegree.String(), hindranceName)
+		log.Fatalf("couldn't find degree %s for %s hindrance in application data for modifierAddIgnoredPacifistHindrance function", wantedDegree.String(), hindranceName)
 	}
 
-	ca.HindrancesRequired[hindranceName] = wantDegree
-	ca.HindrancesIgnored[hindranceName] = wantDegree
+	ca.HindrancesRequired[hindranceName] = wantedDegree
+	ca.HindrancesIgnored[hindranceName] = wantedDegree
 
 	return ca
 }

@@ -20,10 +20,18 @@ var SwadeRaces = Races{
 		description: "pacifistic...",
 		abilities: racialAbilities{
 			{
-				name:           "Hindrance",
+				name:           "Pacifist (Major)",
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
-					addIgnoredPacifistHindranceMod,
+					func(ca CharacterAggregation) CharacterAggregation {
+						return addHindranceModBuilder("Pacifist", Major, ca)
+					},
+				},
+			},
+			{
+				name:           "Construct",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
 					plusShakenRecoveryAdjustmentMod,
 					plusShakenRecoveryAdjustmentMod,
 				},
@@ -83,6 +91,30 @@ var SwadeRaces = Races{
 			},
 		},
 	},
+	{
+		name:        "Elves",
+		description: "Tall, long ears.",
+		abilities: racialAbilities{
+			{
+				name:           "Agile",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return attributeStartsAtModBuilder("Agility", dice.D6, ca)
+					},
+				},
+			},
+			{
+				name:           "All Thumbs",
+				classification: Negative,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return addHindranceModBuilder("All Thumbs", Minor, ca)
+					},
+				},
+			},
+		},
+	},
 }
 
 // SwadeAttributes which are predefined for the SWADE ruleset
@@ -132,6 +164,7 @@ var SwadeSkills = Skills{
 
 // SwadeHindrances which are predefined for the SWADE ruleset
 var SwadeHindrances = Hindrances{
+	{Name: "All Thumbs", description: "–2 to use mechanical or electrical devices.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
 	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
