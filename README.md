@@ -9,12 +9,10 @@ go implementation of savage world rules
 
 ## todo's
 - add testing
+  - add integration test for data.go modifiers (no fatal shall happen)
 - write integration test for sheet validation (cat ....)
 - (maybe, bec how about testing???) make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
-- create validation struct with internal counter
-    - we have to mutate it over the running process
-    - afterwards change modifier to function which can change the internal counter
-        - fixing ModifierKindEdgeSlot ModifierKindAddHindrance issues
+- cleanup deprecated modifier (was replaced by charachterAggregationModifier)
 - races + racial effects
 - add dice raise validation to d12 + 1. (e.g. racial ability keen senses, start notice on d6)
 - hindrance effects
