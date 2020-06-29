@@ -9,6 +9,7 @@ type CharacterAggregation struct {
 	SkillPointsAvailable          int
 	SkillPointsUsed               int
 	MinimumSkillPointsRequiredFor MinimumSkillPointsRequiredFor
+	SkillsAdjustments             SkillsAdjustments
 
 	HindrancePointsLimit  int
 	HindrancePointsEarned int
@@ -30,6 +31,8 @@ type MinimumSkillPointsRequiredFor map[SkillName]int
 
 type AttributeName string
 type MinimumAttributePointsRequiredFor map[AttributeName]int
+
+type SkillsAdjustments map[SkillName]int
 
 //CharacterAggregationState reflects current state of character aggregation
 type CharacterAggregationState struct {

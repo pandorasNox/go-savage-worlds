@@ -41,13 +41,13 @@ func (sk SelectorKind) String() string {
 	return [...]string{"attribute", "skill"}[sk]
 }
 
-func addHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, ca CharacterAggregation) CharacterAggregation {
-	hIndex, hFound := SwadeHindrances.FindHindrance(string(hindranceName))
+func addHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, hindrances Hindrances,ca CharacterAggregation) CharacterAggregation {
+	hIndex, hFound := hindrances.FindHindrance(string(hindranceName))
 	if hFound == false {
 		log.Fatalf("couldn't find %s hindrance in application data for modifierAddIgnoredPacifistHindrance function", hindranceName)
 	}
 
-	foundHindrance := SwadeHindrances[hIndex]
+	foundHindrance := hindrances[hIndex]
 
 	_, dFound := foundHindrance.FindDegree(wantedDegree.String())
 	if dFound == false {
@@ -114,6 +114,17 @@ func attributeStartsAtModBuilder(attributeName AttributeName, dice dice.Dice, ca
 	}
 
 	ca.MinimumAttributePointsRequiredFor[attributeName] = dice.Points()
+
+	return ca
+}
+
+func skillAdjusmentModBuilder(skillName SkillName, adjustment int, skills Skills, ca CharacterAggregation) CharacterAggregation {
+	_, found := skills.FindSkill(string(skillName))
+	if found == false {
+		log.Fatalf("skillAdjusmentModBuilder: skill \"%s\" not found.", skillName)
+	}
+
+	ca.SkillsAdjustments[skillName] += adjustment
 
 	return ca
 }

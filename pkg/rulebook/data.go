@@ -11,7 +11,9 @@ var SwadeRaces = Races{
 			{
 				name:           "Adaptable",
 				classification: Positive,
-				modifiers:      CharacterAggregationModifiers{},
+				modifiers:      CharacterAggregationModifiers{
+					//todo free edge
+				},
 			},
 		},
 	},
@@ -24,7 +26,7 @@ var SwadeRaces = Races{
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
 					func(ca CharacterAggregation) CharacterAggregation {
-						return addHindranceModBuilder("Pacifist", Major, ca)
+						return addHindranceModBuilder("Pacifist", Major, SwadeHindrances, ca)
 					},
 				},
 			},
@@ -109,10 +111,17 @@ var SwadeRaces = Races{
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
 					func(ca CharacterAggregation) CharacterAggregation {
-						return addHindranceModBuilder("All Thumbs", Minor, ca)
+						return addHindranceModBuilder("All Thumbs", Minor, SwadeHindrances, ca)
 					},
 				},
 			},
+		},
+	},
+	{
+		name:        "Half Elves (Edge)",
+		description: "",
+		abilities:   racialAbilities{
+			//todo free edge
 		},
 	},
 }
@@ -191,5 +200,18 @@ var SwadeHindrances = Hindrances{
 		Name:             "Pacifist",
 		description:      "Fights only in self-defense as a Minor Hindrance, won’t fight at all as Major.",
 		AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}},
+	},
+}
+
+// SawadeEdges which are predefined for the SWADE ruleset
+var SawadeEdges = Edges{
+	{
+		name:        "Alertness",
+		requirement: Requirement{level: Novice},
+		modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Notice", 2, SwadeSkills, ca)
+			},
+		},
 	},
 }
