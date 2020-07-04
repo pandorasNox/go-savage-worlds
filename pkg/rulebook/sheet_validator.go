@@ -1,25 +1,24 @@
-package sheet
+package rulebook
 
 import (
 	"fmt"
 
 	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
-	"github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
 )
 
 //Validate validates a savage world sheet
-func Validate(s Sheet, rb rulebook.Rulebook) error {
-	initCharAggegation := rulebook.CharacterAggregation{
-		AttributePointsAvailable: rulebook.BaseAttributePoints,
-		SkillPointsAvailable:     rulebook.BaseSkillPoints,
+func Validate(s Sheet, rb Rulebook) error {
+	initCharAggegation := CharacterAggregation{
+		AttributePointsAvailable: BaseAttributePoints,
+		SkillPointsAvailable:     BaseSkillPoints,
 		HindrancePointsLimit:     4,
 		HindrancePointsEarned:    0,
 		HindrancePointsUsed:      0,
 	}
 
-	charState := rulebook.CharacterAggregationState{}
+	charState := CharacterAggregationState{}
 	//todo: init func instead?!
-	charState.Update(func(_ rulebook.CharacterAggregation) rulebook.CharacterAggregation {
+	charState.Update(func(_ CharacterAggregation) CharacterAggregation {
 		return initCharAggegation
 	})
 
@@ -33,7 +32,7 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 	modifier := s.collectModifier(rb)
 	_ = modifier
 
-	charState.Update(func(currentState rulebook.CharacterAggregation) rulebook.CharacterAggregation {
+	charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
 		currentState.HindrancePointsEarned = s.countHindrancePoints()
 		return currentState
 	})
@@ -55,7 +54,7 @@ func Validate(s Sheet, rb rulebook.Rulebook) error {
 	return nil
 }
 
-func validatePermittedHindrances(s Sheet, rbHinds rulebook.Hindrances) error {
+func validatePermittedHindrances(s Sheet, rbHinds Hindrances) error {
 	for _, sheetHindrance := range s.Character.Hindrances {
 		index, ok := rbHinds.FindHindrance(sheetHindrance.Name)
 
@@ -64,7 +63,7 @@ func validatePermittedHindrances(s Sheet, rbHinds rulebook.Hindrances) error {
 		}
 
 		found := false
-		for _, hd := range rulebook.SwadeHindrances[index].AvailableDegrees {
+		for _, hd := range SwadeHindrances[index].AvailableDegrees {
 			if hd.Degree.String() == sheetHindrance.Degree {
 				found = true
 				break
@@ -75,7 +74,7 @@ func validatePermittedHindrances(s Sheet, rbHinds rulebook.Hindrances) error {
 			return fmt.Errorf(
 				"\"%s\" is no valid degree of \"%s\"",
 				sheetHindrance.Degree,
-				rulebook.SwadeHindrances[index].Name,
+				SwadeHindrances[index].Name,
 			)
 		}
 	}
@@ -83,7 +82,7 @@ func validatePermittedHindrances(s Sheet, rbHinds rulebook.Hindrances) error {
 	return nil
 }
 
-func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, charState rulebook.CharacterAggregationState) error {
+func validateAttributes(s Sheet, rbAttrs Attributes, charState CharacterAggregationState) error {
 	var err error
 
 	err = validateAttributesExist(s, rbAttrs)
@@ -99,7 +98,7 @@ func validateAttributes(s Sheet, rbAttrs rulebook.Attributes, charState rulebook
 	return nil
 }
 
-func validateAttributesExist(s Sheet, rbAttrs rulebook.Attributes) error {
+func validateAttributesExist(s Sheet, rbAttrs Attributes) error {
 RequiredAttributes:
 	for _, attribute := range rbAttrs {
 		for _, sheetAttribute := range s.Character.Traits.Attributes {
@@ -114,7 +113,7 @@ RequiredAttributes:
 	return nil
 }
 
-func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState rulebook.CharacterAggregationState) error {
+func validateAttributePoints(s Sheet, rbAttrs Attributes, charState CharacterAggregationState) error {
 	for _, attribute := range s.Character.Traits.Attributes {
 		_, ok := rbAttrs.FindAttribute(attribute.Name)
 		if ok == false {
@@ -129,7 +128,7 @@ func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState rul
 			)
 		}
 
-		charState.Update(func(currentState rulebook.CharacterAggregation) rulebook.CharacterAggregation {
+		charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
 			currentState.AttributePointsUsed += dice.Points()
 			return currentState
 		})
@@ -146,7 +145,7 @@ func validateAttributePoints(s Sheet, rbAttrs rulebook.Attributes, charState rul
 	return nil
 }
 
-func validateSkills(s Sheet, rbs rulebook.Skills, charState rulebook.CharacterAggregationState) error {
+func validateSkills(s Sheet, rbs Skills, charState CharacterAggregationState) error {
 	var err error
 
 	err = validateCoreSkillsExist(s, rbs)
@@ -167,7 +166,7 @@ func validateSkills(s Sheet, rbs rulebook.Skills, charState rulebook.CharacterAg
 	return nil
 }
 
-func validateCoreSkillsExist(s Sheet, rbs rulebook.Skills) error {
+func validateCoreSkillsExist(s Sheet, rbs Skills) error {
 RequiredCoreSkills:
 	for _, coreSkill := range rbs.CoreSkills() {
 		for _, sheetAttr := range s.Character.Traits.Attributes {
@@ -184,7 +183,7 @@ RequiredCoreSkills:
 	return nil
 }
 
-func validatePermittedSkills(s Sheet, rbs rulebook.Skills) error {
+func validatePermittedSkills(s Sheet, rbs Skills) error {
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
 			index, ok := rbs.FindSkill(sheetSkill.Name)
@@ -208,7 +207,7 @@ func validatePermittedSkills(s Sheet, rbs rulebook.Skills) error {
 	return nil
 }
 
-func validateSkillPoints(s Sheet, rbs rulebook.Skills, charState rulebook.CharacterAggregationState) error {
+func validateSkillPoints(s Sheet, rbs Skills, charState CharacterAggregationState) error {
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
 			index, _ := rbs.FindSkill(sheetSkill.Name)
@@ -227,7 +226,7 @@ func validateSkillPoints(s Sheet, rbs rulebook.Skills, charState rulebook.Charac
 				pointCostModifier = 0
 			}
 
-			charState.Update(func(currentState rulebook.CharacterAggregation) rulebook.CharacterAggregation {
+			charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
 				currentState.SkillPointsUsed += dice.Points() + pointCostModifier
 				return currentState
 			})

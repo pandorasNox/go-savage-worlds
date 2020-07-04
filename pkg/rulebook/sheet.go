@@ -1,6 +1,4 @@
-package sheet
-
-import "github.com/pandorasNox/go-savage-worlds/pkg/rulebook"
+package rulebook
 
 type Sheet struct {
 	Version      string       `yaml:"version"`
@@ -62,8 +60,8 @@ type DerivedStatistics struct {
 	} `yaml:"toughness"`
 }
 
-func (s Sheet) collectModifier(rb rulebook.Rulebook) []rulebook.Modifier {
-	var modifier []rulebook.Modifier
+func (s Sheet) collectModifier(rb Rulebook) []Modifier {
+	var modifier []Modifier
 
 	// race modifier
 
@@ -74,12 +72,12 @@ func (s Sheet) collectModifier(rb rulebook.Rulebook) []rulebook.Modifier {
 	return modifier
 }
 
-func (s Sheet) collectHindranceModifier(rbHinds rulebook.Hindrances) []rulebook.Modifier {
-	modifier := []rulebook.Modifier{}
+func (s Sheet) collectHindranceModifier(rbHinds Hindrances) []Modifier {
+	modifier := []Modifier{}
 
 	for _, sheetHindrance := range s.Character.Hindrances {
 		index, _ := rbHinds.FindHindrance(sheetHindrance.Name)
-		matchedHindrance := rulebook.SwadeHindrances[index]
+		matchedHindrance := SwadeHindrances[index]
 
 		index, ok := matchedHindrance.FindDegree(sheetHindrance.Degree)
 		if !ok {
