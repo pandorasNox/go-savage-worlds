@@ -18,8 +18,22 @@ type CharacterAggregation struct {
 	//ignored for hindrancePoints aggregation
 	HindrancesIgnored AggregatedHindrances
 
-	ToughnessAdjustment int
+	//edges
 
+	//todo:
+	// add validator fn's for:
+	// - eg. edge requirement skill A or B on lvl x
+	// - replace HindrancesRequired && MinimumAttributePointsRequiredFor &&
+	//   MinimumSkillPointsRequiredFor
+	// - replace/transform in validator e.g. validateSkillPoints to a
+	//   skillValidators func. see list down below
+	//
+	// skillValidators
+	// attributeValidators
+	// additionalValidators []func(s Sheet, ca CharacterAggregation) bool
+
+	//other
+	ToughnessAdjustment     int
 	ShakenRecoveryAdjusment int
 }
 

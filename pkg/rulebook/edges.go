@@ -8,6 +8,10 @@ const (
 
 type Requirement struct {
 	level CharacterLevel
+	//edgeDeps
+	//skill & attr level (probbably mod)
+
+	// todo: transform to additinalValidator
 }
 
 type EdgeClassification int
