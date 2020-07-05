@@ -60,20 +60,20 @@ type DerivedStatistics struct {
 	} `yaml:"toughness"`
 }
 
-func (s Sheet) collectModifier(rb Rulebook) []Modifier {
-	var modifier []Modifier
+func (s Sheet) collectModifier(rb Rulebook) CharacterAggregationModifiers {
+	var modifier CharacterAggregationModifiers
 
 	// race modifier
 
 	modifier = append(modifier, s.collectHindranceModifier(rb.Hindrances())...)
 
-	// endge modifier
+	// edge modifier
 
 	return modifier
 }
 
-func (s Sheet) collectHindranceModifier(rbHinds Hindrances) []Modifier {
-	modifier := []Modifier{}
+func (s Sheet) collectHindranceModifier(rbHinds Hindrances) CharacterAggregationModifiers {
+	var modifier CharacterAggregationModifiers
 
 	for _, sheetHindrance := range s.Character.Hindrances {
 		index, _ := rbHinds.FindHindrance(sheetHindrance.Name)
@@ -96,7 +96,7 @@ func (s Sheet) countHindrancePoints() int {
 
 	for _, hindrance := range s.Character.Hindrances {
 		if hindrance.Degree == "minor" {
-			hindrancePoints += 1
+			hindrancePoints++
 		}
 
 		if hindrance.Degree == "major" {

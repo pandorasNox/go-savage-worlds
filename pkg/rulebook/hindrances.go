@@ -10,7 +10,7 @@ type Hindrances []Hindrance
 
 type HindranceDegree struct {
 	Degree    Degree
-	Modifiers []Modifier
+	Modifiers CharacterAggregationModifiers
 }
 
 type Degree int

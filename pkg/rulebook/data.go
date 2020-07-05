@@ -183,9 +183,13 @@ var SwadeHindrances = Hindrances{
 		Name:        "Clueless",
 		description: "Clueless (Major): –1 to Common Knowledge and Notice rolls.",
 		AvailableDegrees: []HindranceDegree{{Degree: Major,
-			Modifiers: []Modifier{
-				{kind: ModifierKindDiceAdjustment, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Common Knowledge"}},
-				{kind: ModifierKindDiceAdjustment, value: -1, selector: Selector{kind: SelectorKindSkill, target: "Notice"}},
+			Modifiers: CharacterAggregationModifiers{
+				func(ca CharacterAggregation) CharacterAggregation {
+					return skillAdjusmentModBuilder("Common Knowledge", -1, SwadeSkills, ca)
+				},
+				func(ca CharacterAggregation) CharacterAggregation {
+					return skillAdjusmentModBuilder("Notice", -1, SwadeSkills, ca)
+				},
 			}}},
 	},
 	//Clumsy (Major): –2 to Athletics and Stealth rolls.

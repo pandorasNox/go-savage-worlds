@@ -6,41 +6,6 @@ import (
 	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 )
 
-type Modifier struct {
-	kind     ModifierKind
-	value    int
-	selector Selector
-}
-
-type Modifiers []Modifier
-
-type ModifierKind int
-
-const (
-	ModifierKindDiceValue ModifierKind = iota
-	ModifierKindDiceAdjustment
-)
-
-func (mk ModifierKind) String() string {
-	return [...]string{"diceValue", "diceAdjustment"}[mk]
-}
-
-type Selector struct {
-	kind   SelectorKind
-	target string
-}
-
-type SelectorKind int
-
-const (
-	SelectorKindAttribute SelectorKind = iota
-	SelectorKindSkill
-)
-
-func (sk SelectorKind) String() string {
-	return [...]string{"attribute", "skill"}[sk]
-}
-
 func addHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, hindrances Hindrances,ca CharacterAggregation) CharacterAggregation {
 	hIndex, hFound := hindrances.FindHindrance(string(hindranceName))
 	if hFound == false {
