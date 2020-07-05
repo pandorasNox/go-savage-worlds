@@ -20,17 +20,8 @@ type CharacterAggregation struct {
 
 	//edges
 
-	//todo:
-	// add validator fn's for:
-	// - eg. edge requirement skill A or B on lvl x
-	// - replace HindrancesRequired && MinimumAttributePointsRequiredFor &&
-	//   MinimumSkillPointsRequiredFor
-	// - replace/transform in validator e.g. validateSkillPoints to a
-	//   skillValidators func. see list down below
-	//
-	// skillValidators
-	// attributeValidators
-	// additionalValidators []func(s Sheet, ca CharacterAggregation) bool
+	coreValidators       validators
+	additionalValidators validators
 
 	//other
 	ToughnessAdjustment     int
@@ -89,4 +80,38 @@ func (cas CharacterAggregationState) SkillPointsAvailable() (pointsAvailable int
 //SkillPointsUsed returns used skill points
 func (cas CharacterAggregationState) SkillPointsUsed() (pointsUsed int) {
 	return cas.characterAggregation.SkillPointsUsed
+}
+
+type validator func(ca CharacterAggregation) error
+
+// validators list of functions to validate
+type validators []validator
+
+// type coreValidator struct {
+// 	hindrancePointsValidators validators
+// 	skillValidators           validators
+// 	attributeValidators       validators
+// }
+
+// Validators returns all validators
+func (cas CharacterAggregationState) validators() validators {
+	var v validators
+
+	v = append(v, cas.characterAggregation.coreValidators...)
+	v = append(v, cas.characterAggregation.additionalValidators...)
+
+	return v
+}
+
+// Validate all the things
+func (cas CharacterAggregationState) Validate() (errors []error) {
+	for _, v := range cas.validators() {
+		err := v(cas.characterAggregation)
+
+		if err != nil {
+			errors = append(errors, err)
+		}
+	}
+
+	return errors
 }

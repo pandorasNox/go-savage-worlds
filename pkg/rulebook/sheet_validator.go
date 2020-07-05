@@ -14,6 +14,7 @@ func Validate(s Sheet, rb Rulebook) error {
 		HindrancePointsLimit:     4,
 		HindrancePointsEarned:    0,
 		HindrancePointsUsed:      0,
+		SkillsAdjustments:        make(SkillsAdjustments),
 	}
 
 	charState := CharacterAggregationState{}
@@ -29,22 +30,29 @@ func Validate(s Sheet, rb Rulebook) error {
 		return fmt.Errorf("sheet validation hindrance errors: %s", err)
 	}
 
-	modifier := s.collectModifier(rb)
-	_ = modifier
-
 	charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
 		currentState.HindrancePointsEarned = s.countHindrancePoints()
 		return currentState
 	})
 
-	//todo: process attribute modifieres
+	modifiers := s.collectModifier(rb)
+	charState.Updates(modifiers)
+
+	errors := charState.Validate()
+	if errors != nil {
+		var sErrors string = ""
+
+		for _, err := range errors {
+			sErrors = fmt.Sprintf("%s  %s\n", sErrors, err)
+		}
+
+		return fmt.Errorf("aggregation validation failed:\n%s", sErrors)
+	}
 
 	err = validateAttributes(s, rb.Traits().Attributes, charState)
 	if err != nil {
 		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
-
-	//todo: process skill modifieres
 
 	err = validateSkills(s, rb.Traits().Skills, charState)
 	if err != nil {
