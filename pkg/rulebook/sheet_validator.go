@@ -15,6 +15,8 @@ func Validate(s Sheet, rb Rulebook) error {
 		HindrancePointsEarned:    0,
 		HindrancePointsUsed:      0,
 		SkillsAdjustments:        make(SkillsAdjustments),
+		coreValidators:           make(coreValidators),
+		additionalValidators:     validators{},
 	}
 
 	charState := CharacterAggregationState{}

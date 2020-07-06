@@ -19,8 +19,7 @@ type CharacterAggregation struct {
 	HindrancesIgnored AggregatedHindrances
 
 	//edges
-
-	coreValidators       validators
+	coreValidators       coreValidators
 	additionalValidators validators
 
 	//other
@@ -87,17 +86,17 @@ type validator func(ca CharacterAggregation) error
 // validators list of functions to validate
 type validators []validator
 
-// type coreValidator struct {
-// 	hindrancePointsValidators validators
-// 	skillValidators           validators
-// 	attributeValidators       validators
-// }
+type validatorIdentifier string
+type coreValidators map[validatorIdentifier]validator
 
 // Validators returns all validators
 func (cas CharacterAggregationState) validators() validators {
 	var v validators
 
-	v = append(v, cas.characterAggregation.coreValidators...)
+	for _, validator := range cas.characterAggregation.coreValidators {
+		v = append(v, validator)
+	}
+
 	v = append(v, cas.characterAggregation.additionalValidators...)
 
 	return v
