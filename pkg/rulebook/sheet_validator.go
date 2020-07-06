@@ -7,7 +7,9 @@ import (
 )
 
 //Validate validates a savage world sheet
-func Validate(s Sheet, rb Rulebook) error {
+func Validate(sheet Sheet, rb Rulebook) error {
+	var err error
+
 	initCharAggegation := CharacterAggregation{
 		AttributePointsAvailable:          BaseAttributePoints,
 		AttributePointsUsed:               0,
@@ -31,19 +33,23 @@ func Validate(s Sheet, rb Rulebook) error {
 		return initCharAggegation
 	})
 
-	var err error
+	aggregateMod, err := aggregate(charState, sheet, rb)
+	if err != nil {
+		return fmt.Errorf("aggregation error: %s", err)
+	}
+	charState.Update(aggregateMod)
 
-	err = validatePermittedHindrances(s, rb.Hindrances())
+	err = validatePermittedHindrances(sheet, rb.Hindrances())
 	if err != nil {
 		return fmt.Errorf("sheet validation hindrance errors: %s", err)
 	}
 
 	charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
-		currentState.HindrancePointsEarned = s.countHindrancePoints()
+		currentState.HindrancePointsEarned = sheet.countHindrancePoints()
 		return currentState
 	})
 
-	modifiers := s.collectModifier(rb)
+	modifiers := sheet.collectModifier(rb)
 	charState.Updates(modifiers)
 
 	errors := charState.Validate()
@@ -57,17 +63,49 @@ func Validate(s Sheet, rb Rulebook) error {
 		return fmt.Errorf("aggregation validation failed:\n%s", sErrors)
 	}
 
-	err = validateAttributes(s, rb.Traits().Attributes, charState)
+	err = validateAttributes(sheet, rb.Traits().Attributes, charState)
 	if err != nil {
 		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
 
-	err = validateSkills(s, rb.Traits().Skills, charState)
+	err = validateSkills(sheet, rb.Traits().Skills, charState)
 	if err != nil {
 		return fmt.Errorf("sheet validation skill errors: %s", err)
 	}
 
 	return nil
+}
+
+func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAggregationModifier, error) {
+	emptyFn := func(ca CharacterAggregation) CharacterAggregation {
+		return ca
+	}
+	var fn CharacterAggregationModifier
+
+	attributePointsUsed := 0
+	for _, attribute := range s.Character.Traits.Attributes {
+		_, ok := rb.Traits().Attributes.FindAttribute(attribute.Name)
+		if ok == false {
+			return emptyFn, fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
+		}
+
+		dice, err := dice.Parse(attribute.Dice)
+		if err != nil {
+			return emptyFn, fmt.Errorf(
+				"parsing dice for attribute \"%s\" failed: %s",
+				attribute.Name, err,
+			)
+		}
+
+		attributePointsUsed += dice.Points()
+	}
+
+	fn = func(currentState CharacterAggregation) CharacterAggregation {
+		currentState.AttributePointsUsed = attributePointsUsed
+		return currentState
+	}
+
+	return fn, nil
 }
 
 func validatePermittedHindrances(s Sheet, rbHinds Hindrances) error {
@@ -130,26 +168,6 @@ RequiredAttributes:
 }
 
 func validateAttributePoints(s Sheet, rbAttrs Attributes, charState CharacterAggregationState) error {
-	for _, attribute := range s.Character.Traits.Attributes {
-		_, ok := rbAttrs.FindAttribute(attribute.Name)
-		if ok == false {
-			return fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
-		}
-
-		dice, err := dice.Parse(attribute.Dice)
-		if err != nil {
-			return fmt.Errorf(
-				"parsing dice for attribute \"%s\" failed: %s",
-				attribute.Name, err,
-			)
-		}
-
-		charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
-			currentState.AttributePointsUsed += dice.Points()
-			return currentState
-		})
-	}
-
 	if charState.AttributePointsUsed() > charState.AttributePointsAvailable() {
 		return fmt.Errorf(
 			"validation error: Used %d of %d available attribute points",
