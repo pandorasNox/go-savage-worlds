@@ -13,4 +13,7 @@ fi
 
 $(pwd)/bin/exhaustive ./...
 
+go test ./...
+cat assets/tests/valid-character.yaml | go run .
+
 echo "pre-commit finished"
