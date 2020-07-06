@@ -9,14 +9,20 @@ import (
 //Validate validates a savage world sheet
 func Validate(s Sheet, rb Rulebook) error {
 	initCharAggegation := CharacterAggregation{
-		AttributePointsAvailable: BaseAttributePoints,
-		SkillPointsAvailable:     BaseSkillPoints,
-		HindrancePointsLimit:     4,
-		HindrancePointsEarned:    0,
-		HindrancePointsUsed:      0,
-		SkillsAdjustments:        make(SkillsAdjustments),
-		coreValidators:           make(coreValidators),
-		additionalValidators:     validators{},
+		AttributePointsAvailable:          BaseAttributePoints,
+		AttributePointsUsed:               0,
+		MinimumAttributePointsRequiredFor: make(MinimumAttributePointsRequiredFor),
+
+		SkillPointsAvailable:          BaseSkillPoints,
+		SkillPointsUsed:               0,
+		MinimumSkillPointsRequiredFor: make(MinimumSkillPointsRequiredFor),
+		SkillsAdjustments:             make(SkillsAdjustments),
+
+		HindrancePointsEarnedLimit: 4,
+		HindrancePointsEarned:      0,
+		HindrancePointsUsed:        0,
+		coreValidators:             make(coreValidators),
+		additionalValidators:       validators{},
 	}
 
 	charState := CharacterAggregationState{}

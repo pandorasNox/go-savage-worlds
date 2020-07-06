@@ -11,10 +11,10 @@ type CharacterAggregation struct {
 	MinimumSkillPointsRequiredFor MinimumSkillPointsRequiredFor
 	SkillsAdjustments             SkillsAdjustments
 
-	HindrancePointsLimit  int
-	HindrancePointsEarned int
-	HindrancePointsUsed   int
-	HindrancesRequired    AggregatedHindrances
+	HindrancePointsEarnedLimit int
+	HindrancePointsEarned      int
+	HindrancePointsUsed        int
+	HindrancesRequired         AggregatedHindrances
 	//ignored for hindrancePoints aggregation
 	HindrancesIgnored AggregatedHindrances
 
