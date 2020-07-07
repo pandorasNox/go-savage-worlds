@@ -77,21 +77,42 @@ func Validate(sheet Sheet, rb Rulebook) error {
 }
 
 func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAggregationModifier, error) {
+	var err error
 	emptyFn := func(ca CharacterAggregation) CharacterAggregation {
 		return ca
 	}
 	var fn CharacterAggregationModifier
 
+	attributePointsUsed, err := aggregateAttributePointsUsed(s, rb.Traits().Attributes)
+	if err != nil {
+		return emptyFn, err
+	}
+
+	skillPointsUsed, err := aggregateSkillPointsUsed(s, rb.Traits().Skills)
+	if err != nil {
+		return emptyFn, err
+	}
+
+	fn = func(currentState CharacterAggregation) CharacterAggregation {
+		currentState.AttributePointsUsed = attributePointsUsed
+		currentState.SkillPointsUsed = skillPointsUsed
+		return currentState
+	}
+
+	return fn, nil
+}
+
+func aggregateAttributePointsUsed(sheet Sheet, attributes Attributes) (pointsUsed int, err error) {
 	attributePointsUsed := 0
-	for _, attribute := range s.Character.Traits.Attributes {
-		_, ok := rb.Traits().Attributes.FindAttribute(attribute.Name)
+	for _, attribute := range sheet.Character.Traits.Attributes {
+		_, ok := attributes.FindAttribute(attribute.Name)
 		if ok == false {
-			return emptyFn, fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
+			return 0, fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
 		}
 
 		dice, err := dice.Parse(attribute.Dice)
 		if err != nil {
-			return emptyFn, fmt.Errorf(
+			return 0, fmt.Errorf(
 				"parsing dice for attribute \"%s\" failed: %s",
 				attribute.Name, err,
 			)
@@ -100,12 +121,35 @@ func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAg
 		attributePointsUsed += dice.Points()
 	}
 
-	fn = func(currentState CharacterAggregation) CharacterAggregation {
-		currentState.AttributePointsUsed = attributePointsUsed
-		return currentState
+	return attributePointsUsed, nil
+}
+
+func aggregateSkillPointsUsed(sheet Sheet, skills Skills) (pointsUsed int, err error) {
+	skillPointsUsed := 0
+
+	for _, sheetAttr := range sheet.Character.Traits.Attributes {
+		for _, sheetSkill := range sheetAttr.Skills {
+			index, _ := skills.FindSkill(sheetSkill.Name)
+			skill := skills[index]
+
+			dice, err := dice.Parse(sheetSkill.Dice)
+			if err != nil {
+				return 0, fmt.Errorf(
+					"parsing dice for skill \"%s\" failed: %s",
+					sheetSkill.Name, err,
+				)
+			}
+
+			pointCostModifier := 1
+			if skill.IsCore {
+				pointCostModifier = 0
+			}
+
+			skillPointsUsed += dice.Points() + pointCostModifier
+		}
 	}
 
-	return fn, nil
+	return skillPointsUsed, nil
 }
 
 func validatePermittedHindrances(s Sheet, rbHinds Hindrances) error {
@@ -242,31 +286,6 @@ func validatePermittedSkills(s Sheet, rbs Skills) error {
 }
 
 func validateSkillPoints(s Sheet, rbs Skills, charState CharacterAggregationState) error {
-	for _, sheetAttr := range s.Character.Traits.Attributes {
-		for _, sheetSkill := range sheetAttr.Skills {
-			index, _ := rbs.FindSkill(sheetSkill.Name)
-			skill := rbs[index]
-
-			dice, err := dice.Parse(sheetSkill.Dice)
-			if err != nil {
-				return fmt.Errorf(
-					"parsing dice for skill \"%s\" failed: %s",
-					sheetSkill.Name, err,
-				)
-			}
-
-			pointCostModifier := 1
-			if skill.IsCore {
-				pointCostModifier = 0
-			}
-
-			charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
-				currentState.SkillPointsUsed += dice.Points() + pointCostModifier
-				return currentState
-			})
-		}
-	}
-
 	if charState.SkillPointsUsed() > charState.SkillPointsAvailable() {
 		return fmt.Errorf(
 			"validation error: Used %d of %d available skill points",
