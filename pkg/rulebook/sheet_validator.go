@@ -78,8 +78,8 @@ func Validate(sheet Sheet, rb Rulebook) error {
 
 func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAggregationModifier, error) {
 	var err error
-	emptyFn := func(ca CharacterAggregation) CharacterAggregation {
-		return ca
+	emptyFn := func(_ CharacterAggregation) CharacterAggregation {
+		return CharacterAggregation{}
 	}
 	var fn CharacterAggregationModifier
 
@@ -102,9 +102,9 @@ func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAg
 	return fn, nil
 }
 
-func aggregateAttributePointsUsed(sheet Sheet, attributes Attributes) (pointsUsed int, err error) {
+func aggregateAttributePointsUsed(s Sheet, attributes Attributes) (pointsUsed int, err error) {
 	attributePointsUsed := 0
-	for _, attribute := range sheet.Character.Traits.Attributes {
+	for _, attribute := range s.Character.Traits.Attributes {
 		_, ok := attributes.FindAttribute(attribute.Name)
 		if ok == false {
 			return 0, fmt.Errorf("\"%s\" is no valid attribute", attribute.Name)
@@ -124,10 +124,10 @@ func aggregateAttributePointsUsed(sheet Sheet, attributes Attributes) (pointsUse
 	return attributePointsUsed, nil
 }
 
-func aggregateSkillPointsUsed(sheet Sheet, skills Skills) (pointsUsed int, err error) {
+func aggregateSkillPointsUsed(s Sheet, skills Skills) (pointsUsed int, err error) {
 	skillPointsUsed := 0
 
-	for _, sheetAttr := range sheet.Character.Traits.Attributes {
+	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
 			index, _ := skills.FindSkill(sheetSkill.Name)
 			skill := skills[index]
