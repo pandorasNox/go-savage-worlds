@@ -23,8 +23,16 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		HindrancePointsEarnedLimit: 4,
 		HindrancePointsEarned:      0,
 		HindrancePointsUsed:        0,
-		coreValidators:             make(coreValidators),
-		additionalValidators:       validators{},
+		HindrancesRequired:         make(AggregatedHindrances),
+		HindrancesIgnored:          make(AggregatedHindrances),
+
+		sheetChosenEdges:     Edges{},
+		MinimumChosenEdges:   0,
+		coreValidators:       make(coreValidators),
+		additionalValidators: validators{},
+
+		ToughnessAdjustment:     0,
+		ShakenRecoveryAdjusment: 0,
 	}
 
 	charState := CharacterAggregationState{}

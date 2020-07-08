@@ -11,8 +11,8 @@ var SwadeRaces = Races{
 			{
 				name:           "Adaptable",
 				classification: Positive,
-				modifiers:      CharacterAggregationModifiers{
-					//todo free edge
+				modifiers: CharacterAggregationModifiers{
+					freeNoviceEdgeMod,
 				},
 			},
 		},
@@ -120,8 +120,14 @@ var SwadeRaces = Races{
 	{
 		name:        "Half Elves (Edge)",
 		description: "",
-		abilities:   racialAbilities{
-			//todo free edge
+		abilities: racialAbilities{
+			{
+				name:           "Adaptable",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					freeNoviceEdgeMod,
+				},
+			},
 		},
 	},
 }

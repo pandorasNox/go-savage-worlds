@@ -1,12 +1,13 @@
 package rulebook
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 )
 
-func addHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, hindrances Hindrances,ca CharacterAggregation) CharacterAggregation {
+func addHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, hindrances Hindrances, ca CharacterAggregation) CharacterAggregation {
 	hIndex, hFound := hindrances.FindHindrance(string(hindranceName))
 	if hFound == false {
 		log.Fatalf("couldn't find %s hindrance in application data for modifierAddIgnoredPacifistHindrance function", hindranceName)
@@ -90,6 +91,24 @@ func skillAdjusmentModBuilder(skillName SkillName, adjustment int, skills Skills
 	}
 
 	ca.SkillsAdjustments[skillName] += adjustment
+
+	return ca
+}
+
+func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
+	ca.HindrancePointsUsed += -2
+	ca.MinimumChosenEdges++
+
+	hasNoviceEdgeValidator := func(ca CharacterAggregation) error {
+		for _, edge := range ca.sheetChosenEdges {
+			if edge.requirement.level == Novice {
+				return nil
+			}
+		}
+
+		return fmt.Errorf("hasNoviceEdgeValidator: no novice edge found")
+	}
+	ca.additionalValidators = append(ca.additionalValidators, hasNoviceEdgeValidator)
 
 	return ca
 }

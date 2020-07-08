@@ -23,6 +23,7 @@ go implementation of savage world rules
 - build a frontend app with go and the wasm compiler or go and gopherjs/vecty
 - use opaque types (example creating hindrances)
 - check to have hindrance twice?
+- how to validate "minimum two novice edges" (eg. race + house rule)?
 
 ## out of scope v1.0
 - racial abilities
