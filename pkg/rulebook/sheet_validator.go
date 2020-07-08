@@ -44,11 +44,6 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		return fmt.Errorf("sheet validation hindrance errors: %s", err)
 	}
 
-	charState.Update(func(currentState CharacterAggregation) CharacterAggregation {
-		currentState.HindrancePointsEarned = sheet.countHindrancePoints()
-		return currentState
-	})
-
 	modifiers := sheet.collectModifier(rb)
 	charState.Updates(modifiers)
 
@@ -93,9 +88,15 @@ func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAg
 		return emptyFn, err
 	}
 
+	hindrancePointsEarned, err := aggregateHindrancePointsEarned(s, rb.Hindrances())
+	if err != nil {
+		return emptyFn, err
+	}
+
 	fn = func(currentState CharacterAggregation) CharacterAggregation {
 		currentState.AttributePointsUsed = attributePointsUsed
 		currentState.SkillPointsUsed = skillPointsUsed
+		currentState.HindrancePointsEarned = hindrancePointsEarned
 		return currentState
 	}
 
@@ -150,6 +151,36 @@ func aggregateSkillPointsUsed(s Sheet, skills Skills) (pointsUsed int, err error
 	}
 
 	return skillPointsUsed, nil
+}
+
+func aggregateHindrancePointsEarned(s Sheet, hs Hindrances) (pointsEarned int, err error) {
+	hindrancePoints := 0
+
+	for _, sheetHindrance := range s.Character.Hindrances {
+		index, found := hs.FindHindrance(sheetHindrance.Name)
+
+		if !found {
+			return 0, fmt.Errorf("\"%s\" is no valid hindrance", sheetHindrance.Name)
+		}
+
+		if _, found := hs[index].FindDegree(sheetHindrance.Degree); !found {
+			return 0, fmt.Errorf(
+				"\"%s\" is no valid degree of \"%s\"",
+				sheetHindrance.Degree,
+				SwadeHindrances[index].Name,
+			)
+		}
+
+		if sheetHindrance.Degree == Minor.String() {
+			hindrancePoints++
+		}
+
+		if sheetHindrance.Degree == Major.String() {
+			hindrancePoints += 2
+		}
+	}
+
+	return hindrancePoints, nil
 }
 
 func validatePermittedHindrances(s Sheet, rbHinds Hindrances) error {

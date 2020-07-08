@@ -22,6 +22,7 @@ go implementation of savage world rules
 - ??? gold validation + inventory + gear IF init validation ???
 - build a frontend app with go and the wasm compiler or go and gopherjs/vecty
 - use opaque types (example creating hindrances)
+- check to have hindrance twice?
 
 ## out of scope v1.0
 - racial abilities

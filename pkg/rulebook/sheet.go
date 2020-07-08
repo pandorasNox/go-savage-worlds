@@ -90,19 +90,3 @@ func (s Sheet) collectHindranceModifier(rbHinds Hindrances) CharacterAggregation
 
 	return modifier
 }
-
-func (s Sheet) countHindrancePoints() int {
-	hindrancePoints := 0
-
-	for _, sHindrance := range s.Character.Hindrances {
-		if sHindrance.Degree == Minor.String() {
-			hindrancePoints++
-		}
-
-		if sHindrance.Degree == Major.String() {
-			hindrancePoints += 2
-		}
-	}
-
-	return hindrancePoints
-}
