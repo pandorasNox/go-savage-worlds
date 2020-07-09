@@ -29,6 +29,10 @@ go implementation of savage world rules
 - racial abilities
   - android
     - hindrance: OUTSIDER (Major): Androids subtract 2 from Persuasion rolls when interacting with anyone besides other androids, and have no legal rights in most areas (they’re generally considered property).
+  - Rakashans
+    - BITE/CLAWS
+    - CAN’T SWIM
+    - RACIAL ENEMY
 - subskills (roadmap v1.1)
   - in racial ability
     - pace modifiers

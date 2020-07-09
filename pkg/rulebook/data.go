@@ -171,6 +171,22 @@ var SwadeRaces = Races{
 			},
 		},
 	},
+	{
+		name:        "Rakashans",
+		description: "animalistic",
+		abilities: racialAbilities{
+			{
+				name:           "Agile",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return attributeStartsAtModBuilder("Agility", dice.D6, ca)
+					},
+				},
+			},
+		},
+	},
+	//Saurians
 }
 
 // SwadeAttributes which are predefined for the SWADE ruleset
