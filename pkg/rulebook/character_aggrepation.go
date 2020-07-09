@@ -19,12 +19,13 @@ type CharacterAggregation struct {
 	HindrancesIgnored AggregatedHindrances
 
 	//edges
-	sheetChosenEdges     Edges
+	SheetChosenEdges     Edges
 	MinimumChosenEdges   int
-	coreValidators       coreValidators
+	CoreValidators       coreValidators
 	additionalValidators validators
 
 	//other
+	Size                    int
 	ToughnessAdjustment     int
 	ShakenRecoveryAdjusment int
 }
@@ -95,7 +96,7 @@ type coreValidators map[validatorIdentifier]validator
 func (cas CharacterAggregationState) validators() validators {
 	var v validators
 
-	for _, validator := range cas.characterAggregation.coreValidators {
+	for _, validator := range cas.characterAggregation.CoreValidators {
 		v = append(v, validator)
 	}
 

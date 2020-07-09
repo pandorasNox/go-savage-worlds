@@ -26,11 +26,12 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		HindrancesRequired:         make(AggregatedHindrances),
 		HindrancesIgnored:          make(AggregatedHindrances),
 
-		sheetChosenEdges:     Edges{},
+		SheetChosenEdges:     Edges{},
 		MinimumChosenEdges:   0,
-		coreValidators:       make(coreValidators),
+		CoreValidators:       make(coreValidators),
 		additionalValidators: validators{},
 
+		Size:                    0,
 		ToughnessAdjustment:     0,
 		ShakenRecoveryAdjusment: 0,
 	}

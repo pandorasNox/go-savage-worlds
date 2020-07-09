@@ -132,7 +132,32 @@ var SwadeRaces = Races{
 			},
 		},
 	},
-	//Half-Folk
+	{
+		name:        "Half-Folk",
+		description: "Small but lucky",
+		abilities: racialAbilities{
+			//LUCK -> extra benny
+			//REDUCED PACE: Decrease Pace by 1 and their running die one die type.
+			{
+				name:           "Size",
+				description:    "Reducing Size (& therefore Toughness) by 1.",
+				classification: Negative,
+				modifiers: CharacterAggregationModifiers{
+					minusToughnessAdjustmentMod,
+					minusSizeMod,
+				},
+			},
+			{
+				name:           "Spirited",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return attributeStartsAtModBuilder("Spirit", dice.D6, ca)
+					},
+				},
+			},
+		},
+	},
 	{
 		name:        "Human",
 		description: "boring",

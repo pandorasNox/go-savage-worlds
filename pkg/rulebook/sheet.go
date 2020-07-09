@@ -54,6 +54,7 @@ type SheetHindrance struct {
 type DerivedStatistics struct {
 	StandardPace string `yaml:"standard-pace"`
 	Parry        int    `yaml:"parry"`
+	Size         int    `yaml:"size"`
 	Toughness    struct {
 		Base  int `yaml:"base"`
 		Armor int `yaml:"armor"`

@@ -32,7 +32,7 @@ go implementation of savage world rules
 - subskills (roadmap v1.1)
   - in racial ability
     - pace modifiers
-      - e.g. agurian, avion ...
+      - e.g. agurian, avion, half folk ...
     - CAN’T SWIM (-2 to swim)
   - edge adjustments
   - hindrance adjustment

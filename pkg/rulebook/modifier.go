@@ -100,7 +100,7 @@ func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 	ca.MinimumChosenEdges++
 
 	hasNoviceEdgeValidator := func(ca CharacterAggregation) error {
-		for _, edge := range ca.sheetChosenEdges {
+		for _, edge := range ca.SheetChosenEdges {
 			if edge.requirement.level == Novice {
 				return nil
 			}
@@ -109,6 +109,12 @@ func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 		return fmt.Errorf("hasNoviceEdgeValidator: no novice edge found")
 	}
 	ca.additionalValidators = append(ca.additionalValidators, hasNoviceEdgeValidator)
+
+	return ca
+}
+
+func minusSizeMod(ca CharacterAggregation) CharacterAggregation {
+	ca.Size--
 
 	return ca
 }
