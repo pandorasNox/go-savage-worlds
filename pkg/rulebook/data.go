@@ -117,7 +117,21 @@ var SwadeRaces = Races{
 			},
 		},
 	},
-	//Half Elves (Agile)
+	{
+		name:        "Half Elves (Agile)",
+		description: "",
+		abilities: racialAbilities{
+			{
+				name:           "Agile",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return attributeStartsAtModBuilder("Agility", dice.D6, ca)
+					},
+				},
+			},
+		},
+	},
 	//Half-Folk
 	{
 		name:        "Human",
