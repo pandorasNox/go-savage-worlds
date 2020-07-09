@@ -32,14 +32,14 @@ func plusShakenRecoveryAdjustmentMod(ca CharacterAggregation) CharacterAggregati
 	return ca
 }
 
-func plusToughnessAdjustmentMod(ca CharacterAggregation) CharacterAggregation {
-	ca.ToughnessAdjustment++
+func plusBaseToughnessMod(ca CharacterAggregation) CharacterAggregation {
+	ca.BaseToughness++
 
 	return ca
 }
 
-func minusToughnessAdjustmentMod(ca CharacterAggregation) CharacterAggregation {
-	ca.ToughnessAdjustment--
+func minusBaseToughnessMod(ca CharacterAggregation) CharacterAggregation {
+	ca.BaseToughness--
 
 	return ca
 }
@@ -115,6 +115,12 @@ func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 
 func minusSizeMod(ca CharacterAggregation) CharacterAggregation {
 	ca.Size--
+
+	return ca
+}
+
+func plusArmorMod(ca CharacterAggregation) CharacterAggregation {
+	ca.Armor++
 
 	return ca
 }

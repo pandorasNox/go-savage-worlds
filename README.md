@@ -33,6 +33,9 @@ go implementation of savage world rules
     - BITE/CLAWS
     - CAN’T SWIM
     - RACIAL ENEMY
+  - Saurians
+    - ENVIRONMENTAL WEAKNESS
+    - OUTSIDER (Minor)
 - subskills (roadmap v1.1)
   - in racial ability
     - pace modifiers

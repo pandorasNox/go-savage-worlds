@@ -32,7 +32,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		additionalValidators: validators{},
 
 		Size:                    0,
-		ToughnessAdjustment:     0,
+		BaseToughness:           0,
 		ShakenRecoveryAdjusment: 0,
 	}
 

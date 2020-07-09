@@ -26,7 +26,8 @@ type CharacterAggregation struct {
 
 	//other
 	Size                    int
-	ToughnessAdjustment     int
+	BaseToughness           int
+	Armor                   int
 	ShakenRecoveryAdjusment int
 }
 

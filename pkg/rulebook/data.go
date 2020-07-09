@@ -35,8 +35,8 @@ var SwadeRaces = Races{
 				name:           "Toughness",
 				classification: Positive,
 				modifiers: CharacterAggregationModifiers{
-					plusToughnessAdjustmentMod,
-					plusToughnessAdjustmentMod,
+					plusBaseToughnessMod,
+					plusBaseToughnessMod,
 				},
 			},
 		},
@@ -49,7 +49,7 @@ var SwadeRaces = Races{
 				name:           "Frail",
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
-					minusToughnessAdjustmentMod,
+					minusBaseToughnessMod,
 				},
 			},
 			//KEEN SENSES: Avions are more perceptive than most.
@@ -143,7 +143,7 @@ var SwadeRaces = Races{
 				description:    "Reducing Size (& therefore Toughness) by 1.",
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
-					minusToughnessAdjustmentMod,
+					minusBaseToughnessMod,
 					minusSizeMod,
 				},
 			},
@@ -186,7 +186,22 @@ var SwadeRaces = Races{
 			},
 		},
 	},
-	//Saurians
+	{
+		name:        "Saurians",
+		description: "dragon like humanoids",
+		abilities: racialAbilities{
+			{
+				name:           "Armor +2",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					plusArmorMod,
+					plusArmorMod,
+				},
+			},
+			//todo:
+			//KEEN SENSES (Alertness Edge): Saurians have acute senses, giving them the Alertness Edge.
+		},
+	},
 }
 
 // SwadeAttributes which are predefined for the SWADE ruleset
