@@ -5,19 +5,6 @@ import "github.com/pandorasNox/go-savage-worlds/pkg/dice"
 // SwadeRaces predefined for the SWADE core ruleset
 var SwadeRaces = Races{
 	{
-		name:        "Human",
-		description: "boring",
-		abilities: racialAbilities{
-			{
-				name:           "Adaptable",
-				classification: Positive,
-				modifiers: CharacterAggregationModifiers{
-					freeNoviceEdgeMod,
-				},
-			},
-		},
-	},
-	{
 		name:        "Android",
 		description: "pacifistic...",
 		abilities: racialAbilities{
@@ -118,8 +105,23 @@ var SwadeRaces = Races{
 		},
 	},
 	{
-		name:        "Half Elves (Edge)",
+		name:        "Half Elves (Adaptable)",
 		description: "",
+		abilities: racialAbilities{
+			{
+				name:           "Adaptable",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					freeNoviceEdgeMod,
+				},
+			},
+		},
+	},
+	//Half Elves (Agile)
+	//Half-Folk
+	{
+		name:        "Human",
+		description: "boring",
 		abilities: racialAbilities{
 			{
 				name:           "Adaptable",
