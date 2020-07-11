@@ -21,6 +21,7 @@ type CharacterAggregation struct {
 	//edges
 	SheetChosenEdges     Edges
 	MinimumChosenEdges   int
+	EdgesRequired		 Edges
 	CoreValidators       coreValidators
 	additionalValidators validators
 

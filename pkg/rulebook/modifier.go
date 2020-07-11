@@ -7,7 +7,7 @@ import (
 	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 )
 
-func addHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, hindrances Hindrances, ca CharacterAggregation) CharacterAggregation {
+func addRequiredHindranceModBuilder(hindranceName HindranceName, wantedDegree Degree, hindrances Hindrances, ca CharacterAggregation) CharacterAggregation {
 	hIndex, hFound := hindrances.FindHindrance(string(hindranceName))
 	if hFound == false {
 		log.Fatalf("couldn't find %s hindrance in application data for modifierAddIgnoredPacifistHindrance function", hindranceName)
@@ -121,6 +121,17 @@ func minusSizeMod(ca CharacterAggregation) CharacterAggregation {
 
 func plusArmorMod(ca CharacterAggregation) CharacterAggregation {
 	ca.Armor++
+
+	return ca
+}
+
+func addRequiredEdgeModBuilder(edgeName string, edges Edges, ca CharacterAggregation) CharacterAggregation {
+	index, found := edges.FindEdge(edgeName)
+	if found == false {
+		log.Fatalf("addRequiredEdgeModBuilder: edge \"%s\" not found.", edgeName)
+	}
+
+	ca.EdgesRequired = append(ca.EdgesRequired, edges[index])
 
 	return ca
 }

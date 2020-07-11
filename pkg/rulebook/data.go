@@ -13,7 +13,7 @@ var SwadeRaces = Races{
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
 					func(ca CharacterAggregation) CharacterAggregation {
-						return addHindranceModBuilder("Pacifist", Major, SwadeHindrances, ca)
+						return addRequiredHindranceModBuilder("Pacifist", Major, SwadeHindrances, ca)
 					},
 				},
 			},
@@ -52,10 +52,8 @@ var SwadeRaces = Races{
 					minusBaseToughnessMod,
 				},
 			},
-			//KEEN SENSES: Avions are more perceptive than most.
-			//They begin with a d6 in Notice (instead of d4) and may raise the skill to d12 + 1.
 			{
-				name:           "Keen Senses",
+				name:           "Keen Senses (Skill)",
 				classification: Positive,
 				modifiers: CharacterAggregationModifiers{
 					func(ca CharacterAggregation) CharacterAggregation {
@@ -98,7 +96,7 @@ var SwadeRaces = Races{
 				classification: Negative,
 				modifiers: CharacterAggregationModifiers{
 					func(ca CharacterAggregation) CharacterAggregation {
-						return addHindranceModBuilder("All Thumbs", Minor, SwadeHindrances, ca)
+						return addRequiredHindranceModBuilder("All Thumbs", Minor, SwadeHindrances, ca)
 					},
 				},
 			},
@@ -198,8 +196,53 @@ var SwadeRaces = Races{
 					plusArmorMod,
 				},
 			},
-			//todo:
-			//KEEN SENSES (Alertness Edge): Saurians have acute senses, giving them the Alertness Edge.
+			{
+				name:           "Keen Senses (Edge)",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return addRequiredEdgeModBuilder("Alertness", SawadeEdges, ca)
+					},
+				},
+			},
+		},
+	},
+	{
+		name:        "Gnomes",
+		description: "",
+		abilities: racialAbilities{
+			{
+				name:           "Smart",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return attributeStartsAtModBuilder("Smarts", dice.D6, ca)
+					},
+				},
+			},
+			{
+				name:           "Keen Senses (Skill)",
+				classification: Positive,
+				modifiers: CharacterAggregationModifiers{
+					func(ca CharacterAggregation) CharacterAggregation {
+						return skillStartsAtModBuilder("Notice", dice.D6, ca)
+					},
+				},
+			},
+			{
+				name:           "Size -1",
+				classification: Negative,
+				modifiers: CharacterAggregationModifiers{
+					minusSizeMod,
+				},
+			},
+			{
+				name:           "Frail",
+				classification: Negative,
+				modifiers: CharacterAggregationModifiers{
+					minusBaseToughnessMod,
+				},
+			},
 		},
 	},
 }

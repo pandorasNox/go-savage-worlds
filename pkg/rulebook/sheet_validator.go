@@ -28,6 +28,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 
 		SheetChosenEdges:     Edges{},
 		MinimumChosenEdges:   0,
+		EdgesRequired:        Edges{},
 		CoreValidators:       make(coreValidators),
 		additionalValidators: validators{},
 
