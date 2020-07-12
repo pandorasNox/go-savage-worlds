@@ -43,21 +43,18 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		return initCharAggegation
 	})
 
-	aggregateMod, err := aggregate(charState, sheet, rb)
+	aggregateMods, err := aggregate(charState, sheet, rb)
 	if err != nil {
 		return fmt.Errorf("aggregation error: %s", err)
 	}
-	charState.Update(aggregateMod)
+	charState.Updates(aggregateMods)
 
 	err = validatePermittedHindrances(sheet, rb.Hindrances())
 	if err != nil {
 		return fmt.Errorf("sheet validation hindrance errors: %s", err)
 	}
 
-	modifiers := sheet.collectModifier(rb)
-	charState.Updates(modifiers)
-
-	errors := charState.Validate()
+	errors := charState.Validate(sheet)
 	if errors != nil {
 		var sErrors string = ""
 
@@ -81,26 +78,24 @@ func Validate(sheet Sheet, rb Rulebook) error {
 	return nil
 }
 
-func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAggregationModifier, error) {
+func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAggregationModifiers, error) {
 	var err error
-	emptyFn := func(_ CharacterAggregation) CharacterAggregation {
-		return CharacterAggregation{}
-	}
 	var fn CharacterAggregationModifier
+	var modifiers CharacterAggregationModifiers
 
 	attributePointsUsed, err := aggregateAttributePointsUsed(s, rb.Traits().Attributes)
 	if err != nil {
-		return emptyFn, err
+		return CharacterAggregationModifiers{}, err
 	}
 
 	skillPointsUsed, err := aggregateSkillPointsUsed(s, rb.Traits().Skills)
 	if err != nil {
-		return emptyFn, err
+		return CharacterAggregationModifiers{}, err
 	}
 
 	hindrancePointsEarned, err := aggregateHindrancePointsEarned(s, rb.Hindrances())
 	if err != nil {
-		return emptyFn, err
+		return CharacterAggregationModifiers{}, err
 	}
 
 	fn = func(currentState CharacterAggregation) CharacterAggregation {
@@ -110,7 +105,14 @@ func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAg
 		return currentState
 	}
 
-	return fn, nil
+	modifiers, err = s.collectModifier(rb)
+	if err != nil {
+		return CharacterAggregationModifiers{}, err
+	}
+
+	modifiers = append(modifiers, fn)
+
+	return modifiers, nil
 }
 
 func aggregateAttributePointsUsed(s Sheet, attributes Attributes) (pointsUsed int, err error) {

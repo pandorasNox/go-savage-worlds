@@ -21,7 +21,7 @@ type CharacterAggregation struct {
 	//edges
 	SheetChosenEdges     Edges
 	MinimumChosenEdges   int
-	EdgesRequired		 Edges
+	EdgesRequired        Edges
 	CoreValidators       coreValidators
 	additionalValidators validators
 
@@ -86,7 +86,7 @@ func (cas CharacterAggregationState) SkillPointsUsed() (pointsUsed int) {
 	return cas.characterAggregation.SkillPointsUsed
 }
 
-type validator func(ca CharacterAggregation) error
+type validator func(ca CharacterAggregation, s Sheet) error
 
 // validators list of functions to validate
 type validators []validator
@@ -108,9 +108,9 @@ func (cas CharacterAggregationState) validators() validators {
 }
 
 // Validate all the things
-func (cas CharacterAggregationState) Validate() (errors []error) {
+func (cas CharacterAggregationState) Validate(s Sheet) (errors []error) {
 	for _, v := range cas.validators() {
-		err := v(cas.characterAggregation)
+		err := v(cas.characterAggregation, s)
 
 		if err != nil {
 			errors = append(errors, err)

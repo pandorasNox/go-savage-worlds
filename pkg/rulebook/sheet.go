@@ -1,5 +1,7 @@
 package rulebook
 
+import "fmt"
+
 type Sheet struct {
 	Version      string       `yaml:"version"`
 	RuleSet      string       `yaml:"rule-set"`
@@ -61,33 +63,40 @@ type DerivedStatistics struct {
 	} `yaml:"toughness"`
 }
 
-func (s Sheet) collectModifier(rb Rulebook) CharacterAggregationModifiers {
+func (s Sheet) collectModifier(rb Rulebook) (CharacterAggregationModifiers, error) {
 	var modifier CharacterAggregationModifiers
 
 	// race modifier
 
-	modifier = append(modifier, s.collectHindranceModifier(rb.Hindrances())...)
+	hindranceMods, err := s.collectHindranceModifier(rb.Hindrances())
+	if err != nil {
+		return CharacterAggregationModifiers{}, err
+	}
+	modifier = append(modifier, hindranceMods...)
 
 	// edge modifier
 
-	return modifier
+	return modifier, nil
 }
 
-func (s Sheet) collectHindranceModifier(rbHinds Hindrances) CharacterAggregationModifiers {
+func (s Sheet) collectHindranceModifier(rbHinds Hindrances) (CharacterAggregationModifiers, error) {
 	var modifier CharacterAggregationModifiers
 
 	for _, sheetHindrance := range s.Character.Hindrances {
-		index, _ := rbHinds.FindHindrance(sheetHindrance.Name)
+		index, foundHin := rbHinds.FindHindrance(sheetHindrance.Name)
+		if foundHin == false {
+			return CharacterAggregationModifiers{}, fmt.Errorf("hindrance \"%s\" doesn't exist", sheetHindrance.Name)
+		}
 		matchedHindrance := SwadeHindrances[index]
 
-		index, ok := matchedHindrance.FindDegree(sheetHindrance.Degree)
-		if !ok {
-			continue
+		index, foundDeg := matchedHindrance.FindDegree(sheetHindrance.Degree)
+		if foundDeg == false {
+			return CharacterAggregationModifiers{}, fmt.Errorf("hindrance \"%s\" doesn't have a \"%s\" degree", sheetHindrance.Name, sheetHindrance.Degree)
 		}
 		matchedDegree := matchedHindrance.AvailableDegrees[index]
 
 		modifier = append(modifier, matchedDegree.Modifiers...)
 	}
 
-	return modifier
+	return modifier, nil
 }
