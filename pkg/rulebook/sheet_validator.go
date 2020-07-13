@@ -43,16 +43,17 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		return initCharAggegation
 	})
 
+	charState.Update(func(ca CharacterAggregation) CharacterAggregation {
+		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
+
+		return ca
+	})
+
 	aggregateMods, err := aggregate(charState, sheet, rb)
 	if err != nil {
 		return fmt.Errorf("aggregation error: %s", err)
 	}
 	charState.Updates(aggregateMods)
-
-	err = validatePermittedHindrances(sheet, rb.Hindrances())
-	if err != nil {
-		return fmt.Errorf("sheet validation hindrance errors: %s", err)
-	}
 
 	errors := charState.Validate(sheet, rb)
 	if errors != nil {
@@ -195,9 +196,9 @@ func aggregateHindrancePointsEarned(s Sheet, hs Hindrances) (pointsEarned int, e
 	return hindrancePoints, nil
 }
 
-func validatePermittedHindrances(s Sheet, rbHinds Hindrances) error {
+func permittedHindrancesValidator(ca CharacterAggregation, s Sheet, rb Rulebook) error {
 	for _, sheetHindrance := range s.Character.Hindrances {
-		index, ok := rbHinds.FindHindrance(sheetHindrance.Name)
+		index, ok := rb.Hindrances().FindHindrance(sheetHindrance.Name)
 
 		if !ok {
 			return fmt.Errorf("\"%s\" is no valid hindrance", sheetHindrance.Name)
