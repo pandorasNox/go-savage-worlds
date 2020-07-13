@@ -86,7 +86,7 @@ func (cas CharacterAggregationState) SkillPointsUsed() (pointsUsed int) {
 	return cas.characterAggregation.SkillPointsUsed
 }
 
-type validator func(ca CharacterAggregation, s Sheet) error
+type validator func(ca CharacterAggregation, s Sheet, rb Rulebook) error
 
 // validators list of functions to validate
 type validators []validator
@@ -108,9 +108,9 @@ func (cas CharacterAggregationState) validators() validators {
 }
 
 // Validate all the things
-func (cas CharacterAggregationState) Validate(s Sheet) (errors []error) {
+func (cas CharacterAggregationState) Validate(s Sheet, rb Rulebook) (errors []error) {
 	for _, v := range cas.validators() {
-		err := v(cas.characterAggregation, s)
+		err := v(cas.characterAggregation, s, rb)
 
 		if err != nil {
 			errors = append(errors, err)

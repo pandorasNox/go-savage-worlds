@@ -99,7 +99,7 @@ func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 	ca.HindrancePointsUsed += -2
 	ca.MinimumChosenEdges++
 
-	hasNoviceEdgeValidator := func(ca CharacterAggregation, s Sheet) error {
+	hasNoviceEdgeValidator := func(ca CharacterAggregation, _ Sheet, _ Rulebook) error {
 		for _, edge := range ca.SheetChosenEdges {
 			if edge.requirement.level == Novice {
 				return nil

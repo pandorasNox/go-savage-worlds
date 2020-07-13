@@ -54,7 +54,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		return fmt.Errorf("sheet validation hindrance errors: %s", err)
 	}
 
-	errors := charState.Validate(sheet)
+	errors := charState.Validate(sheet, rb)
 	if errors != nil {
 		var sErrors string = ""
 
