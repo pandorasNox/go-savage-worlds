@@ -47,6 +47,9 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
 		ca.CoreValidators["requiredAttributesValidator"] = requiredAttributesValidator
 		ca.CoreValidators["attributePointsValidator"] = attributePointsValidator
+		ca.CoreValidators["requiredCoreSkillsValidator"] = requiredCoreSkillsValidator
+		ca.CoreValidators["permittedSkillsValidator"] = permittedSkillsValidator
+		ca.CoreValidators["skillPointsValidator"] = skillPointsValidator
 
 		return ca
 	})
@@ -66,11 +69,6 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		}
 
 		return fmt.Errorf("aggregation validation failed:\n%s", sErrors)
-	}
-
-	err = validateSkills(sheet, rb.Traits().Skills, charState)
-	if err != nil {
-		return fmt.Errorf("sheet validation skill errors: %s", err)
 	}
 
 	return nil
@@ -140,7 +138,13 @@ func aggregateSkillPointsUsed(s Sheet, skills Skills) (pointsUsed int, err error
 
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
-			index, _ := skills.FindSkill(sheetSkill.Name)
+			index, found := skills.FindSkill(sheetSkill.Name)
+			if found == false {
+				return 0, fmt.Errorf(
+					"Skill \"%s\" does not exist",
+					sheetSkill.Name,
+				)
+			}
 			skill := skills[index]
 
 			dice, err := dice.Parse(sheetSkill.Dice)
@@ -248,30 +252,9 @@ func attributePointsValidator(ca CharacterAggregation, _ Sheet, _ Rulebook) erro
 	return nil
 }
 
-func validateSkills(s Sheet, rbs Skills, charState CharacterAggregationState) error {
-	var err error
-
-	err = validateCoreSkillsExist(s, rbs)
-	if err != nil {
-		return err
-	}
-
-	err = validatePermittedSkills(s, rbs)
-	if err != nil {
-		return err
-	}
-
-	err = validateSkillPoints(s, rbs, charState)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func validateCoreSkillsExist(s Sheet, rbs Skills) error {
+func requiredCoreSkillsValidator(_ CharacterAggregation, s Sheet, rb Rulebook) error {
 RequiredCoreSkills:
-	for _, coreSkill := range rbs.CoreSkills() {
+	for _, coreSkill := range rb.traits.Skills.CoreSkills() {
 		for _, sheetAttr := range s.Character.Traits.Attributes {
 			for _, sheetSkill := range sheetAttr.Skills {
 				if coreSkill.Name == sheetSkill.Name {
@@ -286,20 +269,20 @@ RequiredCoreSkills:
 	return nil
 }
 
-func validatePermittedSkills(s Sheet, rbs Skills) error {
+func permittedSkillsValidator(_ CharacterAggregation, s Sheet, rb Rulebook) error {
 	for _, sheetAttr := range s.Character.Traits.Attributes {
 		for _, sheetSkill := range sheetAttr.Skills {
-			index, ok := rbs.FindSkill(sheetSkill.Name)
+			index, ok := rb.Traits().Skills.FindSkill(sheetSkill.Name)
 
 			if !ok {
 				return fmt.Errorf("\"%s\" is no valid skill", sheetSkill.Name)
 			}
 
-			if rbs[index].LinkedAttribute != sheetAttr.Name {
+			if rb.Traits().Skills[index].LinkedAttribute != sheetAttr.Name {
 				return fmt.Errorf(
 					"\"%s\" should belong to attribute \"%s\" and not \"%s\"",
 					sheetSkill.Name,
-					rbs[index].LinkedAttribute,
+					rb.Traits().Skills[index].LinkedAttribute,
 					sheetAttr.Name,
 				)
 			}
@@ -310,12 +293,12 @@ func validatePermittedSkills(s Sheet, rbs Skills) error {
 	return nil
 }
 
-func validateSkillPoints(s Sheet, rbs Skills, charState CharacterAggregationState) error {
-	if charState.SkillPointsUsed() > charState.SkillPointsAvailable() {
+func skillPointsValidator(ca CharacterAggregation, _ Sheet, _ Rulebook) error {
+	if ca.SkillPointsUsed > ca.SkillPointsAvailable {
 		return fmt.Errorf(
 			"validation error: Used %d of %d available skill points",
-			charState.SkillPointsUsed(),
-			charState.SkillPointsAvailable(),
+			ca.SkillPointsUsed,
+			ca.SkillPointsAvailable,
 		)
 	}
 

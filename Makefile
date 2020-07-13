@@ -6,6 +6,10 @@ test:
 	bash githooks/pre-commit
 	cat assets/tests/valid-character.yaml | go run .
 
+.PHONY: test-sheet
+test-sheet:
+	cat assets/tests/valid-character.yaml | go run .
+
 
 .PHONY: githooks
 githooks:
