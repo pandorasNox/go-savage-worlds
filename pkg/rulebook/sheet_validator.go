@@ -45,6 +45,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 
 	charState.Update(func(ca CharacterAggregation) CharacterAggregation {
 		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
+		ca.CoreValidators["requiredAttributesValidator"] = requiredAttributesValidator
 		ca.CoreValidators["attributePointsValidator"] = attributePointsValidator
 
 		return ca
@@ -65,11 +66,6 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		}
 
 		return fmt.Errorf("aggregation validation failed:\n%s", sErrors)
-	}
-
-	err = validateAttributes(sheet, rb.Traits().Attributes, charState)
-	if err != nil {
-		return fmt.Errorf("sheet validation attribute errors: %s", err)
 	}
 
 	err = validateSkills(sheet, rb.Traits().Skills, charState)
@@ -225,27 +221,16 @@ func permittedHindrancesValidator(ca CharacterAggregation, s Sheet, rb Rulebook)
 	return nil
 }
 
-func validateAttributes(s Sheet, rbAttrs Attributes, charState CharacterAggregationState) error {
-	var err error
-
-	err = validateAttributesExist(s, rbAttrs)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func validateAttributesExist(s Sheet, rbAttrs Attributes) error {
+func requiredAttributesValidator(_ CharacterAggregation, s Sheet, rb Rulebook) error {
 RequiredAttributes:
-	for _, attribute := range rbAttrs {
+	for _, attribute := range rb.Traits().Attributes {
 		for _, sheetAttribute := range s.Character.Traits.Attributes {
 			if attribute.Name == sheetAttribute.Name {
 				continue RequiredAttributes
 			}
 		}
 
-		return fmt.Errorf("\"%s\" is a required attribute", attribute.Name)
+		return fmt.Errorf("Attribute \"%s\" is a required attribute", attribute.Name)
 	}
 
 	return nil
