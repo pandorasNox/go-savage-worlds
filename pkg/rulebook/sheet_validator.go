@@ -45,6 +45,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 
 	charState.Update(func(ca CharacterAggregation) CharacterAggregation {
 		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
+		ca.CoreValidators["attributePointsValidator"] = attributePointsValidator
 
 		return ca
 	})
@@ -232,11 +233,6 @@ func validateAttributes(s Sheet, rbAttrs Attributes, charState CharacterAggregat
 		return err
 	}
 
-	err = validateAttributePoints(s, rbAttrs, charState)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -255,12 +251,12 @@ RequiredAttributes:
 	return nil
 }
 
-func validateAttributePoints(s Sheet, rbAttrs Attributes, charState CharacterAggregationState) error {
-	if charState.AttributePointsUsed() > charState.AttributePointsAvailable() {
+func attributePointsValidator(ca CharacterAggregation, _ Sheet, _ Rulebook) error {
+	if ca.AttributePointsUsed > ca.AttributePointsAvailable {
 		return fmt.Errorf(
 			"validation error: Used %d of %d available attribute points",
-			charState.AttributePointsUsed(),
-			charState.AttributePointsAvailable(),
+			ca.AttributePointsUsed,
+			ca.AttributePointsAvailable,
 		)
 	}
 
