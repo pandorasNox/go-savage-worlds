@@ -2,6 +2,8 @@ package rulebook
 
 import (
 	"fmt"
+
+	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 )
 
 //Validate validates a savage world sheet
@@ -42,12 +44,16 @@ func Validate(sheet Sheet, rb Rulebook) error {
 	})
 
 	charState.Update(func(ca CharacterAggregation) CharacterAggregation {
-		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
 		ca.CoreValidators["requiredAttributesValidator"] = requiredAttributesValidator
 		ca.CoreValidators["attributePointsValidator"] = attributePointsValidator
+
 		ca.CoreValidators["requiredCoreSkillsValidator"] = requiredCoreSkillsValidator
 		ca.CoreValidators["permittedSkillsValidator"] = permittedSkillsValidator
 		ca.CoreValidators["skillPointsValidator"] = skillPointsValidator
+
+		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
+
+		ca.CoreValidators["minimumSkillPointsRequiredForValidator"] = minimumSkillPointsRequiredForValidator
 
 		return ca
 	})
@@ -175,6 +181,32 @@ func skillPointsValidator(ca CharacterAggregation, _ Sheet, _ Rulebook) error {
 			ca.SkillPointsUsed,
 			ca.SkillPointsAvailable,
 		)
+	}
+
+	return nil
+}
+
+func minimumSkillPointsRequiredForValidator(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+	for skillName, minRequiredPoints := range ca.MinimumSkillPointsRequiredFor {
+		_, found := rb.Traits().Skills.FindSkill(string(skillName))
+		if found == false {
+			return fmt.Errorf("couldn't find skill \"%s\" in rulebook for min points required validation", skillName)
+		}
+
+		sheetSkill, err := s.SheetSkill(skillName)
+		if err != nil {
+			return fmt.Errorf("%s: for min points required validation", err)
+		}
+
+		sDice, err := dice.Parse(sheetSkill.Dice)
+		if err != nil {
+			return fmt.Errorf("couldn't parse dice \"%s\" from sheet skill \"%s\" for min points required validation", sheetSkill.Dice, sheetSkill.Name)
+		}
+
+		if minRequiredPoints > sDice.Points() {
+			minDice, err := dice.FromPoints(minRequiredPoints)
+			return fmt.Errorf("for skill \"%s\" a minimum dice of \"d%s\" is required. other err: %s", skillName, minDice.Value(), err)
+		}
 	}
 
 	return nil

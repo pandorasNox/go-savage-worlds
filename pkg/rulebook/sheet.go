@@ -100,3 +100,16 @@ func (s Sheet) collectHindranceModifier(rbHinds Hindrances) (CharacterAggregatio
 
 	return modifier, nil
 }
+
+// SheetSkill returns sheetSkill by skillName
+func (s Sheet) SheetSkill(skillName SkillName) (sheetSkill SheetSkill, err error) {
+	for _, sheetAttr := range s.Character.Traits.Attributes {
+		for _, sheetSkill := range sheetAttr.Skills {
+			if sheetSkill.Name == string(skillName) {
+				return sheetSkill, nil
+			}
+		}
+	}
+
+	return SheetSkill{}, fmt.Errorf("couldn't find skill %s in sheet", skillName)
+}

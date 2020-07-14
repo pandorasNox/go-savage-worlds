@@ -87,3 +87,18 @@ func MustParse(dice string) Dice {
 
 	return parsedDice
 }
+
+func FromPoints(points int) (Dice, error) {
+	diceVal := ""
+	for dVal, dPoints := range diceValueToPointsUsedMap {
+		if points == dPoints {
+			diceVal = dVal
+		}
+	}
+
+	if diceVal == "" {
+		return Dice{}, fmt.Errorf("\"%d\" points are no valid dice points", points)
+	}
+
+	return Parse(fmt.Sprintf("d%s", diceVal))
+}
