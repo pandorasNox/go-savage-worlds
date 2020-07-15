@@ -63,6 +63,17 @@ type DerivedStatistics struct {
 	} `yaml:"toughness"`
 }
 
+// SheetAttribute returns SheetAttribute by attributeName
+func (s Sheet) SheetAttribute(attributeName AttributeName) (sheetAttribute SheetAttribute, err error) {
+	for _, sheetAttr := range s.Character.Traits.Attributes {
+		if sheetAttr.Name == string(attributeName) {
+			return sheetAttr, nil
+		}
+	}
+
+	return SheetAttribute{}, fmt.Errorf("couldn't find attribute %s in sheet", attributeName)
+}
+
 // SheetSkill returns sheetSkill by skillName
 func (s Sheet) SheetSkill(skillName SkillName) (sheetSkill SheetSkill, err error) {
 	for _, sheetAttr := range s.Character.Traits.Attributes {

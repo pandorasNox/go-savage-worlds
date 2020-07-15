@@ -53,6 +53,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 
 		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
 
+		ca.CoreValidators["minimumAttributePointsRequiredForValidator"] = minimumAttributePointsRequiredForValidator
 		ca.CoreValidators["minimumSkillPointsRequiredForValidator"] = minimumSkillPointsRequiredForValidator
 
 		return ca
@@ -181,6 +182,32 @@ func skillPointsValidator(ca CharacterAggregation, _ Sheet, _ Rulebook) error {
 			ca.SkillPointsUsed,
 			ca.SkillPointsAvailable,
 		)
+	}
+
+	return nil
+}
+
+func minimumAttributePointsRequiredForValidator(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+	for attributeName, minRequiredPoints := range ca.MinimumAttributePointsRequiredFor {
+		_, found := rb.Traits().Attributes.FindAttribute(string(attributeName))
+		if found == false {
+			return fmt.Errorf("couldn't find attribute \"%s\" in rulebook for min points required validation", attributeName)
+		}
+
+		sheetAttribute, err := s.SheetAttribute(attributeName)
+		if err != nil {
+			return fmt.Errorf("%s: for min points required validation", err)
+		}
+
+		aDice, err := dice.Parse(sheetAttribute.Dice)
+		if err != nil {
+			return fmt.Errorf("couldn't parse dice \"%s\" from sheet attribute \"%s\" for min points required validation", sheetAttribute.Dice, sheetAttribute.Name)
+		}
+
+		if minRequiredPoints > aDice.Points() {
+			minDice, err := dice.FromPoints(minRequiredPoints)
+			return fmt.Errorf("for attribute \"%s\" a minimum dice of \"d%s\" is required. other err: %s", attributeName, minDice.Value(), err)
+		}
 	}
 
 	return nil
