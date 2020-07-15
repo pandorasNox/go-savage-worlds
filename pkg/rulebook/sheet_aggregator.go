@@ -6,7 +6,6 @@ import (
 	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 )
 
-
 func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAggregationModifiers, error) {
 	var err error
 	var fn CharacterAggregationModifier
@@ -132,8 +131,13 @@ func aggregateHindrancePointsEarned(s Sheet, hs Hindrances) (pointsEarned int, e
 
 func collectModifier(s Sheet, rb Rulebook) (CharacterAggregationModifiers, error) {
 	var modifier CharacterAggregationModifiers
+	var err error
 
-	// race modifier
+	raceMods, err := collectRaceModifier(s, rb.Races())
+	if err != nil {
+		return CharacterAggregationModifiers{}, err
+	}
+	modifier = append(modifier, raceMods...)
 
 	hindranceMods, err := collectHindranceModifier(s, rb.Hindrances())
 	if err != nil {
@@ -144,6 +148,18 @@ func collectModifier(s Sheet, rb Rulebook) (CharacterAggregationModifiers, error
 	// edge modifier
 
 	return modifier, nil
+}
+
+func collectRaceModifier(s Sheet, rbRaces Races) (CharacterAggregationModifiers, error) {
+	sheetRace := s.Character.Info.Race
+
+	index, found := rbRaces.FindRace(sheetRace)
+	if found == false {
+		return CharacterAggregationModifiers{}, fmt.Errorf("Unknown race \"%s\" in sheet", sheetRace)
+	}
+	race := rbRaces[index]
+
+	return race.Modifiers(), nil
 }
 
 func collectHindranceModifier(s Sheet, rbHinds Hindrances) (CharacterAggregationModifiers, error) {

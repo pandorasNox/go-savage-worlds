@@ -2,19 +2,26 @@ package rulebook
 
 //Rulebook defines a rulebook
 type Rulebook struct {
-	traits Traits
+	races      Races
+	traits     Traits
 	hindrances Hindrances
 }
 
 //New returns a rulebook with basic SWADE rules and related data
-func New(a Attributes, s Skills, h Hindrances) Rulebook {
+func New(r Races, a Attributes, s Skills, h Hindrances) Rulebook {
 	return Rulebook{
+		races: r,
 		traits: Traits{
 			Attributes: a,
 			Skills:     s,
 		},
 		hindrances: h,
 	}
+}
+
+// Races returns races
+func (rb Rulebook) Races() Races {
+	return rb.races
 }
 
 //Traits returns traits, containing e.g. attributes and skills
