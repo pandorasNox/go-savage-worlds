@@ -63,44 +63,6 @@ type DerivedStatistics struct {
 	} `yaml:"toughness"`
 }
 
-func (s Sheet) collectModifier(rb Rulebook) (CharacterAggregationModifiers, error) {
-	var modifier CharacterAggregationModifiers
-
-	// race modifier
-
-	hindranceMods, err := s.collectHindranceModifier(rb.Hindrances())
-	if err != nil {
-		return CharacterAggregationModifiers{}, err
-	}
-	modifier = append(modifier, hindranceMods...)
-
-	// edge modifier
-
-	return modifier, nil
-}
-
-func (s Sheet) collectHindranceModifier(rbHinds Hindrances) (CharacterAggregationModifiers, error) {
-	var modifier CharacterAggregationModifiers
-
-	for _, sheetHindrance := range s.Character.Hindrances {
-		index, foundHin := rbHinds.FindHindrance(sheetHindrance.Name)
-		if foundHin == false {
-			return CharacterAggregationModifiers{}, fmt.Errorf("hindrance \"%s\" doesn't exist", sheetHindrance.Name)
-		}
-		matchedHindrance := SwadeHindrances[index]
-
-		index, foundDeg := matchedHindrance.FindDegree(sheetHindrance.Degree)
-		if foundDeg == false {
-			return CharacterAggregationModifiers{}, fmt.Errorf("hindrance \"%s\" doesn't have a \"%s\" degree", sheetHindrance.Name, sheetHindrance.Degree)
-		}
-		matchedDegree := matchedHindrance.AvailableDegrees[index]
-
-		modifier = append(modifier, matchedDegree.Modifiers...)
-	}
-
-	return modifier, nil
-}
-
 // SheetSkill returns sheetSkill by skillName
 func (s Sheet) SheetSkill(skillName SkillName) (sheetSkill SheetSkill, err error) {
 	for _, sheetAttr := range s.Character.Traits.Attributes {

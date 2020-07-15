@@ -34,7 +34,7 @@ func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAg
 		return currentState
 	}
 
-	modifiers, err = s.collectModifier(rb)
+	modifiers, err = collectModifier(s, rb)
 	if err != nil {
 		return CharacterAggregationModifiers{}, err
 	}
@@ -128,4 +128,42 @@ func aggregateHindrancePointsEarned(s Sheet, hs Hindrances) (pointsEarned int, e
 	}
 
 	return hindrancePoints, nil
+}
+
+func collectModifier(s Sheet, rb Rulebook) (CharacterAggregationModifiers, error) {
+	var modifier CharacterAggregationModifiers
+
+	// race modifier
+
+	hindranceMods, err := collectHindranceModifier(s, rb.Hindrances())
+	if err != nil {
+		return CharacterAggregationModifiers{}, err
+	}
+	modifier = append(modifier, hindranceMods...)
+
+	// edge modifier
+
+	return modifier, nil
+}
+
+func collectHindranceModifier(s Sheet, rbHinds Hindrances) (CharacterAggregationModifiers, error) {
+	var modifier CharacterAggregationModifiers
+
+	for _, sheetHindrance := range s.Character.Hindrances {
+		index, foundHin := rbHinds.FindHindrance(sheetHindrance.Name)
+		if foundHin == false {
+			return CharacterAggregationModifiers{}, fmt.Errorf("hindrance \"%s\" doesn't exist", sheetHindrance.Name)
+		}
+		matchedHindrance := SwadeHindrances[index]
+
+		index, foundDeg := matchedHindrance.FindDegree(sheetHindrance.Degree)
+		if foundDeg == false {
+			return CharacterAggregationModifiers{}, fmt.Errorf("hindrance \"%s\" doesn't have a \"%s\" degree", sheetHindrance.Name, sheetHindrance.Degree)
+		}
+		matchedDegree := matchedHindrance.AvailableDegrees[index]
+
+		modifier = append(modifier, matchedDegree.Modifiers...)
+	}
+
+	return modifier, nil
 }
