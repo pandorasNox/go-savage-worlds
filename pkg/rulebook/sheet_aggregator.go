@@ -145,7 +145,11 @@ func collectModifier(s Sheet, rb Rulebook) (CharacterAggregationModifiers, error
 	}
 	modifier = append(modifier, hindranceMods...)
 
-	// edge modifier
+	edgeMods, err := collectEdgeModifier(s, rb.Edges())
+	if err != nil {
+		return CharacterAggregationModifiers{}, err
+	}
+	modifier = append(modifier, edgeMods...)
 
 	return modifier, nil
 }
@@ -179,6 +183,23 @@ func collectHindranceModifier(s Sheet, rbHinds Hindrances) (CharacterAggregation
 		matchedDegree := matchedHindrance.AvailableDegrees[index]
 
 		modifier = append(modifier, matchedDegree.Modifiers...)
+	}
+
+	return modifier, nil
+}
+
+func collectEdgeModifier(s Sheet, es Edges) (CharacterAggregationModifiers, error) {
+	var modifier CharacterAggregationModifiers
+
+	for _, sheetEdge := range s.Character.Edges {
+		index, found := es.FindEdge(sheetEdge)
+		if found == false {
+			return CharacterAggregationModifiers{}, fmt.Errorf("edge \"%s\" doesn't exist", sheetEdge)
+		}
+
+		edge := es[index]
+
+		modifier = append(modifier, edge.modifiers...)
 	}
 
 	return modifier, nil

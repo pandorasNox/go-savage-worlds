@@ -62,7 +62,7 @@ character:
     - name: Mean
       degree: minor
   edges:
-    - alertness
+    - Alertness
   derived-statistics:
     standard-pace: 6in
     parry: 4

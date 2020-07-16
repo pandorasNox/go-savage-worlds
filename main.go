@@ -22,9 +22,10 @@ func main() {
 
 	rb := rulebook.New(
 		rulebook.SwadeRaces,
+		rulebook.SwadeHindrances,
 		rulebook.SwadeAttributes,
 		rulebook.SwadeSkills,
-		rulebook.SwadeHindrances,
+		rulebook.SawadeEdges,
 	)
 
 	err = rulebook.Validate(charSheet, rb)

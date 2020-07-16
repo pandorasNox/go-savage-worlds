@@ -25,6 +25,9 @@ go implementation of savage world rules
 - check to have hindrance twice?
 - how to validate "minimum two novice edges" (eg. race + house rule)?
 
+## questions
+- maybe move minimumAttributePointsRequiredForValidator &minimumSkillPointsRequiredForValidator into modifier (out of sheet_validator)
+
 ## out of scope v1.0
 - racial abilities
   - android
