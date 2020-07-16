@@ -42,9 +42,9 @@ character:
         dice: d6
         skills:
           - name: Common Knowledge
-            dice: d4
+            dice: d4-1
           - name: Notice
-            dice: d4
+            dice: d4+1
       - name: Spirit
         dice: d4
         skills:

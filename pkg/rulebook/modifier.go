@@ -92,6 +92,30 @@ func skillAdjusmentModBuilder(skillName SkillName, adjustment int, skills Skills
 
 	ca.SkillsAdjustments[skillName] += adjustment
 
+	skillAdjusmentValidator := func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+		sheetSkill, err := s.SheetSkill(skillName)
+		if err != nil {
+			return err
+		}
+
+		sDice, err := dice.Parse(sheetSkill.Dice)
+		if err != nil {
+			return fmt.Errorf("skill \"%s\" does not contain valid dice \"%s\"", skillName, sheetSkill.Dice)
+		}
+
+		if _, ok := ca.SkillsAdjustments[skillName]; ok == false {
+			return fmt.Errorf("internal error during skilladjustment validation for skill \"%s\"", skillName)
+		}
+
+		if ca.SkillsAdjustments[skillName] != sDice.Adjustment() {
+			return fmt.Errorf("skill \"%s\" is expected to have \"%d\" adjustment, but got \"%d\"", skillName, ca.SkillsAdjustments[skillName], sDice.Adjustment())
+		}
+
+		return nil
+	}
+
+	ca.additionalValidators = append(ca.additionalValidators, skillAdjusmentValidator)
+
 	return ca
 }
 
