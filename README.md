@@ -8,6 +8,7 @@ go implementation of savage world rules
 - returns invald and all the related "errors/mistakes" if the sheet is invalid
 
 ## todo's
+- deduplicate erros from validate
 - add testing
   - add integration test for data.go modifiers (no fatal shall happen)
 - write integration test for sheet validation (cat ....)
