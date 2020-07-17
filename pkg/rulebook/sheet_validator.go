@@ -52,6 +52,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		ca.CoreValidators["skillPointsValidator"] = skillPointsValidator
 
 		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
+		ca.CoreValidators["hindrancePointsUsedValidator"] = hindrancePointsUsedValidator
 
 		ca.CoreValidators["minimumAttributePointsRequiredForValidator"] = minimumAttributePointsRequiredForValidator
 		ca.CoreValidators["minimumSkillPointsRequiredForValidator"] = minimumSkillPointsRequiredForValidator
@@ -105,6 +106,27 @@ func permittedHindrancesValidator(ca CharacterAggregation, s Sheet, rb Rulebook)
 	}
 
 	return nil
+}
+
+func hindrancePointsUsedValidator(ca CharacterAggregation, _ Sheet, _ Rulebook) error {
+	hindrancePointsAvailable := min(ca.HindrancePointsEarned, ca.HindrancePointsEarnedLimit)
+	if ca.HindrancePointsUsed > hindrancePointsAvailable {
+		return fmt.Errorf(
+			"Used %d of %d available hindrance points",
+			ca.HindrancePointsUsed,
+			hindrancePointsAvailable,
+		)
+	}
+
+	return nil
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+
+	return b
 }
 
 func requiredAttributesValidator(_ CharacterAggregation, s Sheet, rb Rulebook) error {
