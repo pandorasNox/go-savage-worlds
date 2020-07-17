@@ -6,7 +6,7 @@ import (
 	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 )
 
-func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAggregationModifiers, error) {
+func aggregate(ca CharacterAggregation, s Sheet, rb Rulebook) (CharacterAggregationModifiers, error) {
 	var err error
 	var fn CharacterAggregationModifier
 	var modifiers CharacterAggregationModifiers
@@ -32,13 +32,19 @@ func aggregate(cas CharacterAggregationState, s Sheet, rb Rulebook) (CharacterAg
 		currentState.HindrancePointsEarned = hindrancePointsEarned
 		return currentState
 	}
+	modifiers = append(modifiers, fn)
 
-	modifiers, err = collectModifier(s, rb)
+	cModifiers, err := collectModifier(s, rb)
 	if err != nil {
 		return CharacterAggregationModifiers{}, err
 	}
+	modifiers = append(modifiers, cModifiers...)
 
-	modifiers = append(modifiers, fn)
+	hindrancePointsUsedModifier, err := aggregateHindrancePointsUsed(ca)
+	if err != nil {
+		return CharacterAggregationModifiers{}, err
+	}
+	modifiers = append(modifiers, hindrancePointsUsedModifier)
 
 	return modifiers, nil
 }
@@ -203,4 +209,21 @@ func collectEdgeModifier(s Sheet, es Edges) (CharacterAggregationModifiers, erro
 	}
 
 	return modifier, nil
+}
+
+func aggregateHindrancePointsUsed(ca CharacterAggregation) (CharacterAggregationModifier, error) {
+	hindrancePointsUsed := 0
+
+	for range ca.SheetChosenEdges {
+		hindrancePointsUsed += 2
+	}
+
+	//hindrancePointsUsed += max(0, (ca.AttributePointsUsed-ca.AttributePointsAvailable)) * 2
+
+	fn := func(ca CharacterAggregation) CharacterAggregation {
+		ca.HindrancePointsUsed = hindrancePointsUsed
+		return ca
+	}
+
+	return fn, nil
 }

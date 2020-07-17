@@ -66,6 +66,11 @@ type CharacterAggregationModifier func(CharacterAggregation) CharacterAggregatio
 //CharacterAggregationModifiers is a list of CharacterAggregationModifier
 type CharacterAggregationModifiers []CharacterAggregationModifier
 
+// CharacterAggregation returns CharacterAggregation
+func (cas CharacterAggregationState) CharacterAggregation() CharacterAggregation {
+	return cas.characterAggregation
+}
+
 //SkillPointsAvailable returns available skill points
 func (cas CharacterAggregationState) SkillPointsAvailable() (pointsAvailable int) {
 	return cas.characterAggregation.SkillPointsAvailable
