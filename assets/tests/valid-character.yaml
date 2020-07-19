@@ -19,7 +19,7 @@ character:
   traits:
     attributes:
       - name: Agility
-        dice: d8
+        dice: d10
         skills:
           #(4)68 = 2
           - name: Athletics
