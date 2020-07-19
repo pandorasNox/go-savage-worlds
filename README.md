@@ -12,6 +12,7 @@ go implementation of savage world rules
 - hindrancePointsUsed
 	- calc hindrancePointsUsed for start wealth
 	- accumulate for what hindrancePointsUsed were added and put this into a map into character_aggregation
+  - enhance errors OR stop counting hindrancePointsUsed after we reach earned/limit
 - add testing
   - add integration test for data.go modifiers (no fatal shall happen)
 - write integration test for sheet validation (cat ....)
