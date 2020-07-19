@@ -40,7 +40,7 @@ func aggregate(ca CharacterAggregation, s Sheet, rb Rulebook) (CharacterAggregat
 	}
 	modifiers = append(modifiers, cModifiers...)
 
-	hindrancePointsUsedModifier, err := aggregateHindrancePointsUsed(ca)
+	hindrancePointsUsedModifier, err := aggregateHindrancePointsUsed(ca, s, rb)
 	if err != nil {
 		return CharacterAggregationModifiers{}, err
 	}
@@ -211,10 +211,18 @@ func collectEdgeModifier(s Sheet, es Edges) (CharacterAggregationModifiers, erro
 	return modifier, nil
 }
 
-func aggregateHindrancePointsUsed(ca CharacterAggregation) (CharacterAggregationModifier, error) {
+func aggregateHindrancePointsUsed(ca CharacterAggregation, s Sheet, rb Rulebook) (CharacterAggregationModifier, error) {
 	hindrancePointsUsed := 0
+	emptyFn := func(ca CharacterAggregation) CharacterAggregation {
+		return ca
+	}
 
-	for range ca.SheetChosenEdges {
+	for _, sheetEdge := range s.Character.Edges {
+		_, eFound := rb.Edges().FindEdge(sheetEdge)
+		if eFound == false {
+			return emptyFn, fmt.Errorf("unknown edge \"%s\" in sheet", sheetEdge)
+		}
+
 		hindrancePointsUsed += 2
 	}
 

@@ -19,7 +19,6 @@ type CharacterAggregation struct {
 	HindrancesIgnored AggregatedHindrances
 
 	//edges
-	SheetChosenEdges     Edges
 	MinimumChosenEdges   int
 	EdgesRequired        Edges
 	CoreValidators       coreValidators

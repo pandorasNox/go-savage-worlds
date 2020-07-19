@@ -123,8 +123,14 @@ func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 	ca.HindrancePointsUsed += -2
 	ca.MinimumChosenEdges++
 
-	hasNoviceEdgeValidator := func(ca CharacterAggregation, _ Sheet, _ Rulebook) error {
-		for _, edge := range ca.SheetChosenEdges {
+	hasNoviceEdgeValidator := func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+		for _, sheetEdge := range s.Character.Edges {
+			eIndex, eFound := rb.Edges().FindEdge(sheetEdge)
+			if eFound == false {
+				return fmt.Errorf("unknown edge \"%s\" in sheet", sheetEdge)
+			}
+
+			edge := rb.Edges()[eIndex]
 			if edge.requirement.level == Novice {
 				return nil
 			}

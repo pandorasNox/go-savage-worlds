@@ -26,7 +26,6 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		HindrancesRequired:         make(AggregatedHindrances),
 		HindrancesIgnored:          make(AggregatedHindrances),
 
-		SheetChosenEdges:     Edges{},
 		MinimumChosenEdges:   0,
 		EdgesRequired:        Edges{},
 		CoreValidators:       make(coreValidators),
