@@ -59,11 +59,10 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		return ca
 	})
 
-	aggregateMods, err := aggregate(charState.CharacterAggregation(), sheet, rb)
+	err = aggregateAndUpdate(&charState, sheet, rb)
 	if err != nil {
 		return fmt.Errorf("aggregation error: %s", err)
 	}
-	charState.Updates(aggregateMods)
 
 	errors := charState.Validate(sheet, rb)
 	if errors != nil {

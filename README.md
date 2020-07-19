@@ -9,6 +9,9 @@ go implementation of savage world rules
 
 ## todo's
 - deduplicate erros from validate
+- hindrancePointsUsed
+	- calc hindrancePointsUsed for start wealth
+	- accumulate for what hindrancePointsUsed were added and put this into a map into character_aggregation
 - add testing
   - add integration test for data.go modifiers (no fatal shall happen)
 - write integration test for sheet validation (cat ....)

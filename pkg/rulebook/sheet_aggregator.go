@@ -6,24 +6,23 @@ import (
 	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
 )
 
-func aggregate(ca CharacterAggregation, s Sheet, rb Rulebook) (CharacterAggregationModifiers, error) {
+func aggregateAndUpdate(cas *CharacterAggregationState, s Sheet, rb Rulebook) error {
 	var err error
 	var fn CharacterAggregationModifier
-	var modifiers CharacterAggregationModifiers
 
 	attributePointsUsed, err := aggregateAttributePointsUsed(s, rb.Traits().Attributes)
 	if err != nil {
-		return CharacterAggregationModifiers{}, err
+		return err
 	}
 
 	skillPointsUsed, err := aggregateSkillPointsUsed(s, rb.Traits().Skills)
 	if err != nil {
-		return CharacterAggregationModifiers{}, err
+		return err
 	}
 
 	hindrancePointsEarned, err := aggregateHindrancePointsEarned(s, rb.Hindrances())
 	if err != nil {
-		return CharacterAggregationModifiers{}, err
+		return err
 	}
 
 	fn = func(currentState CharacterAggregation) CharacterAggregation {
@@ -32,21 +31,21 @@ func aggregate(ca CharacterAggregation, s Sheet, rb Rulebook) (CharacterAggregat
 		currentState.HindrancePointsEarned = hindrancePointsEarned
 		return currentState
 	}
-	modifiers = append(modifiers, fn)
+	cas.Update(fn)
 
 	cModifiers, err := collectModifier(s, rb)
 	if err != nil {
-		return CharacterAggregationModifiers{}, err
+		return err
 	}
-	modifiers = append(modifiers, cModifiers...)
+	cas.Updates(cModifiers)
 
-	hindrancePointsUsedModifier, err := aggregateHindrancePointsUsed(ca, s, rb)
+	hindrancePointsUsedModifier, err := aggregateHindrancePointsUsed(cas.CharacterAggregation(), s, rb)
 	if err != nil {
-		return CharacterAggregationModifiers{}, err
+		return err
 	}
-	modifiers = append(modifiers, hindrancePointsUsedModifier)
+	cas.Update(hindrancePointsUsedModifier)
 
-	return modifiers, nil
+	return nil
 }
 
 func aggregateAttributePointsUsed(s Sheet, attributes Attributes) (pointsUsed int, err error) {
@@ -226,12 +225,30 @@ func aggregateHindrancePointsUsed(ca CharacterAggregation, s Sheet, rb Rulebook)
 		hindrancePointsUsed += 2
 	}
 
-	//hindrancePointsUsed += max(0, (ca.AttributePointsUsed-ca.AttributePointsAvailable)) * 2
+	extraUsedAttributePoints := max(0, (ca.AttributePointsUsed - ca.AttributePointsAvailable))
+
+	hindrancePointsUsed += extraUsedAttributePoints * 2
+
+	hindrancePointsUsed += max(0, (ca.SkillPointsUsed - ca.SkillPointsAvailable))
+
+	//todo: calc hindrancePointsUsed for start wealth
+
+	//todo: accumulate for what hindrancePointsUsed were added and put this into a map
+	//into character_aggregation
 
 	fn := func(ca CharacterAggregation) CharacterAggregation {
+		ca.AttributePointsAvailable += extraUsedAttributePoints
 		ca.HindrancePointsUsed = hindrancePointsUsed
 		return ca
 	}
 
 	return fn, nil
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+
+	return b
 }
