@@ -63,6 +63,8 @@ character:
       degree: minor
   edges:
     - Alertness
+    - Aristocrat
+    # - Berserk
   derived-statistics:
     standard-pace: 6in
     parry: 4

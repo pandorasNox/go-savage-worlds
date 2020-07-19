@@ -339,4 +339,21 @@ var SawadeEdges = Edges{
 			},
 		},
 	},
+	//Ambidextrous
+	//Arcane Background
+	//Arcane Resistance
+	//Improved Arcane
+	{
+		name:        "Aristocrat",
+		requirement: Requirement{level: Novice},
+		modifiers:   CharacterAggregationModifiers{},
+	},
+	//Attractive
+	//Very Attractive
+	//Berserk
+	{
+		name:        "Berserk",
+		requirement: Requirement{level: Novice},
+		modifiers:   CharacterAggregationModifiers{},
+	},
 }
