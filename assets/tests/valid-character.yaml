@@ -8,6 +8,7 @@ setting-rules:
 character:
   info:
     name: Johanna Smith
+    rank: Novice
     race: Dwarfs
     gender: Female
     concept: An example character.

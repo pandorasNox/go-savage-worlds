@@ -43,6 +43,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 	})
 
 	charState.Update(func(ca CharacterAggregation) CharacterAggregation {
+		ca.CoreValidators["allowNoviceRankOnlyValidator"] = allowNoviceRankOnlyValidator
 		ca.CoreValidators["requiredAttributesValidator"] = requiredAttributesValidator
 		ca.CoreValidators["attributePointsValidator"] = attributePointsValidator
 
@@ -72,7 +73,16 @@ func Validate(sheet Sheet, rb Rulebook) error {
 			sErrors = fmt.Sprintf("%s  %s\n", sErrors, err)
 		}
 
-		return fmt.Errorf("aggregation validation failed:\n%s", sErrors)
+		return fmt.Errorf("validation failed:\n%s", sErrors)
+	}
+
+	return nil
+}
+
+func allowNoviceRankOnlyValidator(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+	sheetRank := s.Character.Info.Rank
+	if sheetRank != "Novice" {
+		return fmt.Errorf("unsupported character rank \"%s\", supported are: [\"Novice\"]", sheetRank)
 	}
 
 	return nil
