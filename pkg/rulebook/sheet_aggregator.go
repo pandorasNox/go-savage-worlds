@@ -45,6 +45,18 @@ func aggregateAndUpdate(cas *CharacterAggregationState, s Sheet, rb Rulebook) er
 	}
 	cas.Update(hindrancePointsUsedModifier)
 
+	additionalValidators, err := collectAdditionalValidator(s, rb)
+	if err != nil {
+		return err
+	}
+	cas.Update(func(currentState CharacterAggregation) CharacterAggregation {
+		currentState.additionalValidators = append(
+			currentState.additionalValidators,
+			additionalValidators...,
+		)
+		return currentState
+	})
+
 	return nil
 }
 
@@ -251,4 +263,34 @@ func max(a, b int) int {
 	}
 
 	return b
+}
+
+func collectAdditionalValidator(s Sheet, rb Rulebook) (validators, error) {
+	var v validators
+	var err error
+
+	edgeValidators, err := collectEdgeValidator(s, rb.Edges())
+	if err != nil {
+		return validators{}, err
+	}
+	v = append(v, edgeValidators...)
+
+	return v, nil
+}
+
+func collectEdgeValidator(s Sheet, es Edges) (validators, error) {
+	var v validators
+
+	for _, sheetEdge := range s.Character.Edges {
+		i, found := es.FindEdge(sheetEdge)
+		if found == false {
+			return validators{}, fmt.Errorf("invalid edge in sheet \"%s\"", sheetEdge)
+		}
+
+		edge := es[i]
+
+		v = append(v, edge.requirement.validators...)
+	}
+
+	return v, nil
 }
