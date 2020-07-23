@@ -1,34 +1,37 @@
 package rulebook
 
-type CharacterLevel int
+type Rank int
 
 const (
-	Novice CharacterLevel = iota
+	Novice Rank = iota
 )
 
+// Requirement to apply the edge
 type Requirement struct {
-	level CharacterLevel
+	rank Rank
 	//edgeDeps
 	//skill & attr level (probbably mod)
 
 	// todo: transform to additinalValidator
 }
 
-type EdgeClassification int
+// EdgeType group
+type EdgeType int
 
 const (
-	BackgroundEdge EdgeClassification = iota
+	BackgroundEdge EdgeType = iota
 )
 
 //Edge defines the edges
 type Edge struct {
-	name           string
-	description    string
-	requirement    Requirement
-	classification EdgeClassification
-	modifiers      CharacterAggregationModifiers
+	name        string
+	description string
+	requirement Requirement
+	edgeType    EdgeType
+	modifiers   CharacterAggregationModifiers
 }
 
+// Edges list of multiple edge
 type Edges []Edge
 
 //FindEdge returns index int and found bool

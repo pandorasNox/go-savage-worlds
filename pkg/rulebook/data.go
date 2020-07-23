@@ -332,7 +332,7 @@ var SwadeHindrances = Hindrances{
 var SawadeEdges = Edges{
 	{
 		name:        "Alertness",
-		requirement: Requirement{level: Novice},
+		requirement: Requirement{rank: Novice},
 		modifiers: CharacterAggregationModifiers{
 			func(ca CharacterAggregation) CharacterAggregation {
 				return skillAdjusmentModBuilder("Notice", 2, SwadeSkills, ca)
@@ -345,7 +345,7 @@ var SawadeEdges = Edges{
 	//Improved Arcane
 	{
 		name:        "Aristocrat",
-		requirement: Requirement{level: Novice},
+		requirement: Requirement{rank: Novice},
 		modifiers:   CharacterAggregationModifiers{},
 	},
 	//Attractive
@@ -353,7 +353,7 @@ var SawadeEdges = Edges{
 	//Berserk
 	{
 		name:        "Berserk",
-		requirement: Requirement{level: Novice},
+		requirement: Requirement{rank: Novice},
 		modifiers:   CharacterAggregationModifiers{},
 	},
 }

@@ -131,7 +131,7 @@ func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 			}
 
 			edge := rb.Edges()[eIndex]
-			if edge.requirement.level == Novice {
+			if edge.requirement.rank == Novice {
 				return nil
 			}
 		}
