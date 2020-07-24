@@ -66,7 +66,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		return fmt.Errorf("aggregation error: %s", err)
 	}
 
-	errors := charState.Validate(sheet, rb)
+	errors := dedublicateErrors(charState.Validate(sheet, rb))
 	if errors != nil {
 		var sErrors string = ""
 
@@ -78,6 +78,20 @@ func Validate(sheet Sheet, rb Rulebook) error {
 	}
 
 	return nil
+}
+
+func dedublicateErrors(errors []error) (dedubedErr []error) {
+	dedubMap := make(map[string]error)
+
+	for _, err := range errors {
+		dedubMap[err.Error()] = err
+	}
+
+	for _, err := range dedubMap {
+		dedubedErr = append(dedubedErr, err)
+	}
+
+	return dedubedErr
 }
 
 func allowNoviceRankOnlyValidator(ca CharacterAggregation, s Sheet, rb Rulebook) error {
