@@ -360,7 +360,6 @@ var SawadeEdges = Edges{
 	},
 	//Attractive
 	//Very Attractive
-	//Berserk
 	{
 		name: "Berserk",
 		requirement: Requirement{
@@ -371,4 +370,19 @@ var SawadeEdges = Edges{
 		},
 		modifiers: CharacterAggregationModifiers{},
 	},
+	//Brave
+	//Brawny
+	//Brute
+	//Charismatic
+	//Elan
+	//Fame
+	////Famous
+	//Fast Healer
+	//Fleet-Footed
+	//Linguist
+	//Luck
+	////Great Luck
+	//Quick
+	//Rich
+	////Filthy Rich
 }

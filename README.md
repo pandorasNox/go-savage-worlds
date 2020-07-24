@@ -8,7 +8,9 @@ go implementation of savage world rules
 - returns invald and all the related "errors/mistakes" if the sheet is invalid
 
 ## todo's
+- check to have hindrance twice?
 - deduplicate erros from validate
+- complete data.go / swadeHindrances swadeEdges
 - hindrancePointsUsed
 	- calc hindrancePointsUsed for start wealth
 	- accumulate for what hindrancePointsUsed were added and put this into a map into character_aggregation
@@ -17,23 +19,18 @@ go implementation of savage world rules
   - add integration test for data.go modifiers (no fatal shall happen)
 - write integration test for sheet validation (cat ....)
 - (maybe, bec how about testing???) make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
-- cleanup deprecated modifier (was replaced by charachterAggregationModifier)
-- races + racial effects
 - add dice raise validation to d12 + 1. (e.g. racial ability keen senses, start notice on d6)
-- hindrance effects
-- edges + edges effects + edged requirements
 - DerivedStatistics
 - gear + gear effects
 - ??? gold validation + inventory + gear IF init validation ???
-- build a frontend app with go and the wasm compiler or go and gopherjs/vecty
 - use opaque types (example creating hindrances)
-- check to have hindrance twice?
 - how to validate "minimum two novice edges" (eg. race + house rule)?
 
 ## questions
 - maybe move minimumAttributePointsRequiredForValidator &minimumSkillPointsRequiredForValidator into modifier (out of sheet_validator)
 
 ## out of scope v1.0
+- build a frontend app with go and the wasm compiler or go and gopherjs/vecty
 - racial abilities
   - android
     - hindrance: OUTSIDER (Major): Androids subtract 2 from Persuasion rolls when interacting with anyone besides other androids, and have no legal rights in most areas (they’re generally considered property).
