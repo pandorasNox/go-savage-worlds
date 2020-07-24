@@ -8,15 +8,14 @@ go implementation of savage world rules
 - returns invald and all the related "errors/mistakes" if the sheet is invalid
 
 ## todo's
-- check to have hindrance twice?
 - deduplicate erros from validate
 - complete data.go / swadeHindrances swadeEdges
+- add testing
+  - add integration test for data.go modifiers (no fatal shall happen)
 - hindrancePointsUsed
 	- calc hindrancePointsUsed for start wealth
 	- accumulate for what hindrancePointsUsed were added and put this into a map into character_aggregation
   - enhance errors OR stop counting hindrancePointsUsed after we reach earned/limit
-- add testing
-  - add integration test for data.go modifiers (no fatal shall happen)
 - write integration test for sheet validation (cat ....)
 - (maybe, bec how about testing???) make public fields from rulebook (e.g. Hindrance.Name etc) private again and provide getters
 - add dice raise validation to d12 + 1. (e.g. racial ability keen senses, start notice on d6)

@@ -52,6 +52,7 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		ca.CoreValidators["skillPointsValidator"] = skillPointsValidator
 
 		ca.CoreValidators["permittedHindrancesValidator"] = permittedHindrancesValidator
+		ca.CoreValidators["forbidSameHindranceTwiceValidator"] = forbidSameHindranceTwiceValidator
 		ca.CoreValidators["hindrancePointsUsedValidator"] = hindrancePointsUsedValidator
 
 		ca.CoreValidators["minimumAttributePointsRequiredForValidator"] = minimumAttributePointsRequiredForValidator
@@ -111,6 +112,20 @@ func permittedHindrancesValidator(ca CharacterAggregation, s Sheet, rb Rulebook)
 				SwadeHindrances[index].Name,
 			)
 		}
+	}
+
+	return nil
+}
+
+func forbidSameHindranceTwiceValidator(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+	hindranceOccourence := make(map[string]int)
+
+	for _, sheetHindrance := range s.Character.Hindrances {
+		if _, ok := hindranceOccourence[sheetHindrance.Name]; ok {
+			return fmt.Errorf("You can't take the \"%s\" hindrance (or any other) twice", sheetHindrance.Name)
+		}
+
+		hindranceOccourence[sheetHindrance.Name] = 0
 	}
 
 	return nil
