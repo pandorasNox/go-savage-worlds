@@ -9,6 +9,7 @@ go implementation of savage world rules
 
 ## todo's
 - complete data.go / swadeHindrances swadeEdges
+- split data.go
 - add testing
   - add integration test for data.go modifiers (no fatal shall happen)
 - hindrancePointsUsed

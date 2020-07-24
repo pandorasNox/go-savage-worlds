@@ -295,6 +295,11 @@ var SwadeSkills = Skills{
 // SwadeHindrances which are predefined for the SWADE ruleset
 var SwadeHindrances = Hindrances{
 	{Name: "All Thumbs", description: "–2 to use mechanical or electrical devices.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Anemic", description: "–2 Vigor when resisting Fatigue", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Arrogant", description: "Likes to dominate his opponent, challenge the most powerful foe in combat.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Bad Eyes", description: "–1 to all Trait rolls dependent on vision, or –2 as a Major Hindrance. Eyewear negates penalty but have a 50% chance of breaking when the hero suffers trauma.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Bad Luck", description: "The characters starts with one less Benny per session.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	//todo: continue here completing the list
 	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
 	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
