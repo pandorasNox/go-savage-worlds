@@ -3,26 +3,30 @@ package rulebook
 import "fmt"
 
 type Sheet struct {
-	Version      string       `yaml:"version"`
-	RuleSet      string       `yaml:"rule-set"`
-	SettingRules SettingRules `yaml:"setting-rules"`
-	Character    struct {
-		Info   CharacterInfo `yaml:"info"`
-		Traits struct {
-			Attributes []SheetAttribute `yaml:"attributes"`
-		} `yaml:"traits"`
-		Hindrances        []SheetHindrance  `yaml:"hindrances"`
-		Edges             []string          `yaml:"edges"`
-		DerivedStatistics DerivedStatistics `yaml:"derived-statistics"`
-		Gear              []string          `yaml:"gear"`
-		Inventory         []string          `yaml:"inventory"`
-	} `yaml:"character"`
+	Version      string         `yaml:"version"`
+	RuleSet      string         `yaml:"rule-set"`
+	SettingRules SettingRules   `yaml:"setting-rules"`
+	Character    SheetCharacter `yaml:"character"`
 }
 
 type SettingRules struct {
 	StartingWealth    int  `yaml:"starting-wealth"`
 	BornAHero         bool `yaml:"born-a-hero"`
 	MultipleLanguages bool `yaml:"multiple-languages"`
+}
+
+type SheetCharacter struct {
+	Info              CharacterInfo     `yaml:"info"`
+	Traits            SheetTraits       `yaml:"traits"`
+	Hindrances        []SheetHindrance  `yaml:"hindrances"`
+	Edges             []string          `yaml:"edges"`
+	DerivedStatistics DerivedStatistics `yaml:"derived-statistics"`
+	Gear              []string          `yaml:"gear"`
+	Inventory         []string          `yaml:"inventory"`
+}
+
+type SheetTraits struct {
+	Attributes []SheetAttribute `yaml:"attributes"`
 }
 
 type CharacterInfo struct {
