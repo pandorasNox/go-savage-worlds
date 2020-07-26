@@ -119,6 +119,13 @@ func skillAdjusmentModBuilder(skillName SkillName, adjustment int, skills Skills
 	return ca
 }
 
+func freeEdgeMod(ca CharacterAggregation) CharacterAggregation {
+	ca.HindrancePointsUsed += -2
+	ca.MinimumChosenEdges++
+	
+	return ca
+}
+
 func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 	ca.HindrancePointsUsed += -2
 	ca.MinimumChosenEdges++

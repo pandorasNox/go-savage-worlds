@@ -299,12 +299,16 @@ var SwadeHindrances = Hindrances{
 	{Name: "Arrogant", description: "Likes to dominate his opponent, challenge the most powerful foe in combat.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
 	{Name: "Bad Eyes", description: "–1 to all Trait rolls dependent on vision, or –2 as a Major Hindrance. Eyewear negates penalty but have a 50% chance of breaking when the hero suffers trauma.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	{Name: "Bad Luck", description: "The characters starts with one less Benny per session.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
-	//todo: continue here completing the list
-	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
-	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
-	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
-	//Can’t Swim (Minor): –2 to swimming (contained in skill Athletiks)
-	{Name: "Can't Swim", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Big Mouth", description: "Unable to keep secrets and constantly gives away private information.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Blind", description: "–6 to all tasks that require vision (but choice of a free Edge to offset).", AvailableDegrees: []HindranceDegree{{
+		Degree: Major,
+		Modifiers: CharacterAggregationModifiers{
+			freeEdgeMod,
+		},
+	}}},
+	{Name: "Bloodthirsty", description: "Never takes prisoners.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Can't Swim", description: "–2 to swimming (Athletics) rolls; Each inch moved in water costs 3\" of Pace.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Cautious", description: "The character plans extensively and/or is overly careful.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{
 		Name:        "Clueless",
 		description: "Clueless (Major): –1 to Common Knowledge and Notice rolls.",
@@ -318,7 +322,28 @@ var SwadeHindrances = Hindrances{
 				},
 			}}},
 	},
-	//Clumsy (Major): –2 to Athletics and Stealth rolls.
+	{Name: "Clumsy", description: "–2 to Athletics and Stealth rolls.", AvailableDegrees: []HindranceDegree{{
+		Degree: Major,
+		Modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Athletics", -2, SwadeSkills, ca)
+			},
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Stealth", -2, SwadeSkills, ca)
+			},
+		},
+	}}},
+	{Name: "Code of Honor", description: "The character keeps his word and acts like a gentleman.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Curious", description: "The character wants to know about everything.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Death Wish", description: "The hero wants to die after or while completing some epic task.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Delusional", description: "The individual believes something strange that causes him occasional or frequent trouble.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Doubting Thomas", description: "The character doesn't believe in the supernatural, often exposing him to unnecessary risks.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+
+	//todo: continue here completing the list
+	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
+	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+
 	//Obese (Minor): Size +1, Pace –1 and running die of d4. Treat Str as one die type lower for Min Str.
 	/*
 	 * Small (Minor): Size and Toughness are reduced by 1. Size cannot be reduced below –1.
