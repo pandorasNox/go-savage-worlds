@@ -8,6 +8,8 @@ go implementation of savage world rules
 - returns invald and all the related "errors/mistakes" if the sheet is invalid
 
 ## todo's
+- add linked attributes validator?
+- if skill points higher than attribute dice level adjust skill point aggregation (2 kill points per level)
 - complete data.go / swadeHindrances swadeEdges
 - split data.go
 - add testing
