@@ -338,8 +338,41 @@ var SwadeHindrances = Hindrances{
 	{Name: "Death Wish", description: "The hero wants to die after or while completing some epic task.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{Name: "Delusional", description: "The individual believes something strange that causes him occasional or frequent trouble.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	{Name: "Doubting Thomas", description: "The character doesn't believe in the supernatural, often exposing him to unnecessary risks.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Driven", description: "The hero’s actions are driven by some important goal or belief.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Elderly", description: "–1 to Pace, running, Agility, Strength, and Vigor. Hero gets 5 extra skill points.", AvailableDegrees: []HindranceDegree{
+		{
+			Degree: Major,
+			Modifiers: CharacterAggregationModifiers{
+				func(ca CharacterAggregation) CharacterAggregation {
+					return attributeAdjusmentModBuilder(AttributeName("Agility"), -1, SwadeAttributes, ca)
+				},
+				func(ca CharacterAggregation) CharacterAggregation {
+					return attributeAdjusmentModBuilder(AttributeName("Strength"), -1, SwadeAttributes, ca)
+				},
+				func(ca CharacterAggregation) CharacterAggregation {
+					return attributeAdjusmentModBuilder(AttributeName("Vigor"), -1, SwadeAttributes, ca)
+				},
+				plusSkillPointsAvailableMod,
+				plusSkillPointsAvailableMod,
+				plusSkillPointsAvailableMod,
+				plusSkillPointsAvailableMod,
+				plusSkillPointsAvailableMod,
+			},
+		},
+	}},
 
+	// {Name: "", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	//todo: continue here completing the list
+
+	// Enemy (Minor/Major): The character has a recurring nemesis.
+	// Greedy (Minor/Major): The individual is obsessed with wealth and material possessions.
+	// Habit (Minor/Major): Addicted to something, suffers Fatigue if deprived.
+	// Hard of Hearing (Minor/Major): –4 to Notice sounds; automatic failure if completely deaf.
+	// Heroic (Major): The character always helps those in need.
+	// Hesitant (Minor): Draw two Action Cards and take the lowest (except Jokers, which may be kept).
+	// Illiterate (Minor): The character cannot read or write.
+	// Impulsive (Major): The hero leaps before he looks.
+
 	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
 	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},

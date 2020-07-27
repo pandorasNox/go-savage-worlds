@@ -92,7 +92,7 @@ func skillAdjusmentModBuilder(skillName SkillName, adjustment int, skills Skills
 
 	ca.SkillsAdjustments[skillName] += adjustment
 
-	skillAdjusmentValidator := func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+	skillAdjustmentValidator := func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
 		sheetSkill, err := s.SheetSkill(skillName)
 		if err != nil {
 			return err
@@ -114,7 +114,42 @@ func skillAdjusmentModBuilder(skillName SkillName, adjustment int, skills Skills
 		return nil
 	}
 
-	ca.additionalValidators = append(ca.additionalValidators, skillAdjusmentValidator)
+	ca.additionalValidators = append(ca.additionalValidators, skillAdjustmentValidator)
+
+	return ca
+}
+
+func attributeAdjusmentModBuilder(attributeName AttributeName, adjustment int, attributes Attributes, ca CharacterAggregation) CharacterAggregation {
+	_, found := attributes.FindAttribute(string(attributeName))
+	if found == false {
+		log.Fatalf("attributeAdjusmentModBuilder: attribute \"%s\" not found.", attributeName)
+	}
+
+	ca.AttributeAdjustments[attributeName] += adjustment
+
+	attributeAdjustmentValidator := func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+		sheetAttribute, err := s.SheetAttribute(attributeName)
+		if err != nil {
+			return err
+		}
+
+		aDice, err := dice.Parse(sheetAttribute.Dice)
+		if err != nil {
+			return fmt.Errorf("attribute \"%s\" does not contain valid dice \"%s\"", attributeName, sheetAttribute.Dice)
+		}
+
+		if _, ok := ca.AttributeAdjustments[attributeName]; ok == false {
+			return fmt.Errorf("internal error during attribute adjustment validation for attribute \"%s\"", attributeName)
+		}
+
+		if ca.AttributeAdjustments[attributeName] != aDice.Adjustment() {
+			return fmt.Errorf("attribute \"%s\" is expected to have \"%d\" adjustment, but got \"%d\"", attributeName, ca.AttributeAdjustments[attributeName], aDice.Adjustment())
+		}
+
+		return nil
+	}
+
+	ca.additionalValidators = append(ca.additionalValidators, attributeAdjustmentValidator)
 
 	return ca
 }
@@ -122,7 +157,7 @@ func skillAdjusmentModBuilder(skillName SkillName, adjustment int, skills Skills
 func freeEdgeMod(ca CharacterAggregation) CharacterAggregation {
 	ca.HindrancePointsUsed += -2
 	ca.MinimumChosenEdges++
-	
+
 	return ca
 }
 
@@ -169,6 +204,12 @@ func addRequiredEdgeModBuilder(edgeName string, edges Edges, ca CharacterAggrega
 	}
 
 	ca.EdgesRequired = append(ca.EdgesRequired, edges[index])
+
+	return ca
+}
+
+func plusSkillPointsAvailableMod(ca CharacterAggregation) CharacterAggregation {
+	ca.SkillPointsAvailable++
 
 	return ca
 }
