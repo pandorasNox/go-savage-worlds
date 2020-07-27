@@ -86,6 +86,14 @@ func aggregateSkillPointsUsed(s Sheet, skills Skills) (pointsUsed int, err error
 	skillPointsUsed := 0
 
 	for _, sheetAttr := range s.Character.Traits.Attributes {
+		aDice, err := dice.Parse(sheetAttr.Dice)
+		if err != nil {
+			return 0, fmt.Errorf(
+				"parsing dice for attribute \"%s\" failed: %s",
+				sheetAttr.Name, err,
+			)
+		}
+
 		for _, sheetSkill := range sheetAttr.Skills {
 			index, found := skills.FindSkill(sheetSkill.Name)
 			if found == false {
@@ -96,7 +104,7 @@ func aggregateSkillPointsUsed(s Sheet, skills Skills) (pointsUsed int, err error
 			}
 			skill := skills[index]
 
-			dice, err := dice.Parse(sheetSkill.Dice)
+			sDice, err := dice.Parse(sheetSkill.Dice)
 			if err != nil {
 				return 0, fmt.Errorf(
 					"parsing dice for skill \"%s\" failed: %s",
@@ -109,7 +117,12 @@ func aggregateSkillPointsUsed(s Sheet, skills Skills) (pointsUsed int, err error
 				pointCostModifier = 0
 			}
 
-			skillPointsUsed += dice.Points() + pointCostModifier
+			higherLevelCostModifier := 0
+			if aDice.Points() < sDice.Points() {
+				higherLevelCostModifier = sDice.Points() - aDice.Points()
+			}
+
+			skillPointsUsed += sDice.Points() + pointCostModifier + higherLevelCostModifier
 		}
 	}
 
