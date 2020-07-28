@@ -18,7 +18,7 @@ type SettingRules struct {
 type SheetCharacter struct {
 	Info              CharacterInfo     `yaml:"info"`
 	Traits            SheetTraits       `yaml:"traits"`
-	Hindrances        []SheetHindrance  `yaml:"hindrances"`
+	Hindrances        SheetHindrances   `yaml:"hindrances"`
 	Edges             []string          `yaml:"edges"`
 	DerivedStatistics DerivedStatistics `yaml:"derived-statistics"`
 	Gear              []string          `yaml:"gear"`
@@ -57,6 +57,8 @@ type SheetHindrance struct {
 	Name   string `yaml:"name"`
 	Degree string `yaml:"degree"`
 }
+
+type SheetHindrances []SheetHindrance
 
 type DerivedStatistics struct {
 	StandardPace string `yaml:"standard-pace"`

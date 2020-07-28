@@ -332,3 +332,195 @@ func Test_aggregateSkillPointsUsed(t *testing.T) {
 		})
 	}
 }
+
+func Test_aggregateHindrancePointsEarned(t *testing.T) {
+	type args struct {
+		s  Sheet
+		hs Hindrances
+	}
+	tests := []struct {
+		name             string
+		args             args
+		wantPointsEarned int
+		wantErr          bool
+	}{
+		{
+			name: "no hindrances no points",
+			args: args{
+				Sheet{},
+				Hindrances{},
+			},
+			wantPointsEarned: 0,
+			wantErr:          false,
+		},
+		{
+			name: "invalid hindrance in sheet",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "Invalid SheetHindrance", Degree: "minor"},
+				}}},
+				Hindrances{},
+			},
+			wantPointsEarned: 0,
+			wantErr:          true,
+		},
+		{
+			name: "invalid hindrance degree in sheet",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance1", Degree: "invalid"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance1", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+				},
+			},
+			wantPointsEarned: 0,
+			wantErr:          true,
+		},
+		{
+			name: "minor hindrance eq 1 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance1", Degree: "minor"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance1", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+				},
+			},
+			wantPointsEarned: 1,
+			wantErr:          false,
+		},
+		{
+			name: "major hindrance eq 2 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance2", Degree: "major"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance2", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+				},
+			},
+			wantPointsEarned: 2,
+			wantErr:          false,
+		},
+		{
+			name: "minor + major hindrance eq 3 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance1", Degree: "minor"},
+					{Name: "mockHindrance2", Degree: "major"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance1", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance2", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+				},
+			},
+			wantPointsEarned: 3,
+			wantErr:          false,
+		},
+		{
+			name: "4x minor hindrance eq 4 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance10", Degree: "minor"},
+					{Name: "mockHindrance20", Degree: "minor"},
+					{Name: "mockHindrance30", Degree: "minor"},
+					{Name: "mockHindrance40", Degree: "minor"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance10", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance20", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance30", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance40", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+				},
+			},
+			wantPointsEarned: 4,
+			wantErr:          false,
+		},
+		{
+			name: "5x minor hindrance eq 5 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance10", Degree: "minor"},
+					{Name: "mockHindrance20", Degree: "minor"},
+					{Name: "mockHindrance30", Degree: "minor"},
+					{Name: "mockHindrance40", Degree: "minor"},
+					{Name: "mockHindrance50", Degree: "minor"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance10", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance20", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance30", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance40", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance50", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+				},
+			},
+			wantPointsEarned: 5,
+			wantErr:          false,
+		},
+		{
+			name: "2x major hindrance eq 4 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance11", Degree: "major"},
+					{Name: "mockHindrance21", Degree: "major"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance11", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+					{Name: "mockHindrance21", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+				},
+			},
+			wantPointsEarned: 4,
+			wantErr:          false,
+		},
+		{
+			name: "3x major hindrance eq 6 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance11", Degree: "major"},
+					{Name: "mockHindrance21", Degree: "major"},
+					{Name: "mockHindrance31", Degree: "major"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance11", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+					{Name: "mockHindrance21", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+					{Name: "mockHindrance31", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+				},
+			},
+			wantPointsEarned: 6,
+			wantErr:          false,
+		},
+		{
+			name: "2x minor + 3x major hindrance eq 8 point",
+			args: args{
+				Sheet{Character: SheetCharacter{Hindrances: SheetHindrances{
+					{Name: "mockHindrance11", Degree: "minor"},
+					{Name: "mockHindrance11", Degree: "major"},
+					{Name: "mockHindrance20", Degree: "minor"},
+					{Name: "mockHindrance21", Degree: "major"},
+					{Name: "mockHindrance31", Degree: "major"},
+				}}},
+				Hindrances{
+					{Name: "mockHindrance11", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+					{Name: "mockHindrance20", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+					{Name: "mockHindrance21", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+					{Name: "mockHindrance31", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+				},
+			},
+			wantPointsEarned: 8,
+			wantErr:          false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotPointsEarned, err := aggregateHindrancePointsEarned(tt.args.s, tt.args.hs)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("aggregateHindrancePointsEarned() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if gotPointsEarned != tt.wantPointsEarned {
+				t.Errorf("aggregateHindrancePointsEarned() = %v, want %v", gotPointsEarned, tt.wantPointsEarned)
+			}
+		})
+	}
+}
