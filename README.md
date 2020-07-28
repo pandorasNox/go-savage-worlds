@@ -21,6 +21,7 @@ go implementation of savage world rules
 - add dice raise validation to d12 + 1. (e.g. racial ability keen senses, start notice on d6)
 - DerivedStatistics
 - gear + gear effects
+  - add ArmorRequiredStrenghtPointsCorrection validator
 - ??? gold validation + inventory + gear IF init validation ???
 - use opaque types (example creating hindrances)
 - how to validate "minimum two novice edges" (eg. race + house rule)?

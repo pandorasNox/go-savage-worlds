@@ -26,10 +26,11 @@ type CharacterAggregation struct {
 	additionalValidators validators
 
 	//other
-	Size                    int
-	BaseToughness           int
-	Armor                   int
-	ShakenRecoveryAdjusment int
+	Size                                int
+	BaseToughness                       int
+	Armor                               int
+	ArmorRequiredStrenghtPointsCorrection int
+	ShakenRecoveryAdjusment             int
 }
 
 type HindranceName string

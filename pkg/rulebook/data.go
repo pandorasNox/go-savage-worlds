@@ -360,22 +360,50 @@ var SwadeHindrances = Hindrances{
 			},
 		},
 	}},
+	{Name: "Enemy", description: "The character has a recurring nemesis.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Greedy", description: "The individual is obsessed with wealth and material possessions.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Habit", description: "Addicted to something, suffers Fatigue if deprived.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Hard of Hearing", description: "–4 to Notice sounds; automatic failure if completely deaf.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Heroic", description: "The character always helps those in need.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Hesitant", description: "Draw two Action Cards and take the lowest (except Jokers, which may be kept).", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Illiterate", description: "The character cannot read or write.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Impulsive", description: "The hero leaps before he looks.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Jealous", description: "The individual covets what others have.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Loyal", description: "The hero is loyal to his friends and allies.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Mean", description: "–1 to Persuasion rolls.", AvailableDegrees: []HindranceDegree{{
+		Degree: Minor,
+		Modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Persuasion", -1, SwadeSkills, ca)
+			},
+		},
+	}}},
+	{Name: "Mild Mannered", description: "–2 to Intimidation rolls.", AvailableDegrees: []HindranceDegree{{
+		Degree: Minor,
+		Modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Intimidation", -2, SwadeSkills, ca)
+			},
+		},
+	}}},
+	{Name: "Mute", description: "The hero cannot speak.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Obese", description: "Size +1, Pace –1 and running die of d4. Treat Str as one die type lower for Min Str.", AvailableDegrees: []HindranceDegree{{
+		Degree: Minor,
+		Modifiers: CharacterAggregationModifiers{
+			plusSizeMod,
+			minusArmorRequiredStrenghtPointsCorrectionMod,
+		},
+	}}},
+	{Name: "Obligation", description: "The character has a weekly obligation of 20 (Minor) to 40 (Major) hours.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "One Arm", description: "–4 to tasks (such as Athletics) that require two hands.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "One Eye", description: "–2 to actions at 5′′ (10 yards) or more distance.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
+	{Name: "Outsider", description: "The character doesn't fit in to the local environment and subtracts 2 from Persuasion rolls. As a Major Hindrance she has no legal rights or other serious consequences.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Overconfident", description: "The hero believes she can do anything.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
 
 	// {Name: "", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	//todo: continue here completing the list
 
-	// Enemy (Minor/Major): The character has a recurring nemesis.
-	// Greedy (Minor/Major): The individual is obsessed with wealth and material possessions.
-	// Habit (Minor/Major): Addicted to something, suffers Fatigue if deprived.
-	// Hard of Hearing (Minor/Major): –4 to Notice sounds; automatic failure if completely deaf.
-	// Heroic (Major): The character always helps those in need.
-	// Hesitant (Minor): Draw two Action Cards and take the lowest (except Jokers, which may be kept).
-	// Illiterate (Minor): The character cannot read or write.
-	// Impulsive (Major): The hero leaps before he looks.
-
 	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
-	{Name: "Habit", description: "", AvailableDegrees: []HindranceDegree{{Degree: Major}, {Degree: Minor}}},
-	{Name: "Mean", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
 
 	//Obese (Minor): Size +1, Pace –1 and running die of d4. Treat Str as one die type lower for Min Str.
 	/*

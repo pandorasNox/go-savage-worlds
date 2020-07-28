@@ -50,7 +50,7 @@ character:
         dice: d4
         skills:
           - name: Persuasion
-            dice: d4
+            dice: d4-1
       - name: Strength
         dice: d6
       - name: Vigor

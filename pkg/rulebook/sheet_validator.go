@@ -31,9 +31,10 @@ func Validate(sheet Sheet, rb Rulebook) error {
 		CoreValidators:       make(coreValidators),
 		additionalValidators: validators{},
 
-		Size:                    0,
-		BaseToughness:           0,
-		ShakenRecoveryAdjusment: 0,
+		Size:                                0,
+		BaseToughness:                       0,
+		ShakenRecoveryAdjusment:             0,
+		ArmorRequiredStrenghtPointsCorrection: 0,
 	}
 
 	charState := CharacterAggregationState{}

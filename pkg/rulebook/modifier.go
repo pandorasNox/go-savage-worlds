@@ -191,6 +191,12 @@ func minusSizeMod(ca CharacterAggregation) CharacterAggregation {
 	return ca
 }
 
+func plusSizeMod(ca CharacterAggregation) CharacterAggregation {
+	ca.Size++
+
+	return ca
+}
+
 func plusArmorMod(ca CharacterAggregation) CharacterAggregation {
 	ca.Armor++
 
@@ -210,6 +216,12 @@ func addRequiredEdgeModBuilder(edgeName string, edges Edges, ca CharacterAggrega
 
 func plusSkillPointsAvailableMod(ca CharacterAggregation) CharacterAggregation {
 	ca.SkillPointsAvailable++
+
+	return ca
+}
+
+func minusArmorRequiredStrenghtPointsCorrectionMod(ca CharacterAggregation) CharacterAggregation {
+	ca.ArmorRequiredStrenghtPointsCorrection--
 
 	return ca
 }
