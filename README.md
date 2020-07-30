@@ -1,6 +1,10 @@
 # go-savage-worlds
 go implementation of savage world rules
 
+## nice to know
+- run single test: `go test -v -run TestHindrances_FindHindrance ./...`
+  - where `TestHindrances_FindHindrance` is the function name
+
 ## first milestone
 - cli tool
 - pass savage-world yaml sheet via cli pipe into it
