@@ -399,24 +399,37 @@ var SwadeHindrances = Hindrances{
 	{Name: "One Eye", description: "–2 to actions at 5′′ (10 yards) or more distance.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
 	{Name: "Outsider", description: "The character doesn't fit in to the local environment and subtracts 2 from Persuasion rolls. As a Major Hindrance she has no legal rights or other serious consequences.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	{Name: "Overconfident", description: "The hero believes she can do anything.", AvailableDegrees: []HindranceDegree{{Degree: Major}}},
-
-	// {Name: "", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
-	//todo: continue here completing the list
-
-	{Name: "Poverty", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
-
-	//Obese (Minor): Size +1, Pace –1 and running die of d4. Treat Str as one die type lower for Min Str.
-	/*
-	 * Small (Minor): Size and Toughness are reduced by 1. Size cannot be reduced below –1.
-	 * race aquarian +1 toughness
-	 */
-	//Young (Minor/Major): Minor has 4 attribute points and 10 skill points, extra Benny per session. Major has 3 attribute points, 10 skill points, and two extra Bennies per session.
-
 	{
 		Name:             "Pacifist",
 		description:      "Fights only in self-defense as a Minor Hindrance, won’t fight at all as Major.",
 		AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}},
 	},
+	{Name: "Phobia", description: "The character is afraid of something, and subtracts –1/–2 from all Trait rolls in its presence.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Poverty", description: "Half starting funds and the character is always broke.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Quirk", description: "The individual has some minor but persistent foible that often annoys others.", AvailableDegrees: []HindranceDegree{{Degree: Minor}}},
+	{Name: "Ruthless", description: "The character does what it takes to get her way.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Secret", description: "The hero has a dark secret of some kind.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Shamed", description: "The individual is haunted by some tragic event from her past.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	{Name: "Slow", description: "Pace –1, reduce running die one step. As Major, Pace –2, –2 to Athletics and rolls to resist Athletics. Neither may take the Fleet-Footed Edge.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {
+		Degree: Major,
+		Modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder(SkillName("Athletics"), -2, SwadeSkills, ca)
+			},
+			//todo: Fleet-Footed...
+			// func(ca CharacterAggregation) CharacterAggregation {
+			// 	return addRequiredEdgeModBuilder()
+			// },
+		},
+	}}},
+	// {Name: "", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
+	//todo: continue here completing the list
+
+	/*
+	 * Small (Minor): Size and Toughness are reduced by 1. Size cannot be reduced below –1.
+	 * race aquarian +1 toughness
+	 */
+	//Young (Minor/Major): Minor has 4 attribute points and 10 skill points, extra Benny per session. Major has 3 attribute points, 10 skill points, and two extra Bennies per session.
 }
 
 // SawadeEdges which are predefined for the SWADE ruleset
@@ -469,7 +482,17 @@ var SawadeEdges = Edges{
 	//Fame
 	////Famous
 	//Fast Healer
-	//Fleet-Footed
+	{
+		name:        "Fleet-Footed",
+		description: "The hero’s Pace is increased by +2 and his running die increases one step (from d6 to d8, for example).",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumAttributeValidatorBuilder(AttributeName("Agility"), dice.D6, "Fleet-Footed"),
+			},
+		},
+		modifiers: CharacterAggregationModifiers{},
+	},
 	//Linguist
 	//Luck
 	////Great Luck

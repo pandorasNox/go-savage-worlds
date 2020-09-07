@@ -1,6 +1,10 @@
 package rulebook
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
+)
 
 type Rank int
 
@@ -70,6 +74,31 @@ func minimumRankValidatorBuilder(rank Rank, edgeName string) validator {
 
 		if sheetRank < rank {
 			return fmt.Errorf("edge \"%s\" requires rank \"%s\"", edgeName, rank.String())
+		}
+
+		return nil
+	}
+}
+
+func minimumAttributeValidatorBuilder(attributeName AttributeName, minNeededDice dice.Dice, edgeName string) validator {
+	return func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
+		_, found := rb.Traits().Attributes.FindAttribute(string(attributeName))
+		if found == false {
+			return fmt.Errorf("couldn't find attribute \"%s\" in rulebook for min points required validation", attributeName)
+		}
+
+		sheetAttribute, err := s.SheetAttribute(attributeName)
+		if err != nil {
+			return fmt.Errorf("%s: for min points required validation", err)
+		}
+
+		aDice, err := dice.Parse(sheetAttribute.Dice)
+		if err != nil {
+			return fmt.Errorf("couldn't parse dice \"%s\" from sheet attribute \"%s\" for min points required validation", sheetAttribute.Dice, sheetAttribute.Name)
+		}
+
+		if minNeededDice.Points() > aDice.Points() {
+			return fmt.Errorf("for edge \"%s\" a minimum required dice level the attribute \"%s\" is:\"d%s\"", edgeName, attributeName, minNeededDice.Value())
 		}
 
 		return nil

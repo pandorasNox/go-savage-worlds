@@ -12,6 +12,7 @@ go implementation of savage world rules
 - returns invald and all the related "errors/mistakes" if the sheet is invalid
 
 ## todo's
+- todo edgeName as EdgeName...
 - complete data.go / swadeHindrances swadeEdges
 - split data.go
 - add testing

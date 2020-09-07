@@ -4,6 +4,8 @@ type Hindrance struct {
 	Name             string
 	description      string
 	AvailableDegrees []HindranceDegree
+	//todo: add an `isSituational` flag???
+	//(for hind. which has only influencs (+/- something) in special situations)
 }
 
 type Hindrances []Hindrance
