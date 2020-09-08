@@ -12,17 +12,17 @@ type Dice struct {
 	adjustment int
 }
 
-//Value returns the string value of the dice
+//Value returns the string value of the dice (eg d6+4 => 6)
 func (d Dice) Value() (value string) {
 	return d.value
 }
 
-//Points returns the int representation of dice.Value()
+//Points returns the int representation of dice.Value() (eg d6+4 => 1)
 func (d Dice) Points() (points int) {
 	return d.points
 }
 
-//Adjustment returns the dice adjustment (e.g. +3 OR -2 OR ...)
+//Adjustment returns the dice adjustment (e.g. +3 OR -2 OR ...) (eg d6+4 => 4)
 func (d Dice) Adjustment() (adjustment int) {
 	return d.adjustment
 }
