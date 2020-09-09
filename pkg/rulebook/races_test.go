@@ -79,3 +79,46 @@ func TestRace_Modifiers(t *testing.T) {
 		})
 	}
 }
+
+func TestRaces_FindRace(t *testing.T) {
+	racesFixture := Races{
+		{name: "race1"},
+		{name: "race2"},
+	}
+	type args struct {
+		name string
+	}
+	tests := []struct {
+		name      string
+		rs        Races
+		args      args
+		wantIndex int
+		wantFound bool
+	}{
+		{
+			name:      "race found",
+			rs:        racesFixture,
+			args:      args{name: "race2"},
+			wantIndex: 1,
+			wantFound: true,
+		},
+		{
+			name:      "race not found",
+			rs:        racesFixture,
+			args:      args{name: "notexisting"},
+			wantIndex: -1,
+			wantFound: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotIndex, gotFound := tt.rs.FindRace(tt.args.name)
+			if gotIndex != tt.wantIndex {
+				t.Errorf("Races.FindRace() gotIndex = %v, want %v", gotIndex, tt.wantIndex)
+			}
+			if gotFound != tt.wantFound {
+				t.Errorf("Races.FindRace() gotFound = %v, want %v", gotFound, tt.wantFound)
+			}
+		})
+	}
+}
