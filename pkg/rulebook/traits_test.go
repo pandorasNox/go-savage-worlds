@@ -16,7 +16,6 @@ func TestAttributes_FindAttribute(t *testing.T) {
 		wantIndex int
 		wantFound bool
 	}{
-		// TODO: Add test cases.
 		{
 			name: "find first",
 			attrs: Attributes{
@@ -76,8 +75,6 @@ func TestSkills_CoreSkills(t *testing.T) {
 		skills         Skills
 		wantCoreSkills Skills
 	}{
-		// TODO: Add test cases.
-		// TODO: Add test cases.
 		{
 			name: "find none",
 			skills: []Skill{
@@ -146,7 +143,6 @@ func TestSkills_FindSkill(t *testing.T) {
 		wantIndex int
 		wantFound bool
 	}{
-		// TODO: Add test cases.
 		{
 			name: "find first",
 			skills: []Skill{
