@@ -119,3 +119,65 @@ func Test_minimumAttributeValidatorBuilder(t *testing.T) {
 		})
 	}
 }
+
+func Test_minimumRankValidatorBuilder(t *testing.T) {
+	sheetFixtureInvalidRank := Sheet{
+		Character: SheetCharacter{
+			Info: CharacterInfo{
+				Rank: "invalid",
+			},
+		},
+	}
+	sheetFixtureNovice := Sheet{
+		Character: SheetCharacter{
+			Info: CharacterInfo{
+				Rank: Novice.String(),
+			},
+		},
+	}
+	rulebookFixture := Rulebook{}
+	caFixture := CharacterAggregation{}
+
+	type args struct {
+		rank     Rank
+		edgeName string
+	}
+	type validatorInput struct {
+		ca CharacterAggregation
+		s  Sheet
+		rb Rulebook
+	}
+	tests := []struct {
+		name              string
+		args              args
+		validatorInput    validatorInput
+		wantValidationErr bool
+	}{
+		{
+			name:              "invalid rank in sheet",
+			args:              args{Novice, "a edge"},
+			validatorInput:    validatorInput{caFixture, sheetFixtureInvalidRank, rulebookFixture},
+			wantValidationErr: true,
+		},
+		{
+			name:              "required rank to low",
+			args:              args{Seasoned, "a edge"},
+			validatorInput:    validatorInput{caFixture, sheetFixtureNovice, rulebookFixture},
+			wantValidationErr: true,
+		},
+		{
+			name:              "required rank matches",
+			args:              args{Novice, "a edge"},
+			validatorInput:    validatorInput{caFixture, sheetFixtureNovice, rulebookFixture},
+			wantValidationErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			val := minimumRankValidatorBuilder(tt.args.rank, tt.args.edgeName)
+			if got := val(tt.validatorInput.ca, tt.validatorInput.s, tt.validatorInput.rb); !((got != nil) == tt.wantValidationErr) {
+				t.Errorf("minimumRankValidatorBuilder() = %v, want %v", got, tt.wantValidationErr)
+			}
+		})
+	}
+}
