@@ -222,7 +222,7 @@ func collectEdgeModifier(s Sheet, es Edges) (CharacterAggregationModifiers, erro
 	var modifier CharacterAggregationModifiers
 
 	for _, sheetEdge := range s.Character.Edges {
-		index, found := es.FindEdge(sheetEdge)
+		index, found := es.FindEdge(edgeName(sheetEdge))
 		if found == false {
 			return CharacterAggregationModifiers{}, fmt.Errorf("edge \"%s\" doesn't exist", sheetEdge)
 		}
@@ -242,7 +242,7 @@ func aggregateHindrancePointsUsed(ca CharacterAggregation, s Sheet, rb Rulebook)
 	}
 
 	for _, sheetEdge := range s.Character.Edges {
-		_, eFound := rb.Edges().FindEdge(sheetEdge)
+		_, eFound := rb.Edges().FindEdge(edgeName(sheetEdge))
 		if eFound == false {
 			return emptyFn, fmt.Errorf("unknown edge \"%s\" in sheet", sheetEdge)
 		}
@@ -295,7 +295,7 @@ func collectEdgeValidator(s Sheet, es Edges) (validators, error) {
 	var v validators
 
 	for _, sheetEdge := range s.Character.Edges {
-		i, found := es.FindEdge(sheetEdge)
+		i, found := es.FindEdge(edgeName(sheetEdge))
 		if found == false {
 			return validators{}, fmt.Errorf("invalid edge in sheet \"%s\"", sheetEdge)
 		}

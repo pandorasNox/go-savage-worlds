@@ -167,7 +167,7 @@ func freeNoviceEdgeMod(ca CharacterAggregation) CharacterAggregation {
 
 	hasNoviceEdgeValidator := func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
 		for _, sheetEdge := range s.Character.Edges {
-			eIndex, eFound := rb.Edges().FindEdge(sheetEdge)
+			eIndex, eFound := rb.Edges().FindEdge(edgeName(sheetEdge))
 			if eFound == false {
 				return fmt.Errorf("unknown edge \"%s\" in sheet", sheetEdge)
 			}
@@ -203,7 +203,7 @@ func plusArmorMod(ca CharacterAggregation) CharacterAggregation {
 	return ca
 }
 
-func addRequiredEdgeModBuilder(edgeName string, edges Edges, ca CharacterAggregation) CharacterAggregation {
+func addRequiredEdgeModBuilder(edgeName edgeName, edges Edges, ca CharacterAggregation) CharacterAggregation {
 	index, found := edges.FindEdge(edgeName)
 	if found == false {
 		log.Fatalf("addRequiredEdgeModBuilder: edge \"%s\" not found.", edgeName)

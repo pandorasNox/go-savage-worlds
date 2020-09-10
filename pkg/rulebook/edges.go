@@ -39,12 +39,14 @@ const (
 
 //Edge defines the edges
 type Edge struct {
-	name        string
+	name        edgeName
 	description string
 	requirement Requirement
 	edgeType    EdgeType
 	modifiers   CharacterAggregationModifiers
 }
+
+type edgeName string
 
 type Requirement struct {
 	rank       Rank
@@ -55,7 +57,7 @@ type Requirement struct {
 type Edges []Edge
 
 //FindEdge returns index int and found bool
-func (es Edges) FindEdge(name string) (index int, found bool) {
+func (es Edges) FindEdge(name edgeName) (index int, found bool) {
 	for i, edge := range es {
 		if edge.name == name {
 			return i, true
@@ -65,7 +67,7 @@ func (es Edges) FindEdge(name string) (index int, found bool) {
 	return -1, false
 }
 
-func minimumRankValidatorBuilder(rank Rank, edgeName string) validator {
+func minimumRankValidatorBuilder(rank Rank, edgeName edgeName) validator {
 	return func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
 		sheetRank, err := aToRank(s.Character.Info.Rank)
 		if err != nil {
@@ -80,7 +82,11 @@ func minimumRankValidatorBuilder(rank Rank, edgeName string) validator {
 	}
 }
 
-func minimumAttributeValidatorBuilder(attributeName AttributeName, minNeededDice dice.Dice, edgeName string) validator {
+func minimumAttributeValidatorBuilder(
+	attributeName AttributeName,
+	minNeededDice dice.Dice,
+	edgeName edgeName,
+) validator {
 	return func(ca CharacterAggregation, s Sheet, rb Rulebook) error {
 		_, found := rb.Traits().Attributes.FindAttribute(string(attributeName))
 		if found == false {

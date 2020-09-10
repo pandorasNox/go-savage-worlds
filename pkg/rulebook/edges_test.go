@@ -10,7 +10,7 @@ func Test_minimumAttributeValidatorBuilder(t *testing.T) {
 	type args struct {
 		attributeName AttributeName
 		minNeededDice dice.Dice
-		edgeName      string
+		edgeName      edgeName
 	}
 	type validatorInput struct {
 		ca CharacterAggregation
@@ -140,7 +140,7 @@ func Test_minimumRankValidatorBuilder(t *testing.T) {
 
 	type args struct {
 		rank     Rank
-		edgeName string
+		edgeName edgeName
 	}
 	type validatorInput struct {
 		ca CharacterAggregation
