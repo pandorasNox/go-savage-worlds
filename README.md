@@ -29,6 +29,8 @@ go implementation of savage world rules
 - ??? gold validation + inventory + gear IF init validation ???
 - use opaque types (example creating hindrances)
 - how to validate "minimum two novice edges" (eg. race + house rule)?
+- add fear checks? (see brave edge)
+- add gear requrements/penalties (see brawny edge)
 
 ## questions
 - maybe move minimumAttributePointsRequiredForValidator &minimumSkillPointsRequiredForValidator into modifier (out of sheet_validator)

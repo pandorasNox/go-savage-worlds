@@ -1,6 +1,8 @@
 package rulebook
 
-import "github.com/pandorasNox/go-savage-worlds/pkg/dice"
+import (
+	"github.com/pandorasNox/go-savage-worlds/pkg/dice"
+)
 
 // SwadeRaces predefined for the SWADE core ruleset
 var SwadeRaces = Races{
@@ -410,18 +412,27 @@ var SwadeHindrances = Hindrances{
 	{Name: "Ruthless", description: "The character does what it takes to get her way.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	{Name: "Secret", description: "The hero has a dark secret of some kind.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	{Name: "Shamed", description: "The individual is haunted by some tragic event from her past.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
-	{Name: "Slow", description: "Pace –1, reduce running die one step. As Major, Pace –2, –2 to Athletics and rolls to resist Athletics. Neither may take the Fleet-Footed Edge.", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {
-		Degree: Major,
-		Modifiers: CharacterAggregationModifiers{
-			func(ca CharacterAggregation) CharacterAggregation {
-				return skillAdjusmentModBuilder(SkillName("Athletics"), -2, SwadeSkills, ca)
+	{Name: "Slow", description: "Pace –1, reduce running die one step. As Major, Pace –2, –2 to Athletics and rolls to resist Athletics. Neither may take the Fleet-Footed Edge.", AvailableDegrees: []HindranceDegree{
+		{
+			Degree: Minor,
+			Modifiers: CharacterAggregationModifiers{
+				func(ca CharacterAggregation) CharacterAggregation {
+					return addRequiredEdgeModBuilder(edgeName("Fleet-Footed"), SawadeEdges, ca)
+				},
 			},
-			//todo: Fleet-Footed...
-			// func(ca CharacterAggregation) CharacterAggregation {
-			// 	return addRequiredEdgeModBuilder()
-			// },
 		},
-	}}},
+		{
+			Degree: Major,
+			Modifiers: CharacterAggregationModifiers{
+				func(ca CharacterAggregation) CharacterAggregation {
+					return skillAdjusmentModBuilder(SkillName("Athletics"), -2, SwadeSkills, ca)
+				},
+				func(ca CharacterAggregation) CharacterAggregation {
+					return addRequiredEdgeModBuilder(edgeName("Fleet-Footed"), SawadeEdges, ca)
+				},
+			},
+		},
+	}},
 	// {Name: "", description: "", AvailableDegrees: []HindranceDegree{{Degree: Minor}, {Degree: Major}}},
 	//todo: continue here completing the list
 
@@ -435,7 +446,8 @@ var SwadeHindrances = Hindrances{
 // SawadeEdges which are predefined for the SWADE ruleset
 var SawadeEdges = Edges{
 	{
-		name: "Alertness",
+		name:     "Alertness",
+		edgeType: BackgroundEdge,
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
@@ -448,35 +460,168 @@ var SawadeEdges = Edges{
 			},
 		},
 	},
-	//Ambidextrous
-	//Arcane Background
-	//Arcane Resistance
-	//Improved Arcane
 	{
-		name: "Aristocrat",
+		name:     "Ambidextrous",
+		edgeType: BackgroundEdge,
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Alertness"),
+				minimumAttributeValidatorBuilder(AttributeName("Agility"), dice.D8, "Ambidextrous"),
+			},
+		},
+		modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Notice", 2, SwadeSkills, ca)
+			},
+		},
+	},
+	{
+		name:        "Arcane Background",
+		edgeType:    BackgroundEdge,
+		description: "Allows access to the Arcane Backgrounds listed in Chapter Five.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Arcane Resistance"),
+			},
+		},
+	},
+	{
+		name:        "Arcane Resistance",
+		edgeType:    BackgroundEdge,
+		description: "Arcane skills targeting the hero suffer a −2 penalty (even if cast by allies!); magical damage is reduced by 2.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Arcane Resistance"),
+				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D8, edgeName("Arcane Resistance")),
+			},
+		},
+	},
+	{
+		name:        "Improved Arcane",
+		edgeType:    BackgroundEdge,
+		description: "As Arcane Resistance except penalty is increased to −4 and magical damage is reduced by 4.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Improved Arcane"),
+				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D8, edgeName("Improved Arcane")),
+			},
+		},
+	},
+	{
+		name:        "Aristocrat",
+		edgeType:    BackgroundEdge,
+		description: "+2 to Common Knowledge and networking with upper class.",
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
 				minimumRankValidatorBuilder(Novice, "Aristocrat"),
 			},
 		},
-		modifiers: CharacterAggregationModifiers{},
 	},
-	//Attractive
-	//Very Attractive
 	{
-		name: "Berserk",
+		name:        "Attractive",
+		edgeType:    BackgroundEdge,
+		description: "It's no secret people are more willing to help those they find physically attractive. Your character adds +1 to Performance and Persuasion rolls if the target is attracted to his general type (gender, sex, species, etc.).",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Attractive"),
+				minimumAttributeValidatorBuilder(AttributeName("Vigor"), dice.D6, edgeName("Attractive")),
+			},
+		},
+	},
+	{
+		name:        "Very Attractive",
+		edgeType:    BackgroundEdge,
+		description: "Your hero is drop-dead gorgeous. He increases his Performance and Persuasion bonus to +2.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Very Attractive"),
+			},
+		},
+		modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Performance", 2, SwadeSkills, ca)
+			},
+			func(ca CharacterAggregation) CharacterAggregation {
+				return skillAdjusmentModBuilder("Persuasion", 2, SwadeSkills, ca)
+			},
+		},
+	},
+	{
+		name:        "Berserk",
+		edgeType:    BackgroundEdge,
+		description: "After being Shaken or Wounded, melee attacks must be Wild Attacks, +1 die type to Strength, +2 to Toughness, ignore one level of Wound penalties, Critical Failure on Fighting roll hits random target. Take Fatigue after every five consecutive rounds, may choose to end rage with Smarts roll –2.",
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
 				minimumRankValidatorBuilder(Novice, "Berserk"),
 			},
 		},
-		modifiers: CharacterAggregationModifiers{},
 	},
-	//Brave
-	//Brawny
-	//Brute
+	{
+		name:        "Brave",
+		edgeType:    BackgroundEdge,
+		description: "Those with this Edge have learned to master their fear, or have dealt with so many horrors they've become jaded. These valiant explorers add +2 to Fear checks and subtract 2 from Fear Table results (see page 124).",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Brave"),
+				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D6, edgeName("Brave")),
+			},
+		},
+	},
+	{
+		name:        "Brawny",
+		edgeType:    BackgroundEdge,
+		description: "Your bruiser is very large or very fit. Her Size increases by +1 (and therefore Toughness by 1) and she treats her Strength as one die type higher when determining Encumbrance (page 67) and Minimum Strength to use armor, weapons, and equipment without a penalty (page 66). Brawny can't increase a character's Size above +3.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Brawny"),
+				minimumAttributeValidatorBuilder(AttributeName("Vigor"), dice.D6, edgeName("Brawny")),
+				minimumAttributeValidatorBuilder(AttributeName("Strength"), dice.D6, edgeName("Brawny")),
+			},
+		},
+		modifiers: CharacterAggregationModifiers{
+			func(ca CharacterAggregation) CharacterAggregation {
+				return plusSizeMod(ca)
+			},
+			func(ca CharacterAggregation) CharacterAggregation {
+				return plusBaseToughnessMod(ca)
+			},
+		},
+	},
+	{
+		name:        "Brute",
+		edgeType:    BackgroundEdge,
+		description: "Link Athletics to Strength instead of Agility (including resistance). Short Range of any thrown item increased by +1. Double that for the adjusted Medium Range, and double again for Long Range.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Brute"),
+				minimumAttributeValidatorBuilder(AttributeName("Vigor"), dice.D6, edgeName("Brute")),
+				minimumAttributeValidatorBuilder(AttributeName("Strength"), dice.D6, edgeName("Brute")),
+			},
+		},
+	},
+	{
+		name:        "Charismatic",
+		edgeType:    BackgroundEdge,
+		description: "Your hero is likable for some reason. She may be trustworthy or kind, or might just exude confidence and goodwill. You get one free reroll on Persuasion rolls.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, "Charismatic"),
+				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D8, edgeName("Charismatic")),
+			},
+		},
+	},
 	//Charismatic
 	//Elan
 	//Fame
@@ -491,7 +636,6 @@ var SawadeEdges = Edges{
 				minimumAttributeValidatorBuilder(AttributeName("Agility"), dice.D6, "Fleet-Footed"),
 			},
 		},
-		modifiers: CharacterAggregationModifiers{},
 	},
 	//Linguist
 	//Luck

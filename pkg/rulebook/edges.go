@@ -49,7 +49,7 @@ type Edge struct {
 type edgeName string
 
 type Requirement struct {
-	rank       Rank
+	rank       Rank			//used to filter/find applied edges
 	validators validators
 }
 
