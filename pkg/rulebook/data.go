@@ -451,7 +451,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Alertness"),
+				minimumRankValidatorBuilder(Novice, edgeName("Alertness")),
 			},
 		},
 		modifiers: CharacterAggregationModifiers{
@@ -466,8 +466,8 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Alertness"),
-				minimumAttributeValidatorBuilder(AttributeName("Agility"), dice.D8, "Ambidextrous"),
+				minimumRankValidatorBuilder(Novice, edgeName("Alertness")),
+				minimumAttributeValidatorBuilder(AttributeName("Agility"), dice.D8, edgeName("Ambidextrous")),
 			},
 		},
 		modifiers: CharacterAggregationModifiers{
@@ -483,7 +483,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Arcane Resistance"),
+				minimumRankValidatorBuilder(Novice, edgeName("Arcane Resistance")),
 			},
 		},
 	},
@@ -494,7 +494,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Arcane Resistance"),
+				minimumRankValidatorBuilder(Novice, edgeName("Arcane Resistance")),
 				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D8, edgeName("Arcane Resistance")),
 			},
 		},
@@ -506,7 +506,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Improved Arcane"),
+				minimumRankValidatorBuilder(Novice, edgeName("Improved Arcane")),
 				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D8, edgeName("Improved Arcane")),
 			},
 		},
@@ -518,7 +518,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Aristocrat"),
+				minimumRankValidatorBuilder(Novice, edgeName("Aristocrat")),
 			},
 		},
 	},
@@ -529,7 +529,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Attractive"),
+				minimumRankValidatorBuilder(Novice, edgeName("Attractive")),
 				minimumAttributeValidatorBuilder(AttributeName("Vigor"), dice.D6, edgeName("Attractive")),
 			},
 		},
@@ -541,7 +541,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Very Attractive"),
+				minimumRankValidatorBuilder(Novice, edgeName("Very Attractive")),
 			},
 		},
 		modifiers: CharacterAggregationModifiers{
@@ -560,7 +560,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Berserk"),
+				minimumRankValidatorBuilder(Novice, edgeName("Berserk")),
 			},
 		},
 	},
@@ -571,7 +571,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Brave"),
+				minimumRankValidatorBuilder(Novice, edgeName("Brave")),
 				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D6, edgeName("Brave")),
 			},
 		},
@@ -583,7 +583,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Brawny"),
+				minimumRankValidatorBuilder(Novice, edgeName("Brawny")),
 				minimumAttributeValidatorBuilder(AttributeName("Vigor"), dice.D6, edgeName("Brawny")),
 				minimumAttributeValidatorBuilder(AttributeName("Strength"), dice.D6, edgeName("Brawny")),
 			},
@@ -604,7 +604,7 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Brute"),
+				minimumRankValidatorBuilder(Novice, edgeName("Brute")),
 				minimumAttributeValidatorBuilder(AttributeName("Vigor"), dice.D6, edgeName("Brute")),
 				minimumAttributeValidatorBuilder(AttributeName("Strength"), dice.D6, edgeName("Brute")),
 			},
@@ -617,16 +617,57 @@ var SawadeEdges = Edges{
 		requirement: Requirement{
 			rank: Novice,
 			validators: validators{
-				minimumRankValidatorBuilder(Novice, "Charismatic"),
+				minimumRankValidatorBuilder(Novice, edgeName("Charismatic")),
 				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D8, edgeName("Charismatic")),
 			},
 		},
 	},
-	//Charismatic
-	//Elan
-	//Fame
-	////Famous
-	//Fast Healer
+	{
+		name:        "Elan",
+		edgeType:    BackgroundEdge,
+		description: "Elan means energy or spirit. +2 when spending a Benny to reroll a Trait roll.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, edgeName("Elan")),
+				minimumAttributeValidatorBuilder(AttributeName("Spirit"), dice.D8, edgeName("Elan")),
+			},
+		},
+	},
+	{
+		name:        "Fame",
+		edgeType:    BackgroundEdge,
+		description: "+1 Persuasion rolls when recognized (Common Knowledge), double usual fee for Performance.",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, edgeName("Fame")),
+			},
+		},
+	},
+	{
+		name:        "Famous",
+		edgeType:    BackgroundEdge,
+		description: "+2 Persuasion when recognized, 5 × or more usual fee for Performance.",
+		requirement: Requirement{
+			rank: Seasoned,
+			validators: validators{
+				minimumRankValidatorBuilder(Seasoned, edgeName("Famous")),
+			},
+		},
+	},
+	{
+		name:        "Fast Healer",
+		edgeType:    BackgroundEdge,
+		description: "+2 Vigor when rolling for natural healing; check every 3 days (instead of 5). (see Healing, page 96)",
+		requirement: Requirement{
+			rank: Novice,
+			validators: validators{
+				minimumRankValidatorBuilder(Novice, edgeName("Fast Healer")),
+				minimumAttributeValidatorBuilder(AttributeName("Vigor"), dice.D8, edgeName("Fast Healer")),
+			},
+		},
+	},
 	{
 		name:        "Fleet-Footed",
 		description: "The hero’s Pace is increased by +2 and his running die increases one step (from d6 to d8, for example).",
