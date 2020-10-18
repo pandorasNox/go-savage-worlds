@@ -11,9 +11,6 @@ if [ ! -f "$(pwd)/bin/exhaustive" ]; then
     go get -u github.com/nishanths/exhaustive/...
 fi
 
-$(pwd)/bin/exhaustive ./...
-
-go test ./...
-cat assets/tests/valid-character.yaml | go run .
+make test
 
 echo "pre-commit finished"

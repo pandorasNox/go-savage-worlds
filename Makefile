@@ -1,14 +1,18 @@
 
 
+PWD=$(shell pwd)
+
+
 .PHONY: test
 test:
+	${PWD}/bin/exhaustive ./...
 	go test ./...
-	bash githooks/pre-commit
-	cat assets/tests/valid-character.yaml | go run .
+	cd cmd/cli && cat ../../assets/tests/valid-character.yaml | go run .
+
 
 .PHONY: test-sheet
 test-sheet:
-	cat assets/tests/valid-character.yaml | go run .
+	cd cmd/cli && cat ../../assets/tests/valid-character.yaml | go run .
 
 
 .PHONY: githooks
